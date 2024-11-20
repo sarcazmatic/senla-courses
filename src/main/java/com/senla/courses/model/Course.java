@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Duration;
+import java.util.Set;
 
 @Entity
 @Table(name = "courses")
@@ -22,5 +23,11 @@ public class Course {
     private String field;
     private String complexity;
     private Duration duration;
+
+    @ManyToMany
+    @JoinTable(name = "teachers_courses",
+            joinColumns = {@JoinColumn(name = "fk_courses")},
+            inverseJoinColumns = {@JoinColumn(name = "fk_teacher")})
+    private Set<Teacher> teachers;
 
 }

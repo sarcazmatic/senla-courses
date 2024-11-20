@@ -3,28 +3,21 @@ package com.senla.courses.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
-@Table(name = "teachers")
+@Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
-public class Teacher {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToMany
-    @JoinTable(name = "teachers_courses",
-            joinColumns = {@JoinColumn(name = "fk_teacher")},
-            inverseJoinColumns = {@JoinColumn(name = "fk_courses")})
-    private Set<Course> courses;
 
 }
