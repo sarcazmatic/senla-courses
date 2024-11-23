@@ -16,11 +16,16 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserDAO userDao;
 
-    public User registerUser(UserDTO userDTO) {
+    public Long registerUser(UserDTO userDTO) {
         User user = userMapper.fromUserDTO(userDTO);
         user.setDateTimeRegistered(LocalDateTime.now());
-        userDao.save(user);
-        return user;
+        return userDao.save(user);
+    }
+
+    @Override
+    public UserDTO findUser(Long id) {
+        User user = userDao.find(id);
+        return userMapper.fromUser(user);
     }
 
 }

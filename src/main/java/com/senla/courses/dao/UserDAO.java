@@ -11,13 +11,29 @@ public class UserDAO implements GenericDAO<User, Long> {
 
     @Override
     public Long save(User entity) {
-        try (Session session = HibernateUtil.getCurrentSession()) {
-            Transaction transaction = session.beginTransaction();
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
             session.save(entity);
             transaction.commit();
             return entity.getId();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            transaction.rollback();
         }
         return 0L;
+    }
+
+    @Override
+    public User find(Long id) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            User user = session.load(User.class, id);
+            transaction.commit();
+            return user;
+        } catch (Exception e) {
+            transaction.rollback();
+        }
+        return null;
     }
 }

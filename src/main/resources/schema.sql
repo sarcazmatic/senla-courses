@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS users
     name                 VARCHAR                                 NOT NULL,
     age                  INTEGER,
     email                VARCHAR                                 NOT NULL,
-    password             VARCHAR                                 NOT NULL,
+    pass                 VARCHAR                                 NOT NULL,
     description          VARCHAR,
     date_time_registered DATETIME                                NOT NULL,
     CONSTRAINT pk_users PRIMARY KEY (id)
