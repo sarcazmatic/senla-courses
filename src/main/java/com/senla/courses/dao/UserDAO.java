@@ -19,8 +19,8 @@ public class UserDAO implements GenericDAO<User, Long> {
             return pk;
         } catch (Exception e) {
             transaction.rollback();
+            throw new RuntimeException("Не смогли создать пользователя");
         }
-        return 0L;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class UserDAO implements GenericDAO<User, Long> {
             return user;
         } catch (Exception e) {
             transaction.rollback();
+            throw new RuntimeException("Не нашли пользователя по id");
         }
-        return null;
     }
 }
