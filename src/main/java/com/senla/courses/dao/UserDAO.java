@@ -14,9 +14,9 @@ public class UserDAO implements GenericDAO<User, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            session.save(entity);
+            Long pk = (Long) session.save(entity);
             transaction.commit();
-            return entity.getId();
+            return pk;
         } catch (Exception e) {
             transaction.rollback();
         }
