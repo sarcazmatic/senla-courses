@@ -1,7 +1,7 @@
 package com.senla.courses.controller;
 
 import com.senla.courses.dto.UserDTO;
-import com.senla.courses.service.UserService;
+import com.senla.courses.service.users.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.senla.courses.service;
+package com.senla.courses.service.teachers;
 
 import com.senla.courses.dao.TeacherDAO;
 import com.senla.courses.dao.UserDAO;

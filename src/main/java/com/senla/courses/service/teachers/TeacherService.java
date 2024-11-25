@@ -1,4 +1,4 @@
-package com.senla.courses.service;
+package com.senla.courses.service.teachers;
 
 import com.senla.courses.dto.UserDTO;
 
