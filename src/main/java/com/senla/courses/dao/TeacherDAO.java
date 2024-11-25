@@ -111,10 +111,10 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
         try {
             Teacher teacher = session.get(Teacher.class, id);
             if (teacher != null) {
-                Query<Teacher> query1 = session.createQuery("DELETE FROM Teacher t WHERE t.id = :teacherId");
+                Query query1 = session.createQuery("DELETE FROM Teacher t WHERE t.id = :teacherId");
                 query1.setParameter("teacherId", teacher.getId());
                 query1.executeUpdate();
-                Query<Teacher> query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
+                Query query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
                 query2.setParameter("userId", teacher.getUser().getId());
                 query2.executeUpdate();
                 session.clear();
