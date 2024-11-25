@@ -1,7 +1,5 @@
 package com.senla.courses.dao;
 
-import org.springframework.data.domain.Pageable;
-
 import java.io.Serializable;
 import java.util.List;
 
