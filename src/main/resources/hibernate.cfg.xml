@@ -15,6 +15,7 @@
 
         <mapping class="com.senla.courses.model.User" />
         <mapping class="com.senla.courses.model.Teacher" />
+        <mapping class="com.senla.courses.model.Student" />
         <mapping class="com.senla.courses.model.Course" />
     </session-factory>
 </hibernate-configuration>
