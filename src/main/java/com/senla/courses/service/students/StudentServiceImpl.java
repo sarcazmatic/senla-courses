@@ -27,8 +27,9 @@ public class StudentServiceImpl implements StudentService {
         Long userPk = userDAO.save(user);
         User userStudent = userDAO.find(userPk);
         Student student = Student.builder()
+                .id(userPk)
                 .user(userStudent)
-                .rating(1.2)
+                .rating(0.0)
                 .build();
         return studentDAO.save(student);
     }
