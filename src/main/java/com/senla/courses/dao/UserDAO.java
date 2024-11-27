@@ -112,7 +112,6 @@ public class UserDAO implements GenericDAO<User, Long> {
             User user = session.get(User.class, id);
             if (user != null) {
                 session.delete(user);
-                session.clear();
             } else {
                 logger.log(Level.WARNING, "Не нашли пользователя на удаление");
             }
@@ -120,6 +119,8 @@ public class UserDAO implements GenericDAO<User, Long> {
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не удалось удалить пользователя");
+        } finally {
+            session.clear();
         }
     }
 }

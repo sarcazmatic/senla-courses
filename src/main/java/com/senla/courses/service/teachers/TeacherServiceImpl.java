@@ -28,6 +28,7 @@ public class TeacherServiceImpl implements TeacherService {
         Long userPk = userDAO.save(user);
         User userTeacher = userDAO.find(userPk);
         Teacher teacher = Teacher.builder()
+                .id(userPk)
                 .user(userTeacher)
                 .courses(new HashSet<>())
                 .build();
