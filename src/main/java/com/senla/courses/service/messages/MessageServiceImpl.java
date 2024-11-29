@@ -1,4 +1,4 @@
-package com.senla.courses.service.message;
+package com.senla.courses.service.messages;
 
 import com.senla.courses.dao.MessageDAO;
 import com.senla.courses.dao.StudentDAO;

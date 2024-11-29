@@ -1,4 +1,4 @@
-package com.senla.courses.service.message;
+package com.senla.courses.service.messages;
 
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;

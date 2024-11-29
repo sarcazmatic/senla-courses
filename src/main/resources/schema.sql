@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS courses
     name        VARCHAR                                 NOT NULL,
     description VARCHAR                                 NOT NULL,
     field       VARCHAR                                 NOT NULL,
-    complexity  VARCHAR                                 NOT NULL,
+    complexity  INTEGER                                 NOT NULL,
     duration    INTEGER                                 NOT NULL,
     CONSTRAINT pk_courses PRIMARY KEY (id)
 );

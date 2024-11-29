@@ -2,7 +2,7 @@ package com.senla.courses.controller;
 
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;
-import com.senla.courses.service.message.MessageService;
+import com.senla.courses.service.messages.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,15 +33,9 @@ public class MessageController {
         return messageService.sendMessage(messageDTO, from, to);
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public MessageFullDTO getMessage(@PathVariable Long id) {
-        return messageService.getMessage(id);
-    }
-
     @PutMapping("/{id}/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageFullDTO sendMessage(@RequestBody MessageDTO messageDTO,
+    public MessageFullDTO editMessage(@RequestBody MessageDTO messageDTO,
                             @PathVariable Long id) {
         return messageService.updateMessage(messageDTO, id);
     }

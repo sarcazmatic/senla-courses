@@ -32,7 +32,7 @@ public class Course {
     private String name;
     private String description;
     private String field;
-    private String complexity;
+    private Integer complexity;
     private Duration duration;
 
     @ManyToMany
