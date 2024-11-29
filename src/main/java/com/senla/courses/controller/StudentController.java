@@ -35,16 +35,16 @@ public class StudentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
+    public List<UserDTO> findStudents(@RequestParam(required = false, name = "text") String text,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
-        return studentService.findStudents(name, from, size);
+        return studentService.findStudents(text, from, size);
 
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteUser(@PathVariable("id") Long id) {
+    public void deleteStudent(@PathVariable("id") Long id) {
         studentService.deleteStudent(id);
     }
 
