@@ -1,7 +1,6 @@
 package com.senla.courses.dao;
 
-import com.senla.courses.model.Student;
-import com.senla.courses.model.User;
+import com.senla.courses.model.Course;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,12 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
-public class StudentDAO implements GenericDAO<Student, Long> {
+public class CourseDAO implements GenericDAO<Course, Long> {
 
-    Logger logger = Logger.getLogger("TeacherDAO");
+    Logger logger = Logger.getLogger("CourseDAO");
 
     @Override
-    public Long save(Student entity) {
+    public Long save(Course entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -27,42 +26,40 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             return pk;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли создать пользователя");
+            throw new RuntimeException("Не смогли создать курс");
         }
     }
 
     @Override
-    public Student update(Student entity) {
+    public Course update(Course entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            User userIn = entity.getUser();
-            Query<Student> query = session.createQuery("SELECT s from Student s JOIN FETCH s.user " +
-                    "WHERE :name IS NOT NULL AND UPPER(s.user.name) = UPPER(:name) ", Student.class);
-            query.setParameter("name", userIn.getName());
-            Student student = query.getSingleResult();
-            User userOut = student.getUser();
-            if (userIn.getDateTimeRegistered() != null) {
-                userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
+            Query<Course> query = session.createQuery("SELECT u from Course u " +
+                    "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", Course.class);
+            query.setParameter("name", entity.getName());
+            Course course = query.getSingleResult();
+            /*if (entity.getDateTimeRegistered() != null) {
+                course.setDateTimeRegistered(entity.getDateTimeRegistered());
             }
-            if (userIn.getAge() != null) {
-                userOut.setAge(userIn.getAge());
+            if (entity.getAge() != null) {
+                course.setAge(entity.getAge());
             }
-            if (userIn.getDescription() != null) {
-                userOut.setDescription(userIn.getDescription());
+            if (entity.getDescription() != null) {
+                course.setDescription(entity.getDescription());
             }
-            if (userIn.getEmail() != null) {
-                userOut.setEmail(userIn.getEmail());
+            if (entity.getEmail() != null) {
+                course.setEmail(entity.getEmail());
             }
-            if (userIn.getName() != null) {
-                userOut.setName(userIn.getName());
+            if (entity.getName() != null) {
+                course.setName(entity.getName());
             }
-            if (userIn.getPassword() != null) {
-                userOut.setPassword(userIn.getPassword());
-            }
-            session.update(student);
+            if (entity.getPassword() != null) {
+                course.setPassword(entity.getPassword());
+            }*/
+            session.update(course);
             transaction.commit();
-            return student;
+            return course;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -70,13 +67,16 @@ public class StudentDAO implements GenericDAO<Student, Long> {
     }
 
     @Override
-    public Student find(Long id) {
+    public Course find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Student student = session.get(Student.class, id);
+            Course course = session.get(Course.class, id);
+            if (course == null) {
+                throw new NullPointerException();
+            }
             transaction.commit();
-            return student;
+            return course;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не нашли пользователя по id");
@@ -84,20 +84,20 @@ public class StudentDAO implements GenericDAO<Student, Long> {
     }
 
     @Override
-    public List<Student> findAll(String text, int from, int size) {
+    public List<Course> findAll(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Student> query = session.createQuery("SELECT s from Student s JOIN FETCH s.user " +
+            Query<Course> query = session.createQuery("SELECT u from Course u " +
                     "WHERE (:name IS NULL) " +
                     "OR (:name IS NOT NULL " +
-                    "AND UPPER(s.user.name) LIKE CONCAT ('%', UPPER(:name), '%'))", Student.class);
+                    "AND UPPER(u.name) LIKE CONCAT ('%', UPPER(:name), '%'))", Course.class);
             query.setParameter("name", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
-            List<Student> students = query.list();
+            List<Course> courses = query.list();
             transaction.commit();
-            return students;
+            return courses;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не нашли пользователей");
@@ -109,14 +109,9 @@ public class StudentDAO implements GenericDAO<Student, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Student student = session.get(Student.class, id);
-            if (student != null) {
-                var query1 = session.createQuery("DELETE FROM Student s WHERE s.id = :studentId");
-                query1.setParameter("studentId", student.getId());
-                query1.executeUpdate();
-                var query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
-                query2.setParameter("userId", student.getUser().getId());
-                query2.executeUpdate();
+            Course course = session.get(Course.class, id);
+            if (course != null) {
+                session.delete(course);
             } else {
                 logger.log(Level.WARNING, "Не нашли пользователя на удаление");
             }
@@ -128,5 +123,4 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             session.clear();
         }
     }
-
 }
