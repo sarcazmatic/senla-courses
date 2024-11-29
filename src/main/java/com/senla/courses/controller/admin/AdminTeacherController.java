@@ -1,7 +1,7 @@
-package com.senla.courses.controller;
+package com.senla.courses.controller.admin;
 
-import com.senla.courses.dto.UserDTO;
-import com.senla.courses.service.users.UserService;
+import com.senla.courses.dto.user.UserDTO;
+import com.senla.courses.service.teachers.TeacherService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,22 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/user")
+@RequestMapping("/admin/teacher")
 @AllArgsConstructor
-public class UserController {
+public class AdminTeacherController {
 
-    private final UserService userService;
+    private final TeacherService teacherService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public Long registerUser(@RequestBody @Valid UserDTO userDTO) {
-        return userService.registerUser(userDTO);
+    public Long registerTeacher(@RequestBody @Valid UserDTO userDTO) {
+        return teacherService.registerTeacher(userDTO);
     }
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO updateUser(@RequestBody UserDTO userDTO) {
-        return userService.updateUser(userDTO);
+        return teacherService.updateTeacher(userDTO);
     }
 
     @GetMapping
@@ -42,19 +42,19 @@ public class UserController {
     public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
-        return userService.findUsers(name, from, size);
+        return teacherService.findTeachers(name, from, size);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserDTO findUser(@PathVariable("id") Long id) {
-        return userService.findUser(id);
+        return teacherService.findTeacher(id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
+    public void deleteTeacher(@PathVariable("id") Long id) {
+        teacherService.deleteTeacher(id);
     }
 
 }

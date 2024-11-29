@@ -1,7 +1,7 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.exception.NotFoundException;
-import com.senla.courses.model.Course;
+import com.senla.courses.model.Module;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CourseDAO implements GenericDAO<Course, Long> {
+public class ModuleDAO implements GenericDAO<Module, Long> {
 
     @Override
-    public Long save(Course entity) {
+    public Long save(Module entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -23,84 +23,79 @@ public class CourseDAO implements GenericDAO<Course, Long> {
             return pk;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли создать курс");
-        }
-    }
-
-    @Override
-    public Course update(Course entity) {
-        Session session = HibernateUtil.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            Query<Course> query = session.createQuery("SELECT c from Course c " +
-                    "WHERE :name IS NOT NULL AND UPPER(c.name) = UPPER(:name) ", Course.class);
-            query.setParameter("name", entity.getName());
-            Course course = query.getSingleResult();
-            System.out.println(course.getName());
-            if (entity.getComplexity() != null) {
-                course.setComplexity(entity.getComplexity());
-            }
-            if (entity.getDuration() != null) {
-                course.setDuration(entity.getDuration());
-            }
-            if (entity.getDescription() != null) {
-                course.setDescription(entity.getDescription());
-            }
-            if (entity.getField() != null) {
-                course.setField(entity.getField());
-            }
-            if (entity.getName() != null) {
-                course.setName(entity.getName());
-            }
-            session.update(course);
-            transaction.commit();
-            return course;
-        } catch (Exception e) {
-            transaction.rollback();
-            throw new RuntimeException("Не смогли обновить курс");
+            throw new RuntimeException("Не смогли создать модуль");
         } finally {
             session.clear();
         }
     }
 
     @Override
-    public Course find(Long id) {
+    public Module update(Module entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Course> query = session.createQuery("SELECT c from Course c " +
-                    "LEFT JOIN Module m ON c.id = m.course.id " +
-                    "WHERE c.id = :id", Course.class);
-            query.setParameter("id", id);
-            Course course = query.getSingleResult();
-            if (course == null) {
-                throw new NotFoundException("Курса с id " + id + "не найдено");
+            Query<Module> query = session.createQuery("SELECT m from Module m " +
+                    "WHERE :name IS NOT NULL AND UPPER(m.name) = UPPER(:name) ", Module.class);
+            query.setParameter("name", entity.getName());
+            Module module = query.getSingleResult();
+            System.out.println(module.getName());
+            if (entity.getCourse() != null) {
+                module.setCourse(entity.getCourse());
             }
+            if (entity.getPlaceInCourse() != null) {
+                module.setPlaceInCourse(entity.getPlaceInCourse());
+            }
+            if (entity.getDescription() != null) {
+                module.setDescription(entity.getDescription());
+            }
+            if (entity.getName() != null) {
+                module.setName(entity.getName());
+            }
+            session.update(module);
             transaction.commit();
-            return course;
+            return module;
         } catch (Exception e) {
             transaction.rollback();
-            throw new NotFoundException("Не удалось найти курс по id " + id);
+            throw new RuntimeException("Не смогли обновить модуль");
+        } finally {
+            session.clear();
         }
     }
 
     @Override
-    public List<Course> findAll(String text, int from, int size) {
+    public Module find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Course> query = session.createQuery("SELECT c from Course c " +
+            Module module = session.get(Module.class, id);
+            if (module == null) {
+                throw new NotFoundException("Модуль с id " + id + "не найден");
+            }
+            transaction.commit();
+            return module;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new NotFoundException("Не удалось найти модуль по id " + id);
+        }
+    }
+
+    @Override
+    public List<Module> findAll(String text, int from, int size) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<Module> query = session.createQuery("SELECT m from Module m " +
                     "WHERE ((:text IS NULL) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(c.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
+                    "AND UPPER(m.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(c.description) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Course.class);
+                    "AND UPPER(m.description) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Module.class);
             query.setParameter("text", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
-            List<Course> courses = query.list();
+            List<Module> modules = query.list();
             transaction.commit();
-            return courses;
+            return modules;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не нашли пользователей");
@@ -112,9 +107,9 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Course course = session.get(Course.class, id);
-            if (course != null) {
-                session.delete(course);
+            Module module = session.get(Module.class, id);
+            if (module != null) {
+                session.delete(module);
             } else {
                 throw new NotFoundException("Не удалось найти курс по id " + id);
             }

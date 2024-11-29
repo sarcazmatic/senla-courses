@@ -1,7 +1,7 @@
-package com.senla.courses.controller;
+package com.senla.courses.controller.admin;
 
-import com.senla.courses.dto.MessageDTO;
-import com.senla.courses.dto.MessageFullDTO;
+import com.senla.courses.dto.message.MessageDTO;
+import com.senla.courses.dto.message.MessageFullDTO;
 import com.senla.courses.service.messages.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/message")
+@RequestMapping("/admin/message")
 @RequiredArgsConstructor
-public class MessageController {
+public class AdminMessageController {
 
     private final MessageService messageService;
 

@@ -1,8 +1,10 @@
-package com.senla.courses.dto;
+package com.senla.courses.dto.course;
 
 import com.senla.courses.model.Course;
-import lombok.NoArgsConstructor;
+import com.senla.courses.model.Module;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 public class CourseMapper {
@@ -19,14 +21,21 @@ public class CourseMapper {
     }
 
     public CourseDTO fromCourse(Course course) {
-        return CourseDTO.builder()
+        CourseDTO courseDTO = CourseDTO.builder()
                 .complexity(course.getComplexity())
                 .description(course.getDescription())
                 .duration(course.getDuration())
                 .field(course.getField())
                 .name(course.getName())
-                .teachers(course.getTeachers())
                 .build();
+        if (course.getTeachers() != null) {
+            courseDTO.setTeachersNames((course.getTeachers().stream()
+                    .map(t -> t.getUser().getName()).collect(Collectors.toSet())));
+        }
+        if (course.getModules() != null) {
+            courseDTO.setModulesNames(course.getModules().stream().map(Module::getName).collect(Collectors.toSet()));
+        }
+        return courseDTO;
     }
 
 }

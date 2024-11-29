@@ -1,4 +1,4 @@
-package com.senla.courses.dto;
+package com.senla.courses.dto.message;
 
 import com.senla.courses.model.Student;
 import com.senla.courses.model.Teacher;
@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class MessageDTO {
+public class MessageFullDTO {
 
     private String body;
     private LocalDateTime dateTimeSent;
-    private Teacher teacher;
-    private Student student;
+    private String teacherName;
+    private String studentName;
 
 }

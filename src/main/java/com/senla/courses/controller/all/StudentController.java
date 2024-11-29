@@ -1,6 +1,6 @@
-package com.senla.courses.controller;
+package com.senla.courses.controller.all;
 
-import com.senla.courses.dto.UserDTO;
+import com.senla.courses.dto.user.UserDTO;
 import com.senla.courses.service.students.StudentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -27,6 +27,7 @@ public class StudentController {
     public UserDTO updateStudent(@RequestBody UserDTO userDTO) {
         return studentService.updateStudent(userDTO);
     }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserDTO findStudent(@PathVariable("id") Long id) {

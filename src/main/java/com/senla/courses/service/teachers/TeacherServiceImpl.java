@@ -2,8 +2,8 @@ package com.senla.courses.service.teachers;
 
 import com.senla.courses.dao.TeacherDAO;
 import com.senla.courses.dao.UserDAO;
-import com.senla.courses.dto.UserDTO;
-import com.senla.courses.dto.UserMapper;
+import com.senla.courses.dto.user.UserDTO;
+import com.senla.courses.dto.user.UserMapper;
 import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;

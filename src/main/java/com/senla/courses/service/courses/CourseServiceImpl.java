@@ -1,8 +1,8 @@
 package com.senla.courses.service.courses;
 
 import com.senla.courses.dao.CourseDAO;
-import com.senla.courses.dto.CourseDTO;
-import com.senla.courses.dto.CourseMapper;
+import com.senla.courses.dto.course.CourseDTO;
+import com.senla.courses.dto.course.CourseMapper;
 import com.senla.courses.model.Course;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
