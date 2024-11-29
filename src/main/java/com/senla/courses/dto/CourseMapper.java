@@ -14,6 +14,18 @@ public class CourseMapper {
                 .duration(courseDTO.getDuration())
                 .field(courseDTO.getField())
                 .name(courseDTO.getName())
+                .teachers(courseDTO.getTeachers())
+                .build();
+    }
+
+    public CourseDTO fromCourse(Course course) {
+        return CourseDTO.builder()
+                .complexity(course.getComplexity())
+                .description(course.getDescription())
+                .duration(course.getDuration())
+                .field(course.getField())
+                .name(course.getName())
+                .teachers(course.getTeachers())
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package com.senla.courses.dao;
 
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
@@ -9,13 +10,9 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class TeacherDAO implements GenericDAO<Teacher, Long> {
-
-    Logger logger = Logger.getLogger("TeacherDAO");
 
     @Override
     public Long save(Teacher entity) {
@@ -79,7 +76,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             return teacher;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователя по id");
+            throw new NotFoundException("Не удалось найти пользователя по id " + id);
         }
     }
 
@@ -100,7 +97,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             return teachers;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
+            throw new NotFoundException("Не удалось найти пользователей");
         }
     }
 
@@ -118,7 +115,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
                 query2.setParameter("userId", teacher.getUser().getId());
                 query2.executeUpdate();
             } else {
-                logger.log(Level.WARNING, "Не нашли пользователя на удаление");
+                throw new NotFoundException("Не удалось найти пользователя по id " + id);
             }
             transaction.commit();
         } catch (Exception e) {

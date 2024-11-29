@@ -1,5 +1,6 @@
 package com.senla.courses.dao;
 
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Message;
 import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
@@ -9,13 +10,9 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class MessageDAO implements GenericDAO<Message, Long> {
-
-    Logger logger = Logger.getLogger("MessageDAO");
 
     @Override
     public Long save(Message entity) {
@@ -56,7 +53,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             return message;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли сообщение по id");
+            throw new NotFoundException("Не удалось найти сообщение по id " + id);
         }
     }
 
@@ -75,7 +72,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             return messages;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
+            throw new NotFoundException("Не удалось найти пользователей");
         }
     }
 
@@ -88,7 +85,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             if (message != null) {
                 session.delete(message);
             } else {
-                logger.log(Level.WARNING, "Не нашли сообщения на удаление");
+                throw new NotFoundException("Не удалось найти сообщение по id " + id);
             }
             transaction.commit();
         } catch (Exception e) {

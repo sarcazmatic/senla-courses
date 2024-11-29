@@ -1,5 +1,6 @@
 package com.senla.courses.dao;
 
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
@@ -8,13 +9,9 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class CourseDAO implements GenericDAO<Course, Long> {
-
-    Logger logger = Logger.getLogger("CourseDAO");
 
     @Override
     public Long save(Course entity) {
@@ -35,34 +32,34 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Course> query = session.createQuery("SELECT u from Course u " +
-                    "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", Course.class);
+            Query<Course> query = session.createQuery("SELECT c from Course c " +
+                    "WHERE :name IS NOT NULL AND UPPER(c.name) = UPPER(:name) ", Course.class);
             query.setParameter("name", entity.getName());
             Course course = query.getSingleResult();
-            /*if (entity.getDateTimeRegistered() != null) {
-                course.setDateTimeRegistered(entity.getDateTimeRegistered());
+            System.out.println(course.getName());
+            if (entity.getComplexity() != null) {
+                course.setComplexity(entity.getComplexity());
             }
-            if (entity.getAge() != null) {
-                course.setAge(entity.getAge());
+            if (entity.getDuration() != null) {
+                course.setDuration(entity.getDuration());
             }
             if (entity.getDescription() != null) {
                 course.setDescription(entity.getDescription());
             }
-            if (entity.getEmail() != null) {
-                course.setEmail(entity.getEmail());
+            if (entity.getField() != null) {
+                course.setField(entity.getField());
             }
             if (entity.getName() != null) {
                 course.setName(entity.getName());
             }
-            if (entity.getPassword() != null) {
-                course.setPassword(entity.getPassword());
-            }*/
             session.update(course);
             transaction.commit();
             return course;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли обновить пользователя");
+            throw new RuntimeException("Не смогли обновить курс");
+        } finally {
+            session.clear();
         }
     }
 
@@ -73,13 +70,13 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         try {
             Course course = session.get(Course.class, id);
             if (course == null) {
-                throw new NullPointerException();
+                throw new NotFoundException("Курса с id " + id + "не найдено");
             }
             transaction.commit();
             return course;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователя по id");
+            throw new NotFoundException("Не удалось найти курс по id " + id);
         }
     }
 
@@ -88,11 +85,13 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Course> query = session.createQuery("SELECT u from Course u " +
-                    "WHERE (:name IS NULL) " +
-                    "OR (:name IS NOT NULL " +
-                    "AND UPPER(u.name) LIKE CONCAT ('%', UPPER(:name), '%'))", Course.class);
-            query.setParameter("name", text);
+            Query<Course> query = session.createQuery("SELECT c from Course c " +
+                    "WHERE ((:text IS NULL) " +
+                    "OR (:text IS NOT NULL " +
+                    "AND UPPER(c.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
+                    "OR (:text IS NOT NULL " +
+                    "AND UPPER(c.description) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Course.class);
+            query.setParameter("text", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
             List<Course> courses = query.list();
@@ -113,7 +112,7 @@ public class CourseDAO implements GenericDAO<Course, Long> {
             if (course != null) {
                 session.delete(course);
             } else {
-                logger.log(Level.WARNING, "Не нашли пользователя на удаление");
+                throw new NotFoundException("Не удалось найти курс по id " + id);
             }
             transaction.commit();
         } catch (Exception e) {

@@ -1,10 +1,12 @@
 package com.senla.courses.dto;
 
+import com.senla.courses.model.Teacher;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Duration;
+import java.util.Set;
+
 
 @Builder
 @Getter
@@ -15,6 +17,7 @@ public class CourseDTO {
     private String description;
     private String field;
     private Integer complexity;
-    private Duration duration;
+    private Integer duration;
+    private Set<Teacher> teachers;
 
 }

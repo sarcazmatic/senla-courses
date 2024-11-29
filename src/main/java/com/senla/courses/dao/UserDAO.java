@@ -1,5 +1,6 @@
 package com.senla.courses.dao;
 
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
@@ -8,13 +9,9 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class UserDAO implements GenericDAO<User, Long> {
-
-    Logger logger = Logger.getLogger("UserDAO");
 
     @Override
     public Long save(User entity) {
@@ -79,7 +76,7 @@ public class UserDAO implements GenericDAO<User, Long> {
             return user;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователя по id");
+            throw new NotFoundException("Не удалось найти пользователя по id " + id);
         }
     }
 
@@ -100,7 +97,7 @@ public class UserDAO implements GenericDAO<User, Long> {
             return users;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
+            throw new NotFoundException("Не удалось найти пользователей");
         }
     }
 
@@ -113,7 +110,7 @@ public class UserDAO implements GenericDAO<User, Long> {
             if (user != null) {
                 session.delete(user);
             } else {
-                logger.log(Level.WARNING, "Не нашли пользователя на удаление");
+                throw new NotFoundException("Не удалось найти пользователя");
             }
             transaction.commit();
         } catch (Exception e) {
