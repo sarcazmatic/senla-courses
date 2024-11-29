@@ -1,4 +1,4 @@
-package com.senla.courses.controller.all;
+package com.senla.courses.controller.admin;
 
 import com.senla.courses.dto.module.ModuleDTO;
 import com.senla.courses.service.module.ModuleService;
@@ -21,9 +21,21 @@ import java.util.List;
 @RestController()
 @RequestMapping("/module")
 @AllArgsConstructor
-public class ModuleController {
+public class AdminModuleController {
 
     private final ModuleService moduleService;
+
+    @PostMapping("/add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Long addModule(@RequestBody @Valid ModuleDTO moduleDTO) {
+        return moduleService.addModule(moduleDTO);
+    }
+
+    @PutMapping("/edit")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ModuleDTO editModule(@RequestBody @Valid ModuleDTO moduleDTO) {
+        return moduleService.editModule(moduleDTO);
+    }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,6 +50,12 @@ public class ModuleController {
                                        @RequestParam (required = false, defaultValue = "10") int size) {
         return moduleService.findModules(text, from, size);
 
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void deleteModule(@PathVariable("id") Long id) {
+        moduleService.deleteModule(id);
     }
 
 }
