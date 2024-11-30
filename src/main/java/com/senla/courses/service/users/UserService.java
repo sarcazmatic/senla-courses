@@ -1,7 +1,6 @@
 package com.senla.courses.service.users;
 
-import com.senla.courses.dto.UserDTO;
-import org.springframework.data.domain.Pageable;
+import com.senla.courses.dto.user.UserDTO;
 
 import java.util.List;
 

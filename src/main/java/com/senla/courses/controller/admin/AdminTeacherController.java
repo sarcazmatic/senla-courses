@@ -1,6 +1,6 @@
-package com.senla.courses.controller;
+package com.senla.courses.controller.admin;
 
-import com.senla.courses.dto.UserDTO;
+import com.senla.courses.dto.user.UserDTO;
 import com.senla.courses.service.teachers.TeacherService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/teacher")
+@RequestMapping("/admin/teacher")
 @AllArgsConstructor
-public class TeacherController {
+public class AdminTeacherController {
 
     private final TeacherService teacherService;
 

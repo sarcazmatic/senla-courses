@@ -1,4 +1,4 @@
-package com.senla.courses.dto;
+package com.senla.courses.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
