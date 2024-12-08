@@ -49,7 +49,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<UserDTO> findTeachers(String name, int from, int size) {
+    public List<UserDTO> findTeachersByName(String name, int from, int size) {
         return teacherDAO.findAll(name, from, size).stream().map(t -> userMapper.fromUser(t.getUser())).toList();
     }
 

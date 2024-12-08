@@ -55,7 +55,7 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public List<MessageFullDTO> getMessages(String text, int from, int size) {
+    public List<MessageFullDTO> findMessagesByText(String text, int from, int size) {
         List<Message> messagesList = messageDAO.findAll(text, from, size);
         return messagesList.stream().map(messageMapper::fromMessage).toList();
     }

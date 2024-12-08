@@ -13,7 +13,7 @@ public interface UserService {
 
     UserDTO findUser(Long id);
 
-    List<UserDTO> findUsers(String name, int from, int size);
+    List<UserDTO> findUsersByName(String name, int from, int size);
 
     void deleteUser(Long id);
 }

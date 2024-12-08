@@ -48,7 +48,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<UserDTO> findStudents(String name, int from, int size) {
+    public List<UserDTO> findStudentsByName(String name, int from, int size) {
         return studentDAO.findAll(name, from, size).stream().map(s -> userMapper.fromUser(s.getUser())).toList();
     }
 

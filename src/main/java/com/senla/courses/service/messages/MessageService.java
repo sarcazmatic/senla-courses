@@ -13,7 +13,7 @@ public interface MessageService {
 
     List<MessageFullDTO> getMessagesBetween(List<Long> betweenIds, int from, int size);
 
-    List<MessageFullDTO> getMessages(String text, int from, int size);
+    List<MessageFullDTO> findMessagesByText(String text, int from, int size);
 
     MessageFullDTO updateMessage(MessageDTO messageDTO, Long id);
 
