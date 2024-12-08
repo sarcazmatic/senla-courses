@@ -117,7 +117,6 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
                 var query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
                 query2.setParameter("userId", teacher.getUser().getId());
                 query2.executeUpdate();
-                session.clear();
             } else {
                 logger.log(Level.WARNING, "Не нашли пользователя на удаление");
             }
@@ -125,6 +124,8 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не удалось удалить пользователя");
+        } finally {
+            session.clear();
         }
     }
 

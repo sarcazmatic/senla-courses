@@ -12,7 +12,7 @@ public interface TeacherService {
 
     UserDTO findTeacher(Long id);
 
-    List<UserDTO> findTeachers(String name, int from, int size);
+    List<UserDTO> findTeachersByName(String name, int from, int size);
 
     void deleteTeacher(Long id);
 }
