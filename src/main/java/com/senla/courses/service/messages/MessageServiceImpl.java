@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -27,17 +28,23 @@ public class MessageServiceImpl implements MessageService{
     @Override
     public Long sendMessage(MessageDTO messageDTO, Long from, Long to) {
         Message message = messageMapper.fromMessageDTO(messageDTO);
-        Student student;
-        Teacher teacher;
-        student = studentDAO.find(from);
-        if (student == null) {
-            student = studentDAO.find(to);
-            teacher = teacherDAO.find(from);
+        Optional<Student> student;
+        Optional<Teacher> teacher;
+        student = Optional.ofNullable(studentDAO.find(from));
+        if (student.isEmpty()) {
+            student = Optional.ofNullable(studentDAO.find(to));
+            if (student.isEmpty()) {
+                throw new RuntimeException("Не смогли найти студента ни по from, не по to");
+            }
+            teacher = Optional.ofNullable(teacherDAO.find(from));
         } else {
-            teacher = teacherDAO.find(to);
+            teacher = Optional.ofNullable(teacherDAO.find(to));
         }
-        message.setStudent(student);
-        message.setTeacher(teacher);
+        if (teacher.isEmpty()) {
+            throw new RuntimeException("Не смогли найти учителя ни по from, не по to");
+        }
+        message.setStudent(student.get());
+        message.setTeacher(teacher.get());
         message.setDateTimeSent(LocalDateTime.now());
         return messageDAO.save(message);
     }
