@@ -1,7 +1,6 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.model.Message;
-import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -40,9 +39,12 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             Message message = session.get(Message.class, pk);
             transaction.commit();
             return message;
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли обновить сообщение по id");
+            throw new RuntimeException("Не смогли найти сообщение по id");
+        } catch (RuntimeException e) {
+            transaction.rollback();
+            throw new RuntimeException("Runtime исключение");
         }
     }
 
@@ -54,9 +56,12 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             Message message = session.get(Message.class, id);
             transaction.commit();
             return message;
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             transaction.rollback();
             throw new RuntimeException("Не нашли сообщение по id");
+        } catch (RuntimeException e) {
+            transaction.rollback();
+            throw new RuntimeException("Runtime исключение");
         }
     }
 
@@ -73,9 +78,12 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             List<Message> messages = query.list();
             transaction.commit();
             return messages;
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
+            throw new RuntimeException("Не нашли сообщение");
+        } catch (RuntimeException e) {
+            transaction.rollback();
+            throw new RuntimeException("Runtime исключение");
         }
     }
 
@@ -91,9 +99,12 @@ public class MessageDAO implements GenericDAO<Message, Long> {
                 logger.log(Level.WARNING, "Не нашли сообщения на удаление");
             }
             transaction.commit();
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             transaction.rollback();
-            throw new RuntimeException("Не удалось удалить сообщение");
+            throw new RuntimeException("Не нашли сообщение по id");
+        } catch (RuntimeException e) {
+            transaction.rollback();
+            throw new RuntimeException("Runtime исключение");
         } finally {
             session.clear();
         }
@@ -114,9 +125,12 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             List<Message> messages = query.list();
             transaction.commit();
             return messages;
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли сообщений между пользователями");
+            throw new RuntimeException("Не нашли сообщение");
+        } catch (RuntimeException e) {
+            transaction.rollback();
+            throw new RuntimeException("Runtime исключение");
         }
     }
 
