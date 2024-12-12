@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +33,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
     }
 
     @Override
-    public Teacher update(Teacher entity) {
+    public Optional<Teacher> update(Teacher entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -40,7 +41,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             Query<Teacher> query = session.createQuery("SELECT t from Teacher t JOIN FETCH t.user " +
                     "WHERE :name IS NOT NULL AND UPPER(t.user.name) = UPPER(:name) ", Teacher.class);
             query.setParameter("name", userIn.getName());
-            Teacher teacher = query.getSingleResult();
+            Teacher teacher = Optional.ofNullable(query.getSingleResult()).orElseThrow(() -> new RuntimeException("Не смогли найти учителя по запросу"));
             User userOut = teacher.getUser();
             if (userIn.getDateTimeRegistered() != null) {
                 userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
@@ -62,7 +63,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             }
             session.update(teacher);
             transaction.commit();
-            return teacher;
+            return Optional.of(teacher);
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -70,11 +71,11 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
     }
 
     @Override
-    public Teacher find(Long id) {
+    public Optional<Teacher> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Teacher teacher = session.get(Teacher.class, id);
+            Optional<Teacher> teacher = Optional.ofNullable(session.get(Teacher.class, id));
             transaction.commit();
             return teacher;
         } catch (Exception e) {
@@ -109,22 +110,20 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Teacher teacher = session.get(Teacher.class, id);
-            if (teacher != null) {
-                var query1 = session.createQuery("DELETE FROM Teacher t WHERE t.id = :teacherId");
-                query1.setParameter("teacherId", teacher.getId());
-                query1.executeUpdate();
-                var query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
-                query2.setParameter("userId", teacher.getUser().getId());
-                query2.executeUpdate();
-                session.clear();
-            } else {
-                logger.log(Level.WARNING, "Не нашли пользователя на удаление");
-            }
+            Teacher teacher = Optional.of(session.get(Teacher.class, id))
+                    .orElseThrow(() -> new RuntimeException("не нашли преподавателя"));
+            var query1 = session.createQuery("DELETE FROM Teacher t WHERE t.id = :teacherId");
+            query1.setParameter("teacherId", teacher.getId());
+            query1.executeUpdate();
+            var query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
+            query2.setParameter("userId", teacher.getUser().getId());
+            query2.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не удалось удалить пользователя");
+        } finally {
+            session.clear();
         }
     }
 

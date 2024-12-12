@@ -1,6 +1,6 @@
 package com.senla.courses.dao;
 
-import com.senla.courses.model.User;
+import com.senla.courses.model.Course;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,12 +13,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
-public class UserDAO implements GenericDAO<User, Long> {
+public class CourseDAO implements GenericDAO<Course, Long> {
 
-    Logger logger = Logger.getLogger("UserDAO");
+    Logger logger = Logger.getLogger("CourseDAO");
 
     @Override
-    public Long save(User entity) {
+    public Long save(Course entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -27,41 +27,40 @@ public class UserDAO implements GenericDAO<User, Long> {
             return pk;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли создать пользователя");
+            throw new RuntimeException("Не смогли создать курс");
         }
     }
 
     @Override
-    public Optional<User> update(User entity) {
+    public Optional<Course> update(Course entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<User> query = session.createQuery("SELECT u from User u " +
-                    "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", User.class);
+            Query<Course> query = session.createQuery("SELECT u from Course u " +
+                    "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", Course.class);
             query.setParameter("name", entity.getName());
-            User user = Optional.ofNullable(query.getSingleResult())
-                    .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
-            if (entity.getDateTimeRegistered() != null) {
-                user.setDateTimeRegistered(entity.getDateTimeRegistered());
+            Optional<Course> course = Optional.ofNullable(query.getSingleResult());
+            /*if (entity.getDateTimeRegistered() != null) {
+                course.setDateTimeRegistered(entity.getDateTimeRegistered());
             }
             if (entity.getAge() != null) {
-                user.setAge(entity.getAge());
+                course.setAge(entity.getAge());
             }
             if (entity.getDescription() != null) {
-                user.setDescription(entity.getDescription());
+                course.setDescription(entity.getDescription());
             }
             if (entity.getEmail() != null) {
-                user.setEmail(entity.getEmail());
+                course.setEmail(entity.getEmail());
             }
             if (entity.getName() != null) {
-                user.setName(entity.getName());
+                course.setName(entity.getName());
             }
             if (entity.getPassword() != null) {
-                user.setPassword(entity.getPassword());
-            }
-            session.update(user);
+                course.setPassword(entity.getPassword());
+            }*/
+            session.update(course.get());
             transaction.commit();
-            return Optional.of(user);
+            return course;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -69,13 +68,13 @@ public class UserDAO implements GenericDAO<User, Long> {
     }
 
     @Override
-    public Optional<User> find(Long id) {
+    public Optional<Course> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Optional<User> user = Optional.ofNullable(session.get(User.class, id));
+            Optional<Course> course = Optional.ofNullable(session.get(Course.class, id));
             transaction.commit();
-            return user;
+            return course;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не нашли пользователя по id");
@@ -83,20 +82,20 @@ public class UserDAO implements GenericDAO<User, Long> {
     }
 
     @Override
-    public List<User> findAll(String text, int from, int size) {
+    public List<Course> findAll(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<User> query = session.createQuery("SELECT u from User u " +
+            Query<Course> query = session.createQuery("SELECT u from Course u " +
                     "WHERE (:name IS NULL) " +
                     "OR (:name IS NOT NULL " +
-                    "AND UPPER(u.name) LIKE CONCAT ('%', UPPER(:name), '%'))", User.class);
+                    "AND UPPER(u.name) LIKE CONCAT ('%', UPPER(:name), '%'))", Course.class);
             query.setParameter("name", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
-            List<User> users = query.list();
+            List<Course> courses = query.list();
             transaction.commit();
-            return users;
+            return courses;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не нашли пользователей");
@@ -108,9 +107,12 @@ public class UserDAO implements GenericDAO<User, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            User user = Optional.of(session.get(User.class, id))
-                    .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
-            session.delete(user);
+            Course course = session.get(Course.class, id);
+            if (course != null) {
+                session.delete(course);
+            } else {
+                logger.log(Level.WARNING, "Не нашли пользователя на удаление");
+            }
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();

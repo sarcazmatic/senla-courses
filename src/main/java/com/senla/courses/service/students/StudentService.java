@@ -12,7 +12,7 @@ public interface StudentService {
 
     UserDTO findStudent(Long id);
 
-    List<UserDTO> findStudents(String name, int from, int size);
+    List<UserDTO> findStudentsByName(String name, int from, int size);
 
     void deleteStudent(Long id);
 }
