@@ -27,13 +27,11 @@ public class TeacherServiceImpl implements TeacherService {
         User user = userMapper.fromUserDTO(userDTO);
         user.setDateTimeRegistered(LocalDateTime.now());
         Long userPk = userDAO.save(user);
-        Optional<User> userTeacher = userDAO.find(userPk);
-        if (userTeacher.isEmpty()) {
-            throw new RuntimeException("Не смогли найти такого пользовтеля");
-        }
+        User userTeacher = userDAO.find(userPk)
+                .orElseThrow(() -> new RuntimeException("Не смогли найти такого пользовтеля"));
         Teacher teacher = Teacher.builder()
                 .id(userPk)
-                .user(userTeacher.get())
+                .user(userTeacher)
                 .courses(new HashSet<>())
                 .build();
         return teacherDAO.save(teacher);
@@ -42,20 +40,15 @@ public class TeacherServiceImpl implements TeacherService {
     public UserDTO updateTeacher(UserDTO userDTO) {
         Teacher teacherIn = new Teacher();
         teacherIn.setUser(userMapper.fromUserDTO(userDTO));
-        Optional<Teacher> teacherOut = teacherDAO.update(teacherIn);
-        if (teacherOut.isEmpty()) {
-            throw new RuntimeException("Не смогли найти учителя");
-        }
-        return userMapper.fromUser(teacherOut.get().getUser());
+        Teacher teacherOut = teacherDAO.update(teacherIn)
+                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
+        return userMapper.fromUser(teacherOut.getUser());
     }
 
     @Override
     public UserDTO findTeacher(Long id) {
-        Optional<Teacher> teacher = teacherDAO.find(id);
-        if (teacher.isEmpty()) {
-            throw new RuntimeException("Не смогли найти учителя");
-        }
-        return userMapper.fromUser(teacher.get().getUser());
+        Teacher teacher = teacherDAO.find(id).orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
+        return userMapper.fromUser(teacher.getUser());
     }
 
     @Override

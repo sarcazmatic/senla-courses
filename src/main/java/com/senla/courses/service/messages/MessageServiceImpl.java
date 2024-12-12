@@ -28,34 +28,23 @@ public class MessageServiceImpl implements MessageService{
     @Override
     public Long sendMessage(MessageDTO messageDTO, Long from, Long to) {
         Message message = messageMapper.fromMessageDTO(messageDTO);
-        Optional<Student> student;
-        Optional<Teacher> teacher;
-        student = studentDAO.find(from);
-        if (student.isEmpty()) {
-            student = studentDAO.find(to);
-            if (student.isEmpty()) {
-                throw new RuntimeException("Не смогли найти студента ни по from, не по to");
-            }
-            teacher = teacherDAO.find(from);
-        } else {
-            teacher = teacherDAO.find(to);
-        }
-        if (teacher.isEmpty()) {
-            throw new RuntimeException("Не смогли найти учителя ни по from, не по to");
-        }
-        message.setStudent(student.get());
-        message.setTeacher(teacher.get());
+        Student student = studentDAO.find(from)
+                .orElse(studentDAO.find(to)
+                        .orElseThrow(() -> new RuntimeException("Не смогли найти студента ни по from, не по to")));
+        Teacher teacher = teacherDAO.find(from)
+                .orElse(teacherDAO.find(to)
+                        .orElseThrow(() -> new RuntimeException("Не смогли найти преподавателя ни по from, не по to")));
+        message.setStudent(student);
+        message.setTeacher(teacher);
         message.setDateTimeSent(LocalDateTime.now());
         return messageDAO.save(message);
     }
 
     @Override
     public MessageFullDTO getMessage(Long id) {
-        Optional<Message> message = messageDAO.find(id);
-        if (message.isEmpty()) {
-            throw new RuntimeException("Не смогли найти сообщение");
-        }
-        return messageMapper.fromMessage(message.get());
+        Message message = messageDAO.find(id)
+                .orElseThrow(() -> new RuntimeException("Не смогли найти сообщение"));
+        return messageMapper.fromMessage(message);
     }
 
     @Override
@@ -78,11 +67,8 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public MessageFullDTO updateMessage(MessageDTO messageDTO, Long id) {
-        Optional<Message> messageInOpt = messageDAO.find(id);
-        if (messageInOpt.isEmpty()) {
-            throw new RuntimeException("Не смогли найти сообщение для обновления");
-        }
-        Message messageIn = messageInOpt.get();
+        Message messageIn = messageDAO.find(id)
+                .orElseThrow(() -> new RuntimeException("Не смогли найти сообщение для обновления"));
         messageIn.setBody(messageDTO.getBody());
         Optional<Message> messageOutOpt = messageDAO.update(messageIn);
         if (messageOutOpt.isEmpty()) {

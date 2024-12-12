@@ -84,22 +84,17 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Message message = session.get(Message.class, id);
-            if (message != null) {
-                session.delete(message);
-            } else {
-                logger.log(Level.WARNING, "Не нашли сообщения на удаление");
-            }
+            Message message = Optional.of(session.get(Message.class, id))
+                    .orElseThrow(() -> new RuntimeException("Не нашли сообщения на удаление"));
+            session.delete(message);
             transaction.commit();
-        } catch (NullPointerException e) {
-            transaction.rollback();
-            throw new RuntimeException("Не нашли сообщение по id");
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");
         } finally {
             session.clear();
         }
+
     }
 
     public List<Message> findMessagesBetween(Long userOne, Long userTwo, int from, int size) {
@@ -117,9 +112,6 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             List<Message> messages = query.list();
             transaction.commit();
             return messages;
-        } catch (NullPointerException e) {
-            transaction.rollback();
-            throw new RuntimeException("Не нашли сообщение");
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");

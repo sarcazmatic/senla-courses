@@ -26,20 +26,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(UserDTO userDTO) {
-        Optional<User> user = userDao.update(userMapper.fromUserDTO(userDTO));
-        if (user.isEmpty()) {
-            throw new RuntimeException("Не нашли пользователя");
-        }
-        return userMapper.fromUser(user.get());
+        User user = userDao.update(userMapper.fromUserDTO(userDTO))
+                .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
+        return userMapper.fromUser(user);
     }
 
     @Override
     public UserDTO findUser(Long id) {
-        Optional<User> user = userDao.find(id);
-        if (user.isEmpty()) {
-            throw new RuntimeException("Не нашли пользователя");
-        }
-        return userMapper.fromUser(user.get());
+        User user = userDao.find(id)
+                .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
+        return userMapper.fromUser(user);
     }
 
     @Override

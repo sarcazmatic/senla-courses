@@ -39,11 +39,8 @@ public class UserDAO implements GenericDAO<User, Long> {
             Query<User> query = session.createQuery("SELECT u from User u " +
                     "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", User.class);
             query.setParameter("name", entity.getName());
-            Optional<User> userOpt = Optional.ofNullable(query.getSingleResult());
-            if (userOpt.isEmpty()) {
-                throw new RuntimeException("Не нашли пользователя");
-            }
-            User user = userOpt.get();
+            User user = Optional.ofNullable(query.getSingleResult())
+                    .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
             if (entity.getDateTimeRegistered() != null) {
                 user.setDateTimeRegistered(entity.getDateTimeRegistered());
             }
@@ -111,12 +108,9 @@ public class UserDAO implements GenericDAO<User, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            User user = session.get(User.class, id);
-            if (user != null) {
-                session.delete(user);
-            } else {
-                logger.log(Level.WARNING, "Не нашли пользователя на удаление");
-            }
+            User user = Optional.of(session.get(User.class, id))
+                    .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
+            session.delete(user);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();

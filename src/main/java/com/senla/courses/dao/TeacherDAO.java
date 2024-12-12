@@ -41,11 +41,8 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             Query<Teacher> query = session.createQuery("SELECT t from Teacher t JOIN FETCH t.user " +
                     "WHERE :name IS NOT NULL AND UPPER(t.user.name) = UPPER(:name) ", Teacher.class);
             query.setParameter("name", userIn.getName());
-            Optional<Teacher> teacher = Optional.ofNullable(query.getSingleResult());
-            if (teacher.isEmpty()) {
-                throw new RuntimeException("Не смогли найти учителя по запросу");
-            }
-            User userOut = teacher.get().getUser();
+            Teacher teacher = Optional.ofNullable(query.getSingleResult()).orElseThrow(() -> new RuntimeException("Не смогли найти учителя по запросу"));
+            User userOut = teacher.getUser();
             if (userIn.getDateTimeRegistered() != null) {
                 userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
             }
@@ -64,9 +61,9 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             if (userIn.getPassword() != null) {
                 userOut.setPassword(userIn.getPassword());
             }
-            session.update(teacher.get());
+            session.update(teacher);
             transaction.commit();
-            return teacher;
+            return Optional.of(teacher);
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -113,17 +110,14 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Teacher teacher = session.get(Teacher.class, id);
-            if (teacher != null) {
-                var query1 = session.createQuery("DELETE FROM Teacher t WHERE t.id = :teacherId");
-                query1.setParameter("teacherId", teacher.getId());
-                query1.executeUpdate();
-                var query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
-                query2.setParameter("userId", teacher.getUser().getId());
-                query2.executeUpdate();
-            } else {
-                logger.log(Level.WARNING, "Не нашли пользователя на удаление");
-            }
+            Teacher teacher = Optional.of(session.get(Teacher.class, id))
+                    .orElseThrow(() -> new RuntimeException("не нашли преподавателя"));
+            var query1 = session.createQuery("DELETE FROM Teacher t WHERE t.id = :teacherId");
+            query1.setParameter("teacherId", teacher.getId());
+            query1.executeUpdate();
+            var query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
+            query2.setParameter("userId", teacher.getUser().getId());
+            query2.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
