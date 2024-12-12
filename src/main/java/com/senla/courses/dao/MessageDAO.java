@@ -8,6 +8,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,17 +32,14 @@ public class MessageDAO implements GenericDAO<Message, Long> {
     }
 
     @Override
-    public Message update(Message entity) {
+    public Optional<Message> update(Message entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
             Long pk = (long) session.save(entity);
-            Message message = session.get(Message.class, pk);
+            Optional<Message> message = Optional.ofNullable(session.get(Message.class, pk));
             transaction.commit();
             return message;
-        } catch (NullPointerException e) {
-            transaction.rollback();
-            throw new RuntimeException("Не смогли найти сообщение по id");
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");
@@ -49,16 +47,13 @@ public class MessageDAO implements GenericDAO<Message, Long> {
     }
 
     @Override
-    public Message find(Long id) {
+    public Optional<Message> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Message message = session.get(Message.class, id);
+            Optional<Message> message = Optional.ofNullable(session.get(Message.class, id));
             transaction.commit();
             return message;
-        } catch (NullPointerException e) {
-            transaction.rollback();
-            throw new RuntimeException("Не нашли сообщение по id");
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");
@@ -78,9 +73,6 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             List<Message> messages = query.list();
             transaction.commit();
             return messages;
-        } catch (NullPointerException e) {
-            transaction.rollback();
-            throw new RuntimeException("Не нашли сообщение");
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,10 +26,13 @@ public class StudentServiceImpl implements StudentService {
         User user = userMapper.fromUserDTO(userDTO);
         user.setDateTimeRegistered(LocalDateTime.now());
         Long userPk = userDAO.save(user);
-        User userStudent = userDAO.find(userPk);
+        Optional<User> userStudent = userDAO.find(userPk);
+        if (userStudent.isEmpty()) {
+            throw new RuntimeException("Не смогли найти такого пользовтеля");
+        }
         Student student = Student.builder()
                 .id(userPk)
-                .user(userStudent)
+                .user(userStudent.get())
                 .rating(0.0)
                 .build();
         return studentDAO.save(student);
@@ -37,19 +41,32 @@ public class StudentServiceImpl implements StudentService {
     public UserDTO updateStudent(UserDTO userDTO) {
         Student studentIn = new Student();
         studentIn.setUser(userMapper.fromUserDTO(userDTO));
-        Student studentOut = studentDAO.update(studentIn);
-        return userMapper.fromUser(studentOut.getUser());
+        Optional<Student> studentOut = studentDAO.update(studentIn);
+        if (studentOut.isEmpty()) {
+            throw new RuntimeException("Не смогли найти учителя");
+        }
+        return userMapper.fromUser(studentOut.get().getUser());
     }
 
     @Override
     public UserDTO findStudent(Long id) {
-        Student student = studentDAO.find(id);
-        return userMapper.fromUser(student.getUser());
+        Optional<Student> student = studentDAO.find(id);
+        if (student.isEmpty()) {
+            throw new RuntimeException("Не смогли найти учителя");
+        }
+        return userMapper.fromUser(student.get().getUser());
     }
 
     @Override
     public List<UserDTO> findStudentsByName(String name, int from, int size) {
-        return studentDAO.findAll(name, from, size).stream().map(s -> userMapper.fromUser(s.getUser())).toList();
+        List<UserDTO> userDTOList = studentDAO.findAll(name, from, size)
+                .stream()
+                .map(s -> userMapper.fromUser(s.getUser()))
+                .toList();
+        if (userDTOList.isEmpty()) {
+            throw new RuntimeException("Список пуст");
+        }
+        return userDTOList;
     }
 
     @Override

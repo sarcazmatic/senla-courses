@@ -30,15 +30,15 @@ public class MessageServiceImpl implements MessageService{
         Message message = messageMapper.fromMessageDTO(messageDTO);
         Optional<Student> student;
         Optional<Teacher> teacher;
-        student = Optional.ofNullable(studentDAO.find(from));
+        student = studentDAO.find(from);
         if (student.isEmpty()) {
-            student = Optional.ofNullable(studentDAO.find(to));
+            student = studentDAO.find(to);
             if (student.isEmpty()) {
                 throw new RuntimeException("Не смогли найти студента ни по from, не по to");
             }
-            teacher = Optional.ofNullable(teacherDAO.find(from));
+            teacher = teacherDAO.find(from);
         } else {
-            teacher = Optional.ofNullable(teacherDAO.find(to));
+            teacher = teacherDAO.find(to);
         }
         if (teacher.isEmpty()) {
             throw new RuntimeException("Не смогли найти учителя ни по from, не по to");
@@ -51,28 +51,44 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public MessageFullDTO getMessage(Long id) {
-        Message message = messageDAO.find(id);
-        return messageMapper.fromMessage(message);
+        Optional<Message> message = messageDAO.find(id);
+        if (message.isEmpty()) {
+            throw new RuntimeException("Не смогли найти сообщение");
+        }
+        return messageMapper.fromMessage(message.get());
     }
 
     @Override
     public List<MessageFullDTO> getMessagesBetween(List<Long> betweenIds, int from, int size) {
         List<Message> messagesList = messageDAO.findMessagesBetween(betweenIds.get(0), betweenIds.get(1), from, size);
+        if (messagesList.isEmpty()) {
+            throw new RuntimeException("Список сообщений между указанными id пусть");
+        }
         return messagesList.stream().map(messageMapper::fromMessage).toList();
     }
 
     @Override
     public List<MessageFullDTO> findMessagesByText(String text, int from, int size) {
         List<Message> messagesList = messageDAO.findAll(text, from, size);
+        if (messagesList.isEmpty()) {
+            throw new RuntimeException("Список сообщений между указанными id пусть");
+        }
         return messagesList.stream().map(messageMapper::fromMessage).toList();
     }
 
     @Override
     public MessageFullDTO updateMessage(MessageDTO messageDTO, Long id) {
-        Message messageIn = messageDAO.find(id);
+        Optional<Message> messageInOpt = messageDAO.find(id);
+        if (messageInOpt.isEmpty()) {
+            throw new RuntimeException("Не смогли найти сообщение для обновления");
+        }
+        Message messageIn = messageInOpt.get();
         messageIn.setBody(messageDTO.getBody());
-        Message messageOut = messageDAO.update(messageIn);
-        return messageMapper.fromMessage(messageOut);
+        Optional<Message> messageOutOpt = messageDAO.update(messageIn);
+        if (messageOutOpt.isEmpty()) {
+            throw new RuntimeException("Не смогли найти сообщение для обновления");
+        }
+        return messageMapper.fromMessage(messageOutOpt.get());
     }
 
     @Override

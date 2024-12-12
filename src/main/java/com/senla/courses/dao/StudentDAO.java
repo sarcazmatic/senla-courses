@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +33,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
     }
 
     @Override
-    public Student update(Student entity) {
+    public Optional<Student> update(Student entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -40,8 +41,11 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             Query<Student> query = session.createQuery("SELECT s from Student s JOIN FETCH s.user " +
                     "WHERE :name IS NOT NULL AND UPPER(s.user.name) = UPPER(:name) ", Student.class);
             query.setParameter("name", userIn.getName());
-            Student student = query.getSingleResult();
-            User userOut = student.getUser();
+            Optional<Student> student = Optional.ofNullable(query.getSingleResult());
+            if (student.isEmpty()) {
+                throw new RuntimeException("Такого студента не нашли");
+            }
+            User userOut = student.get().getUser();
             if (userIn.getDateTimeRegistered() != null) {
                 userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
             }
@@ -60,7 +64,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             if (userIn.getPassword() != null) {
                 userOut.setPassword(userIn.getPassword());
             }
-            session.update(student);
+            session.update(student.get());
             transaction.commit();
             return student;
         } catch (Exception e) {
@@ -70,11 +74,11 @@ public class StudentDAO implements GenericDAO<Student, Long> {
     }
 
     @Override
-    public Student find(Long id) {
+    public Optional<Student> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Student student = session.get(Student.class, id);
+            Optional<Student> student = Optional.ofNullable(session.get(Student.class, id));
             transaction.commit();
             return student;
         } catch (Exception e) {

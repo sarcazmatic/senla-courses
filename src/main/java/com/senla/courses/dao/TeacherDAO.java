@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +33,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
     }
 
     @Override
-    public Teacher update(Teacher entity) {
+    public Optional<Teacher> update(Teacher entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -40,8 +41,11 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             Query<Teacher> query = session.createQuery("SELECT t from Teacher t JOIN FETCH t.user " +
                     "WHERE :name IS NOT NULL AND UPPER(t.user.name) = UPPER(:name) ", Teacher.class);
             query.setParameter("name", userIn.getName());
-            Teacher teacher = query.getSingleResult();
-            User userOut = teacher.getUser();
+            Optional<Teacher> teacher = Optional.ofNullable(query.getSingleResult());
+            if (teacher.isEmpty()) {
+                throw new RuntimeException("Не смогли найти учителя по запросу");
+            }
+            User userOut = teacher.get().getUser();
             if (userIn.getDateTimeRegistered() != null) {
                 userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
             }
@@ -60,7 +64,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             if (userIn.getPassword() != null) {
                 userOut.setPassword(userIn.getPassword());
             }
-            session.update(teacher);
+            session.update(teacher.get());
             transaction.commit();
             return teacher;
         } catch (Exception e) {
@@ -70,11 +74,11 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
     }
 
     @Override
-    public Teacher find(Long id) {
+    public Optional<Teacher> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Teacher teacher = session.get(Teacher.class, id);
+            Optional<Teacher> teacher = Optional.ofNullable(session.get(Teacher.class, id));
             transaction.commit();
             return teacher;
         } catch (Exception e) {

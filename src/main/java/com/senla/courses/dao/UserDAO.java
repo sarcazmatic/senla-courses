@@ -8,6 +8,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,14 +32,18 @@ public class UserDAO implements GenericDAO<User, Long> {
     }
 
     @Override
-    public User update(User entity) {
+    public Optional<User> update(User entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
             Query<User> query = session.createQuery("SELECT u from User u " +
                     "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", User.class);
             query.setParameter("name", entity.getName());
-            User user = query.getSingleResult();
+            Optional<User> userOpt = Optional.ofNullable(query.getSingleResult());
+            if (userOpt.isEmpty()) {
+                throw new RuntimeException("Не нашли пользователя");
+            }
+            User user = userOpt.get();
             if (entity.getDateTimeRegistered() != null) {
                 user.setDateTimeRegistered(entity.getDateTimeRegistered());
             }
@@ -59,7 +64,7 @@ public class UserDAO implements GenericDAO<User, Long> {
             }
             session.update(user);
             transaction.commit();
-            return user;
+            return Optional.of(user);
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -67,14 +72,11 @@ public class UserDAO implements GenericDAO<User, Long> {
     }
 
     @Override
-    public User find(Long id) {
+    public Optional<User> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            User user = session.get(User.class, id);
-            if (user == null) {
-                throw new NullPointerException();
-            }
+            Optional<User> user = Optional.ofNullable(session.get(User.class, id));
             transaction.commit();
             return user;
         } catch (Exception e) {
