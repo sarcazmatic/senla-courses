@@ -40,14 +40,14 @@ public class StudentServiceImpl implements StudentService {
         Student studentIn = new Student();
         studentIn.setUser(userMapper.fromUserDTO(userDTO));
         Student studentOut = studentDAO.update(studentIn)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
+                .orElseThrow(() -> new RuntimeException("Не смогли найти студента"));
         return userMapper.fromUser(studentOut.getUser());
     }
 
     @Override
     public UserDTO findStudent(Long id) {
         Student student = studentDAO.find(id)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
+                .orElseThrow(() -> new RuntimeException("Не смогли найти студента"));
         return userMapper.fromUser(student.getUser());
     }
 
