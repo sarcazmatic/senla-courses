@@ -42,7 +42,7 @@ public class TeacherController {
     public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
-        return teacherService.findTeachers(name, from, size);
+        return teacherService.findTeachersByName(name, from, size);
     }
 
     @GetMapping("/{id}")

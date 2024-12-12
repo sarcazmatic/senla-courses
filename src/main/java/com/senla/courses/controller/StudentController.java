@@ -38,7 +38,7 @@ public class StudentController {
     public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
-        return studentService.findStudents(name, from, size);
+        return studentService.findStudentsByName(name, from, size);
 
     }
 

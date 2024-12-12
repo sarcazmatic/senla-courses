@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> findUsers(String name, int from, int size) {
+    public List<UserDTO> findUsersByName(String name, int from, int size) {
         return userDao.findAll(name, from, size).stream().map(userMapper::fromUser).toList();
     }
 
