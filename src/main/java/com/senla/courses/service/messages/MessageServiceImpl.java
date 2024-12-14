@@ -52,7 +52,7 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public MessageFullDTO getMessage(Long id) {
+    public MessageFullDTO findById(Long id) {
         Message message = messageDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не смогли найти сообщение"));
         return messageMapper.fromMessage(message);

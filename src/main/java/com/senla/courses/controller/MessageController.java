@@ -50,7 +50,7 @@ public class MessageController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MessageFullDTO> getMessage(@RequestParam (required = false) String text,
+    public List<MessageFullDTO> getMessageByText(@RequestParam (required = false) String text,
                                            @RequestParam (required = false, defaultValue = "1") int from,
                                            @RequestParam (required = false, defaultValue = "10") int size) {
         return messageService.findMessagesByText(text, from, size);

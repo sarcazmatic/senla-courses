@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findUser(Long id) {
+    public UserDTO findById(Long id) {
         User user = userDao.find(id)
                 .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
         return userMapper.fromUser(user);

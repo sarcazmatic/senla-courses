@@ -33,7 +33,7 @@ public class CourseController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public CourseDTO findCourse(@PathVariable Long id) {
+    public CourseDTO findById(@PathVariable Long id) {
         return courseService.findCourse(id);
     }
 

@@ -38,7 +38,7 @@ public class StudentController {
     }
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDTO findStudent(@PathVariable("id") Long id) {
+    public UserDTO findById(@PathVariable("id") Long id) {
         return studentService.findStudent(id);
     }
 

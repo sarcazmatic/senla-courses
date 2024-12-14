@@ -10,7 +10,7 @@ public interface StudentService {
 
     UserDTO updateStudent(UserDTO userDTO);
 
-    UserDTO findStudent(Long id);
+    UserDTO findById(Long id);
 
     List<UserDTO> findStudentsByName(String name, int from, int size);
 

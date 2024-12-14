@@ -11,7 +11,7 @@ public interface UserService {
 
     UserDTO updateUser(UserDTO userDTO);
 
-    UserDTO findUser(Long id);
+    UserDTO findById(Long id);
 
     List<UserDTO> findUsersByName(String name, int from, int size);
 

@@ -10,7 +10,7 @@ public interface TeacherService {
 
     UserDTO updateTeacher(UserDTO userDTO);
 
-    UserDTO findTeacher(Long id);
+    UserDTO findById(Long id);
 
     List<UserDTO> findTeachersByName(String name, int from, int size);
 

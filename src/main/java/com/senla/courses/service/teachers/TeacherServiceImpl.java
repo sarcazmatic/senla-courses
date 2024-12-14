@@ -45,7 +45,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public UserDTO findTeacher(Long id) {
+    public UserDTO findById(Long id) {
         Teacher teacher = teacherDAO.find(id)
                 .orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
         return userMapper.fromUser(teacher.getUser());

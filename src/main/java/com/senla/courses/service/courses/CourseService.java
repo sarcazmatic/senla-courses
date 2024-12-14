@@ -8,7 +8,7 @@ public interface CourseService {
 
     Long addCourse(CourseDTO courseDTO);
 
-    CourseDTO findCourse(Long id);
+    CourseDTO findById(Long id);
 
     CourseDTO editCourse(CourseDTO courseDTO);
 

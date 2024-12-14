@@ -44,7 +44,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public UserDTO findStudent(Long id) {
+    public UserDTO findById(Long id) {
         Student student = studentDAO.find(id)
                 .orElseThrow(() -> new RuntimeException("Не смогли найти студента"));
         return userMapper.fromUser(student.getUser());

@@ -24,7 +24,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDTO findCourse(Long id) {
+    public CourseDTO findById(Long id) {
         Course course = courseDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         return courseMapper.fromCourse(course);
