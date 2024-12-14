@@ -53,7 +53,7 @@ public class MessageController {
     public List<MessageFullDTO> getMessage(@RequestParam (required = false) String text,
                                            @RequestParam (required = false, defaultValue = "1") int from,
                                            @RequestParam (required = false, defaultValue = "10") int size) {
-        return messageService.getMessages(text, from, size);
+        return messageService.findMessagesByText(text, from, size);
     }
 
     @DeleteMapping("/{id}")

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +27,8 @@ public class TeacherServiceImpl implements TeacherService {
         User user = userMapper.fromUserDTO(userDTO);
         user.setDateTimeRegistered(LocalDateTime.now());
         Long userPk = userDAO.save(user);
-        User userTeacher = userDAO.find(userPk);
+        User userTeacher = userDAO.find(userPk)
+                .orElseThrow(() -> new RuntimeException("Не смогли найти такого пользовтеля"));
         Teacher teacher = Teacher.builder()
                 .id(userPk)
                 .user(userTeacher)
@@ -38,19 +40,27 @@ public class TeacherServiceImpl implements TeacherService {
     public UserDTO updateTeacher(UserDTO userDTO) {
         Teacher teacherIn = new Teacher();
         teacherIn.setUser(userMapper.fromUserDTO(userDTO));
-        Teacher teacherOut = teacherDAO.update(teacherIn);
+        Teacher teacherOut = teacherDAO.update(teacherIn)
+                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
         return userMapper.fromUser(teacherOut.getUser());
     }
 
     @Override
     public UserDTO findTeacher(Long id) {
-        Teacher teacher = teacherDAO.find(id);
+        Teacher teacher = teacherDAO.find(id).orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
         return userMapper.fromUser(teacher.getUser());
     }
 
     @Override
-    public List<UserDTO> findTeachers(String name, int from, int size) {
-        return teacherDAO.findAll(name, from, size).stream().map(t -> userMapper.fromUser(t.getUser())).toList();
+    public List<UserDTO> findTeachersByName(String name, int from, int size) {
+        List<UserDTO> userDTOList = teacherDAO.findAll(name, from, size)
+                .stream()
+                .map(t -> userMapper.fromUser(t.getUser()))
+                .toList();
+        if (userDTOList.isEmpty()) {
+            throw new RuntimeException("Список учителей пуст");
+        }
+        return userDTOList;
     }
 
 

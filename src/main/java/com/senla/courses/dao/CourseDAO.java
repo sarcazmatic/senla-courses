@@ -1,6 +1,5 @@
 package com.senla.courses.dao;
 
-import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
@@ -9,6 +8,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CourseDAO implements GenericDAO<Course, Long> {
@@ -28,15 +28,14 @@ public class CourseDAO implements GenericDAO<Course, Long> {
     }
 
     @Override
-    public Course update(Course entity) {
+    public Optional<Course> update(Course entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
             Query<Course> query = session.createQuery("SELECT c from Course c " +
                     "WHERE :name IS NOT NULL AND UPPER(c.name) = UPPER(:name) ", Course.class);
             query.setParameter("name", entity.getName());
-            Course course = query.getSingleResult();
-            System.out.println(course.getName());
+            Optional<Course> course = Optional.ofNullable(query.getSingleResult());
             if (entity.getComplexity() != null) {
                 course.setComplexity(entity.getComplexity());
             }
@@ -52,7 +51,7 @@ public class CourseDAO implements GenericDAO<Course, Long> {
             if (entity.getName() != null) {
                 course.setName(entity.getName());
             }
-            session.update(course);
+            session.update(course.get());
             transaction.commit();
             return course;
         } catch (Exception e) {
@@ -64,14 +63,11 @@ public class CourseDAO implements GenericDAO<Course, Long> {
     }
 
     @Override
-    public Course find(Long id) {
+    public Optional<Course> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Course course = session.get(Course.class, id);
-            if (course == null) {
-                throw new NotFoundException("Курса с id " + id + "не найдено");
-            }
+            Optional<Course> course = Optional.ofNullable(session.get(Course.class, id));
             transaction.commit();
             return course;
         } catch (Exception e) {

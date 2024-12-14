@@ -2,7 +2,6 @@ package com.senla.courses.dao;
 
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Message;
-import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,9 +9,14 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Repository
 public class MessageDAO implements GenericDAO<Message, Long> {
+
+    Logger logger = Logger.getLogger("MessageDAO");
 
     @Override
     public Long save(Message entity) {
@@ -29,31 +33,31 @@ public class MessageDAO implements GenericDAO<Message, Long> {
     }
 
     @Override
-    public Message update(Message entity) {
+    public Optional<Message> update(Message entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
             Long pk = (long) session.save(entity);
-            Message message = session.get(Message.class, pk);
+            Optional<Message> message = Optional.ofNullable(session.get(Message.class, pk));
             transaction.commit();
             return message;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли обновить сообщение по id");
+            throw new RuntimeException("Runtime исключение");
         }
     }
 
     @Override
-    public Message find(Long id) {
+    public Optional<Message> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Message message = session.get(Message.class, id);
+            Optional<Message> message = Optional.ofNullable(session.get(Message.class, id));
             transaction.commit();
             return message;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             transaction.rollback();
-            throw new NotFoundException("Не удалось найти сообщение по id " + id);
+            throw new RuntimeException("Runtime исключение");
         }
     }
 
@@ -70,7 +74,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             List<Message> messages = query.list();
             transaction.commit();
             return messages;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             transaction.rollback();
             throw new NotFoundException("Не удалось найти пользователей");
         }
@@ -81,16 +85,13 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Message message = session.get(Message.class, id);
-            if (message != null) {
-                session.delete(message);
-            } else {
-                throw new NotFoundException("Не удалось найти сообщение по id " + id);
-            }
+            Message message = Optional.of(session.get(Message.class, id))
+                    .orElseThrow(() -> new RuntimeException("Не нашли сообщения на удаление"));
+            session.delete(message);
             transaction.commit();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             transaction.rollback();
-            throw new RuntimeException("Не удалось удалить сообщение");
+            throw new RuntimeException("Runtime исключение");
         } finally {
             session.clear();
         }
@@ -111,9 +112,9 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             List<Message> messages = query.list();
             transaction.commit();
             return messages;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли сообщений между пользователями");
+            throw new RuntimeException("Runtime исключение");
         }
     }
 

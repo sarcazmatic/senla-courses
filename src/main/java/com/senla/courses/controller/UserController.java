@@ -42,7 +42,7 @@ public class UserController {
     public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
-        return userService.findUsers(name, from, size);
+        return userService.findUsersByName(name, from, size);
     }
 
     @GetMapping("/{id}")

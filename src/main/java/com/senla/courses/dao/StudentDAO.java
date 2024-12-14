@@ -10,9 +10,14 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Repository
 public class StudentDAO implements GenericDAO<Student, Long> {
+
+    Logger logger = Logger.getLogger("TeacherDAO");
 
     @Override
     public Long save(Student entity) {
@@ -29,7 +34,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
     }
 
     @Override
-    public Student update(Student entity) {
+    public Optional<Student> update(Student entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -37,7 +42,8 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             Query<Student> query = session.createQuery("SELECT s from Student s JOIN FETCH s.user " +
                     "WHERE :name IS NOT NULL AND UPPER(s.user.name) = UPPER(:name) ", Student.class);
             query.setParameter("name", userIn.getName());
-            Student student = query.getSingleResult();
+            Student student = Optional.ofNullable(query.getSingleResult())
+                    .orElseThrow(() -> new RuntimeException("Не смогли найти студента"));
             User userOut = student.getUser();
             if (userIn.getDateTimeRegistered() != null) {
                 userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
@@ -59,7 +65,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             }
             session.update(student);
             transaction.commit();
-            return student;
+            return Optional.of(student);
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -67,16 +73,16 @@ public class StudentDAO implements GenericDAO<Student, Long> {
     }
 
     @Override
-    public Student find(Long id) {
+    public Optional<Student> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Student student = session.get(Student.class, id);
+            Optional<Student> student = Optional.ofNullable(session.get(Student.class, id));
             transaction.commit();
             return student;
         } catch (Exception e) {
             transaction.rollback();
-            throw new NotFoundException("Не удалось найти пользователя по id " + id);
+            throw new RuntimeException("Не нашли пользователя по id");
         }
     }
 
@@ -97,7 +103,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             return students;
         } catch (Exception e) {
             transaction.rollback();
-            throw new NotFoundException("Не удалось найти пользователей");
+            throw new RuntimeException("Не нашли пользователей");
         }
     }
 
@@ -106,17 +112,14 @@ public class StudentDAO implements GenericDAO<Student, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Student student = session.get(Student.class, id);
-            if (student != null) {
-                var query1 = session.createQuery("DELETE FROM Student s WHERE s.id = :studentId");
-                query1.setParameter("studentId", student.getId());
-                query1.executeUpdate();
-                var query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
-                query2.setParameter("userId", student.getUser().getId());
-                query2.executeUpdate();
-            } else {
-                throw new NotFoundException("Не удалось найти пользователя по id " + id);
-            }
+            Student student = Optional.of(session.get(Student.class, id))
+                    .orElseThrow(() -> new RuntimeException("Не смогли найти студента"));
+            var query1 = session.createQuery("DELETE FROM Student s WHERE s.id = :studentId");
+            query1.setParameter("studentId", student.getId());
+            query1.executeUpdate();
+            var query2 = session.createQuery("DELETE FROM User u WHERE u.id = :userId");
+            query2.setParameter("userId", student.getUser().getId());
+            query2.executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();

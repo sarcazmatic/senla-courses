@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,19 +26,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(UserDTO userDTO) {
-        User user = userDao.update(userMapper.fromUserDTO(userDTO));
+        User user = userDao.update(userMapper.fromUserDTO(userDTO))
+                .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
         return userMapper.fromUser(user);
     }
 
     @Override
     public UserDTO findUser(Long id) {
-        User user = userDao.find(id);
+        User user = userDao.find(id)
+                .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
         return userMapper.fromUser(user);
     }
 
     @Override
-    public List<UserDTO> findUsers(String name, int from, int size) {
-        return userDao.findAll(name, from, size).stream().map(userMapper::fromUser).toList();
+    public List<UserDTO> findUsersByName(String name, int from, int size) {
+        List<UserDTO> userDTOList = userDao.findAll(name, from, size).stream().map(userMapper::fromUser).toList();
+        if (userDTOList.isEmpty()) {
+            throw new RuntimeException("Список пуст");
+        }
+        return userDTOList;
     }
 
     @Override
