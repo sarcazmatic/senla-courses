@@ -10,13 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class MessageDAO implements GenericDAO<Message, Long> {
-
-    Logger logger = Logger.getLogger("MessageDAO");
 
     @Override
     public Long save(Message entity) {
@@ -33,12 +29,13 @@ public class MessageDAO implements GenericDAO<Message, Long> {
     }
 
     @Override
-    public Optional<Message> update(Message entity) {
+    public Message update(Message entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Long pk = (long) session.save(entity);
-            Optional<Message> message = Optional.ofNullable(session.get(Message.class, pk));
+            session.update(entity);
+            Message message = Optional.of(session.get(Message.class, entity.getId()))
+                    .orElseThrow(() -> new NotFoundException("Обновленное сообщение не удалось найти"));
             transaction.commit();
             return message;
         } catch (RuntimeException e) {

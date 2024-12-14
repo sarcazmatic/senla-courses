@@ -4,6 +4,7 @@ import com.senla.courses.dao.StudentDAO;
 import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.dto.UserMapper;
+import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.model.Student;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -39,8 +39,7 @@ public class StudentServiceImpl implements StudentService {
     public UserDTO updateStudent(UserDTO userDTO) {
         Student studentIn = new Student();
         studentIn.setUser(userMapper.fromUserDTO(userDTO));
-        Student studentOut = studentDAO.update(studentIn)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти студента"));
+        Student studentOut = studentDAO.update(studentIn);
         return userMapper.fromUser(studentOut.getUser());
     }
 
@@ -58,7 +57,7 @@ public class StudentServiceImpl implements StudentService {
                 .map(s -> userMapper.fromUser(s.getUser()))
                 .toList();
         if (userDTOList.isEmpty()) {
-            throw new RuntimeException("Список пуст");
+            throw new EmptyListException("Список пуст");
         }
         return userDTOList;
     }

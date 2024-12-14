@@ -3,6 +3,8 @@ package com.senla.courses.service.courses;
 import com.senla.courses.dao.CourseDAO;
 import com.senla.courses.dto.CourseDTO;
 import com.senla.courses.dto.CourseMapper;
+import com.senla.courses.exception.EmptyListException;
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseDTO findCourse(Long id) {
-        Course course = courseDAO.find(id);
+        Course course = courseDAO.find(id)
+                .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         return courseMapper.fromCourse(course);
     }
 
@@ -37,6 +40,9 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseDTO> findCourses(String text, int from, int size) {
         List<Course> courses = courseDAO.findAll(text, from, size);
+        if (courses.isEmpty()) {
+            throw new EmptyListException("Список пуст");
+        }
         return courses.stream().map(courseMapper::fromCourse).toList();
     }
 

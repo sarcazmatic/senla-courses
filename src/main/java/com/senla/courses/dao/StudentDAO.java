@@ -11,13 +11,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class StudentDAO implements GenericDAO<Student, Long> {
 
-    Logger logger = Logger.getLogger("TeacherDAO");
 
     @Override
     public Long save(Student entity) {
@@ -34,7 +31,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
     }
 
     @Override
-    public Optional<Student> update(Student entity) {
+    public Student update(Student entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -42,8 +39,8 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             Query<Student> query = session.createQuery("SELECT s from Student s JOIN FETCH s.user " +
                     "WHERE :name IS NOT NULL AND UPPER(s.user.name) = UPPER(:name) ", Student.class);
             query.setParameter("name", userIn.getName());
-            Student student = Optional.ofNullable(query.getSingleResult())
-                    .orElseThrow(() -> new RuntimeException("Не смогли найти студента"));
+            Student student = Optional.of(query.getSingleResult())
+                    .orElseThrow(() -> new NotFoundException(String.format("Не нашли пользователя с именем {}", userIn.getName())));
             User userOut = student.getUser();
             if (userIn.getDateTimeRegistered() != null) {
                 userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
@@ -65,7 +62,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
             }
             session.update(student);
             transaction.commit();
-            return Optional.of(student);
+            return student;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");

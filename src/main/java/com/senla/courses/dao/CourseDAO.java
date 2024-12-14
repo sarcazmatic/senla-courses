@@ -1,5 +1,6 @@
 package com.senla.courses.dao;
 
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
@@ -28,14 +29,15 @@ public class CourseDAO implements GenericDAO<Course, Long> {
     }
 
     @Override
-    public Optional<Course> update(Course entity) {
+    public Course update(Course entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
             Query<Course> query = session.createQuery("SELECT c from Course c " +
                     "WHERE :name IS NOT NULL AND UPPER(c.name) = UPPER(:name) ", Course.class);
             query.setParameter("name", entity.getName());
-            Optional<Course> course = Optional.ofNullable(query.getSingleResult());
+            Course course = Optional.of(query.getSingleResult())
+                    .orElseThrow(() -> new NotFoundException("Не смогли найти студента"));
             if (entity.getComplexity() != null) {
                 course.setComplexity(entity.getComplexity());
             }
@@ -51,7 +53,7 @@ public class CourseDAO implements GenericDAO<Course, Long> {
             if (entity.getName() != null) {
                 course.setName(entity.getName());
             }
-            session.update(course.get());
+            session.update(course);
             transaction.commit();
             return course;
         } catch (Exception e) {

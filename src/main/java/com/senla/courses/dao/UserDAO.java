@@ -10,13 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class UserDAO implements GenericDAO<User, Long> {
-
-    Logger logger = Logger.getLogger("UserDAO");
 
     @Override
     public Long save(User entity) {
@@ -33,15 +29,15 @@ public class UserDAO implements GenericDAO<User, Long> {
     }
 
     @Override
-    public Optional<User> update(User entity) {
+    public User update(User entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
             Query<User> query = session.createQuery("SELECT u from User u " +
                     "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", User.class);
             query.setParameter("name", entity.getName());
-            User user = Optional.ofNullable(query.getSingleResult())
-                    .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
+            User user = Optional.of(query.getSingleResult())
+                    .orElseThrow(() -> new NotFoundException(String.format("Не нашли пользователя с именем {}", entity.getName())));
             if (entity.getDateTimeRegistered() != null) {
                 user.setDateTimeRegistered(entity.getDateTimeRegistered());
             }
@@ -62,7 +58,7 @@ public class UserDAO implements GenericDAO<User, Long> {
             }
             session.update(user);
             transaction.commit();
-            return Optional.of(user);
+            return user;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");

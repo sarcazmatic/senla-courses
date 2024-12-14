@@ -11,13 +11,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class TeacherDAO implements GenericDAO<Teacher, Long> {
 
-    Logger logger = Logger.getLogger("TeacherDAO");
 
     @Override
     public Long save(Teacher entity) {
@@ -34,7 +31,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
     }
 
     @Override
-    public Optional<Teacher> update(Teacher entity) {
+    public Teacher update(Teacher entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -42,7 +39,8 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             Query<Teacher> query = session.createQuery("SELECT t from Teacher t JOIN FETCH t.user " +
                     "WHERE :name IS NOT NULL AND UPPER(t.user.name) = UPPER(:name) ", Teacher.class);
             query.setParameter("name", userIn.getName());
-            Teacher teacher = Optional.ofNullable(query.getSingleResult()).orElseThrow(() -> new RuntimeException("Не смогли найти учителя по запросу"));
+            Teacher teacher = Optional.of(query.getSingleResult())
+                    .orElseThrow(() -> new NotFoundException(String.format("Не нашли пользователя с именем {}", userIn.getName())));
             User userOut = teacher.getUser();
             if (userIn.getDateTimeRegistered() != null) {
                 userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
@@ -64,7 +62,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
             }
             session.update(teacher);
             transaction.commit();
-            return Optional.of(teacher);
+            return teacher;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");

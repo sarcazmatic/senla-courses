@@ -8,7 +8,7 @@ public interface GenericDAO<T, PK extends Serializable> {
 
     PK save(T entity);
 
-    Optional<T> update(T entity);
+    T update(T entity);
 
     Optional<T> find(PK id);
 
