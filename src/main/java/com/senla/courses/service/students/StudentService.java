@@ -1,5 +1,6 @@
 package com.senla.courses.service.students;
 
+import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.UserDTO;
 
 import java.util.List;
@@ -8,9 +9,9 @@ public interface StudentService {
 
     Long registerStudent(UserDTO userDTO);
 
-    UserDTO updateStudent(UserDTO userDTO);
+    StudentDTO updateStudent(StudentDTO studentDTO, Long id);
 
-    UserDTO findById(Long id);
+    StudentDTO findById(Long id);
 
     List<UserDTO> findStudentsByName(String name, int from, int size);
 

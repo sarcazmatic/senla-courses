@@ -33,32 +33,9 @@ public class UserDAO implements GenericDAO<User, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<User> query = session.createQuery("SELECT u from User u " +
-                    "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", User.class);
-            query.setParameter("name", entity.getName());
-            User user = Optional.of(query.getSingleResult())
-                    .orElseThrow(() -> new NotFoundException(String.format("Не нашли пользователя с именем {}", entity.getName())));
-            if (entity.getDateTimeRegistered() != null) {
-                user.setDateTimeRegistered(entity.getDateTimeRegistered());
-            }
-            if (entity.getAge() != null) {
-                user.setAge(entity.getAge());
-            }
-            if (entity.getDescription() != null) {
-                user.setDescription(entity.getDescription());
-            }
-            if (entity.getEmail() != null) {
-                user.setEmail(entity.getEmail());
-            }
-            if (entity.getName() != null) {
-                user.setName(entity.getName());
-            }
-            if (entity.getPassword() != null) {
-                user.setPassword(entity.getPassword());
-            }
-            session.update(user);
+            session.update(entity);
             transaction.commit();
-            return user;
+            return entity;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -80,7 +57,7 @@ public class UserDAO implements GenericDAO<User, Long> {
     }
 
     @Override
-    public List<User> findAll(String text, int from, int size) {
+    public List<User> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {

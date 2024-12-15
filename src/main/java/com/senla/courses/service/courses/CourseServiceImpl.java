@@ -24,22 +24,31 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public CourseDTO editCourse(CourseDTO courseDTO, Long id) {
+        Course course = courseDAO.find(id)
+                .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
+        Course courseUpd = courseMapper.updateCourse(course, courseDTO);
+        return courseMapper.fromCourse(courseUpd);
+    }
+
+    @Override
     public CourseDTO findById(Long id) {
         Course course = courseDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         return courseMapper.fromCourse(course);
     }
 
-    @Override
-    public CourseDTO editCourse(CourseDTO courseDTO) {
-        Course courseIn = courseMapper.fromCourseDTO(courseDTO);
-        Course courseOut = courseDAO.update(courseIn);
-        return courseMapper.fromCourse(courseOut);
+    public List<CourseDTO> findCourses(int from, int size) {
+        List<Course> courses = courseDAO.findAll(from, size);
+        if (courses.isEmpty()) {
+            throw new EmptyListException("Список пуст");
+        }
+        return courses.stream().map(courseMapper::fromCourse).toList();
     }
 
     @Override
-    public List<CourseDTO> findCourses(String text, int from, int size) {
-        List<Course> courses = courseDAO.findAll(text, from, size);
+    public List<CourseDTO> findCoursesByText(String text, int from, int size) {
+        List<Course> courses = courseDAO.findAllByText(text, from, size);
         if (courses.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }

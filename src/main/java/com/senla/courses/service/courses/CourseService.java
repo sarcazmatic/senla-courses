@@ -10,9 +10,11 @@ public interface CourseService {
 
     CourseDTO findById(Long id);
 
-    CourseDTO editCourse(CourseDTO courseDTO);
+    CourseDTO editCourse(CourseDTO courseDTO, Long id);
 
-    List<CourseDTO> findCourses(String text, int from, int size);
+    List<CourseDTO> findCourses(int from, int size);
+
+    List<CourseDTO> findCoursesByText(String text, int from, int size);
 
     void deleteCourse(Long id);
 

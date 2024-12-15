@@ -1,6 +1,7 @@
 package com.senla.courses.dto;
 
 import com.senla.courses.model.Course;
+import com.senla.courses.model.User;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,25 @@ public class CourseMapper {
                 .name(course.getName())
                 .teachers(course.getTeachers())
                 .build();
+    }
+
+    public Course updateCourse (Course course, CourseDTO courseDTO) {
+        if (courseDTO.getComplexity() != null) {
+            course.setComplexity(courseDTO.getComplexity());
+        }
+        if (courseDTO.getDuration() != null) {
+            course.setDuration(courseDTO.getDuration());
+        }
+        if (courseDTO.getDescription() != null) {
+            course.setDescription(courseDTO.getDescription());
+        }
+        if (courseDTO.getField() != null) {
+            course.setField(courseDTO.getField());
+        }
+        if (courseDTO.getName() != null) {
+            course.setName(courseDTO.getName());
+        }
+        return course;
     }
 
 }

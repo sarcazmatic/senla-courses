@@ -33,8 +33,8 @@ public class MessageController {
         return messageService.sendMessage(messageDTO, from, to);
     }
 
-    @PutMapping("/{id}/update")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public MessageFullDTO editMessage(@RequestBody MessageDTO messageDTO,
                             @PathVariable Long id) {
         return messageService.updateMessage(messageDTO, id);

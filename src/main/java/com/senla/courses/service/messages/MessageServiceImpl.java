@@ -52,6 +52,15 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
+    public MessageFullDTO updateMessage(MessageDTO messageDTO, Long id) {
+        Message messageIn = messageDAO.find(id)
+                .orElseThrow(() -> new NotFoundException("Не смогли найти сообщение для обновления"));
+        messageIn.setBody(messageDTO.getBody());
+        Message messageOut = messageDAO.update(messageIn);
+        return messageMapper.fromMessage(messageOut);
+    }
+
+    @Override
     public MessageFullDTO findById(Long id) {
         Message message = messageDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не смогли найти сообщение"));
@@ -69,20 +78,11 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public List<MessageFullDTO> findMessagesByText(String text, int from, int size) {
-        List<Message> messagesList = messageDAO.findAll(text, from, size);
+        List<Message> messagesList = messageDAO.findAllByText(text, from, size);
         if (messagesList.isEmpty()) {
             throw new EmptyListException("Список сообщений между указанными id пусть");
         }
         return messagesList.stream().map(messageMapper::fromMessage).toList();
-    }
-
-    @Override
-    public MessageFullDTO updateMessage(MessageDTO messageDTO, Long id) {
-        Message messageIn = messageDAO.find(id)
-                .orElseThrow(() -> new NotFoundException("Не смогли найти сообщение для обновления"));
-        messageIn.setBody(messageDTO.getBody());
-        Message messageOut = messageDAO.update(messageIn);
-        return messageMapper.fromMessage(messageOut);
     }
 
     @Override

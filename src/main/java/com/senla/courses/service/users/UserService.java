@@ -9,7 +9,7 @@ public interface UserService {
 
     Long registerUser(UserDTO userDTO);
 
-    UserDTO updateUser(UserDTO userDTO);
+    UserDTO updateUser(UserDTO userDTO, Long id);
 
     UserDTO findById(Long id);
 

@@ -31,14 +31,15 @@ public class UserController {
         return userService.registerUser(userDTO);
     }
 
-    @PutMapping("/update")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO updateUser(@RequestBody UserDTO userDTO) {
-        return userService.updateUser(userDTO);
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO updateUser(@RequestBody UserDTO userDTO,
+                              @PathVariable Long id) {
+        return userService.updateUser(userDTO, id);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
@@ -46,13 +47,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public UserDTO findById(@PathVariable("id") Long id) {
-        return userService.findUser(id);
+        return userService.findById(id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
     }

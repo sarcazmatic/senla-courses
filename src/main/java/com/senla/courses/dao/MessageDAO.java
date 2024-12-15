@@ -34,10 +34,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             session.update(entity);
-            Message message = Optional.of(session.get(Message.class, entity.getId()))
-                    .orElseThrow(() -> new NotFoundException("Обновленное сообщение не удалось найти"));
-            transaction.commit();
-            return message;
+            return entity;
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");
@@ -59,7 +56,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
     }
 
     @Override
-    public List<Message> findAll(String text, int from, int size) {
+    public List<Message> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {

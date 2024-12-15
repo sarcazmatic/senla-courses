@@ -1,8 +1,6 @@
 package com.senla.courses.dao;
 
-import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Student;
-import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -35,34 +33,9 @@ public class StudentDAO implements GenericDAO<Student, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            User userIn = entity.getUser();
-            Query<Student> query = session.createQuery("SELECT s from Student s JOIN FETCH s.user " +
-                    "WHERE :name IS NOT NULL AND UPPER(s.user.name) = UPPER(:name) ", Student.class);
-            query.setParameter("name", userIn.getName());
-            Student student = Optional.of(query.getSingleResult())
-                    .orElseThrow(() -> new NotFoundException(String.format("Не нашли пользователя с именем {}", userIn.getName())));
-            User userOut = student.getUser();
-            if (userIn.getDateTimeRegistered() != null) {
-                userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
-            }
-            if (userIn.getAge() != null) {
-                userOut.setAge(userIn.getAge());
-            }
-            if (userIn.getDescription() != null) {
-                userOut.setDescription(userIn.getDescription());
-            }
-            if (userIn.getEmail() != null) {
-                userOut.setEmail(userIn.getEmail());
-            }
-            if (userIn.getName() != null) {
-                userOut.setName(userIn.getName());
-            }
-            if (userIn.getPassword() != null) {
-                userOut.setPassword(userIn.getPassword());
-            }
-            session.update(student);
+            session.update(entity);
             transaction.commit();
-            return student;
+            return entity;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -84,7 +57,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
     }
 
     @Override
-    public List<Student> findAll(String text, int from, int size) {
+    public List<Student> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {

@@ -31,29 +31,36 @@ public class CourseController {
         return courseService.addCourse(courseDTO);
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CourseDTO findById(@PathVariable Long id) {
-        return courseService.findCourse(id);
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CourseDTO editCourse(@RequestBody @Valid CourseDTO courseDTO,
+                                @PathVariable Long id) {
+        return courseService.editCourse(courseDTO, id);
     }
 
-    @PutMapping("/edit")
-    @ResponseStatus(HttpStatus.CREATED)
-    public CourseDTO editCourse(@RequestBody @Valid CourseDTO courseDTO) {
-        return courseService.editCourse(courseDTO);
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CourseDTO findById(@PathVariable Long id) {
+        return courseService.findById(id);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public List<CourseDTO> findCourses(@RequestParam(required = false, name = "text") String text,
+    @ResponseStatus(HttpStatus.OK)
+    public List<CourseDTO> findCourses(@RequestParam (required = false, defaultValue = "1") int from,
+                                       @RequestParam (required = false, defaultValue = "10") int size) {
+        return courseService.findCourses(from, size);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<CourseDTO> findCoursesByText(@RequestParam(required = false, name = "text") String text,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
-        return courseService.findCourses(text, from, size);
-
+        return courseService.findCoursesByText(text, from, size);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteCourse(@PathVariable("id") Long id) {
         courseService.deleteCourse(id);
     }
