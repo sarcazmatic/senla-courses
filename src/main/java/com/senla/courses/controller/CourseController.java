@@ -38,10 +38,16 @@ public class CourseController {
         return courseService.editCourse(courseDTO, id);
     }
 
-    @PutMapping("/{id}/teachers")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping("/{id}/add/teachers")
+    @ResponseStatus(HttpStatus.OK)
     public CourseDTO addTeachers(@PathVariable Long id, @RequestParam List<Long> ids) {
         return courseService.addTeachers(id, ids);
+    }
+
+    @PutMapping("/{id}/rm/teachers")
+    @ResponseStatus(HttpStatus.OK)
+    public CourseDTO removeTeachers(@PathVariable Long id, @RequestParam List<Long> ids) {
+        return courseService.removeTeachers(id, ids);
     }
 
     @GetMapping("/{id}")

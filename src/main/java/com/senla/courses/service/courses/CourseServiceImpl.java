@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -52,6 +53,27 @@ public class CourseServiceImpl implements CourseService {
             teachers.add(teacher);
         }
         course.setTeachers(teachers);
+        courseDAO.update(course);
+        return courseMapper.fromCourse(course);
+    }
+
+    @Override
+    public CourseDTO removeTeachers(Long id, List<Long> ids) {
+        Course course = courseDAO.find(id)
+                .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
+        Set<Teacher> teachers;
+        try {
+            teachers = new HashSet<>(course.getTeachers());
+        } catch (NullPointerException e) {
+            throw new EmptyListException("Список преподавателей курса пуст");
+        }
+        for (Long i : ids) {
+            Teacher teacher = teachers.stream().filter(t -> t.getId().equals(i)).findFirst()
+                    .orElseThrow(() -> new NotFoundException("Не нашли в списке преподавателей курса преподавателя с id " + i));
+            teachers.remove(teacher);
+        }
+        course.setTeachers(teachers);
+        courseDAO.update(course);
         return courseMapper.fromCourse(course);
     }
 

@@ -4,6 +4,7 @@ import com.senla.courses.model.Course;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,17 +24,22 @@ public class CourseMapper {
     }
 
     public CourseDTO fromCourse(Course course) {
-        return CourseDTO.builder()
+        CourseDTO courseDTO = CourseDTO.builder()
                 .complexity(course.getComplexity())
                 .description(course.getDescription())
                 .duration(course.getDuration())
                 .field(course.getField())
                 .name(course.getName())
-                .teachers(course.getTeachers().stream().map(t -> userMapper.fromUser(t.getUser())).collect(Collectors.toSet()))
                 .build();
+        try {
+            courseDTO.setTeachers(course.getTeachers().stream().map(t -> userMapper.fromUser(t.getUser())).collect(Collectors.toSet()));
+        } catch (NullPointerException e) {
+            course.setTeachers(new HashSet<>());
+        }
+        return courseDTO;
     }
 
-    public Course updateCourse (Course course, CourseDTO courseDTO) {
+    public Course updateCourse(Course course, CourseDTO courseDTO) {
         if (courseDTO.getComplexity() != null) {
             course.setComplexity(courseDTO.getComplexity());
         }

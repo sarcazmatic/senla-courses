@@ -15,6 +15,8 @@ public interface CourseService {
 
     CourseDTO addTeachers(Long id, List<Long> ids);
 
+    CourseDTO removeTeachers(Long id, List<Long> ids);
+
     List<CourseDTO> findCourses(int from, int size);
 
     List<CourseDTO> findCoursesByText(String text, int from, int size);
