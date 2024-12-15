@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +25,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Long addCourse(CourseDTO courseDTO) {
-        return courseDAO.save(courseMapper.fromCourseDTO(courseDTO));
+        Course course = courseMapper.fromCourseDTO(courseDTO);
+        course.setTeachers(new HashSet<>());
+        return courseDAO.save(course);
     }
 
     @Override
@@ -41,12 +42,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseDTO addTeachers(Long id, List<Long> ids) {
         Course course = courseDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
-        Set<Teacher> teachers;
-        try {
-            teachers = new HashSet<>(course.getTeachers());
-        } catch (NullPointerException e) {
-            teachers = new HashSet<>();
-        }
+        Set<Teacher> teachers = new HashSet<>(course.getTeachers());
         for (Long i : ids) {
             Teacher teacher = teacherDAO.find(i)
                     .orElseThrow(() -> new NotFoundException("Не нашли преподавателя по id " + i));
@@ -61,10 +57,8 @@ public class CourseServiceImpl implements CourseService {
     public CourseDTO removeTeachers(Long id, List<Long> ids) {
         Course course = courseDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
-        Set<Teacher> teachers;
-        try {
-            teachers = new HashSet<>(course.getTeachers());
-        } catch (NullPointerException e) {
+        Set<Teacher> teachers = new HashSet<>(course.getTeachers());
+        if (teachers.isEmpty()) {
             throw new EmptyListException("Список преподавателей курса пуст");
         }
         for (Long i : ids) {
