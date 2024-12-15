@@ -38,13 +38,19 @@ public class CourseController {
         return courseService.editCourse(courseDTO, id);
     }
 
+    @PutMapping("/{id}/teachers")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourseDTO addTeachers(@PathVariable Long id, @RequestParam List<Long> ids) {
+        return courseService.addTeachers(id, ids);
+    }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CourseDTO findById(@PathVariable Long id) {
         return courseService.findById(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<CourseDTO> findCourses(@RequestParam (required = false, defaultValue = "1") int from,
                                        @RequestParam (required = false, defaultValue = "10") int size) {

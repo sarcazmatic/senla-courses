@@ -1,5 +1,6 @@
 package com.senla.courses.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.senla.courses.model.Teacher;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class CourseDTO {
     private String field;
     private Integer complexity;
     private Integer duration;
-    private Set<Teacher> teachers;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Set<UserDTO> teachers;
 
 }

@@ -1,6 +1,7 @@
 package com.senla.courses.service.courses;
 
 import com.senla.courses.dto.CourseDTO;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -11,6 +12,8 @@ public interface CourseService {
     CourseDTO findById(Long id);
 
     CourseDTO editCourse(CourseDTO courseDTO, Long id);
+
+    CourseDTO addTeachers(Long id, List<Long> ids);
 
     List<CourseDTO> findCourses(int from, int size);
 

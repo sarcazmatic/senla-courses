@@ -1,12 +1,16 @@
 package com.senla.courses.dto;
 
 import com.senla.courses.model.Course;
-import com.senla.courses.model.User;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
+@RequiredArgsConstructor
 public class CourseMapper {
+
+    private final UserMapper userMapper;
 
     public Course fromCourseDTO(CourseDTO courseDTO) {
         return Course.builder()
@@ -15,7 +19,6 @@ public class CourseMapper {
                 .duration(courseDTO.getDuration())
                 .field(courseDTO.getField())
                 .name(courseDTO.getName())
-                .teachers(courseDTO.getTeachers())
                 .build();
     }
 
@@ -26,7 +29,7 @@ public class CourseMapper {
                 .duration(course.getDuration())
                 .field(course.getField())
                 .name(course.getName())
-                .teachers(course.getTeachers())
+                .teachers(course.getTeachers().stream().map(t -> userMapper.fromUser(t.getUser())).collect(Collectors.toSet()))
                 .build();
     }
 
