@@ -1,5 +1,6 @@
-package com.senla.courses.dto;
+package com.senla.courses.mapper;
 
+import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.model.Student;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

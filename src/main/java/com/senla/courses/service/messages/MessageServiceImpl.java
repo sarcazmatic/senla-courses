@@ -5,7 +5,7 @@ import com.senla.courses.dao.StudentDAO;
 import com.senla.courses.dao.TeacherDAO;
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;
-import com.senla.courses.dto.MessageMapper;
+import com.senla.courses.mapper.MessageMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Message;

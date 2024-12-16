@@ -2,7 +2,7 @@ package com.senla.courses.service.users;
 
 import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.UserDTO;
-import com.senla.courses.dto.UserMapper;
+import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.User;

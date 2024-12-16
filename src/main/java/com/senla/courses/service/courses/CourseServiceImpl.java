@@ -3,7 +3,7 @@ package com.senla.courses.service.courses;
 import com.senla.courses.dao.CourseDAO;
 import com.senla.courses.dao.TeacherDAO;
 import com.senla.courses.dto.CourseDTO;
-import com.senla.courses.dto.CourseMapper;
+import com.senla.courses.mapper.CourseMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -61,12 +62,8 @@ public class CourseServiceImpl implements CourseService {
         if (teachers.isEmpty()) {
             throw new EmptyListException("Список преподавателей курса пуст");
         }
-        for (Long i : ids) {
-            Teacher teacher = teachers.stream().filter(t -> t.getId().equals(i)).findFirst()
-                    .orElseThrow(() -> new NotFoundException("Не нашли в списке преподавателей курса преподавателя с id " + i));
-            teachers.remove(teacher);
-        }
-        course.setTeachers(teachers);
+        Set<Teacher> newTeachers = teachers.stream().filter(t -> !ids.contains(t.getId())).collect(Collectors.toSet());
+        course.setTeachers(newTeachers);
         courseDAO.update(course);
         return courseMapper.fromCourse(course);
     }

@@ -3,7 +3,7 @@ package com.senla.courses.service.teachers;
 import com.senla.courses.dao.TeacherDAO;
 import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.UserDTO;
-import com.senla.courses.dto.UserMapper;
+import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
