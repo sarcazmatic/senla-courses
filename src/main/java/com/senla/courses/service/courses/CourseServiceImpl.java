@@ -44,11 +44,9 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         Set<Teacher> teachers = new HashSet<>(course.getTeachers());
-        for (Long i : ids) {
-            Teacher teacher = teacherDAO.find(i)
-                    .orElseThrow(() -> new NotFoundException("Не нашли преподавателя по id " + i));
-            teachers.add(teacher);
-        }
+        Set<Teacher> addTeachers = ids.stream().map(i -> teacherDAO.find(i)
+                .orElseThrow(() -> new NotFoundException("Не нашли преподавателя с  id " + i))).collect(Collectors.toSet());
+        teachers.addAll(addTeachers);
         course.setTeachers(teachers);
         courseDAO.update(course);
         return courseMapper.fromCourse(course);
