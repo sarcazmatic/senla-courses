@@ -1,5 +1,6 @@
-package com.senla.courses.dto;
+package com.senla.courses.mapper;
 
+import com.senla.courses.dto.UserDTO;
 import com.senla.courses.model.User;
 import org.springframework.stereotype.Component;
 
@@ -26,4 +27,27 @@ public class UserMapper {
                 .password(user.getPassword())
                 .build();
     }
+
+    public User updateUser (User user, UserDTO userDTO) {
+        if (userDTO.getDateTimeRegistered() != null) {
+            user.setDateTimeRegistered(userDTO.getDateTimeRegistered());
+        }
+        if (userDTO.getAge() != null) {
+            user.setAge(userDTO.getAge());
+        }
+        if (userDTO.getDescription() != null) {
+            user.setDescription(userDTO.getDescription());
+        }
+        if (userDTO.getEmail() != null) {
+            user.setEmail(userDTO.getEmail());
+        }
+        if (userDTO.getName() != null) {
+            user.setName(userDTO.getName());
+        }
+        if (userDTO.getPassword() != null) {
+            user.setPassword(userDTO.getPassword());
+        }
+        return user;
+    }
+
 }

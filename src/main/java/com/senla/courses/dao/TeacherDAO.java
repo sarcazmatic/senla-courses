@@ -1,7 +1,6 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.model.Teacher;
-import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,13 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class TeacherDAO implements GenericDAO<Teacher, Long> {
 
-    Logger logger = Logger.getLogger("TeacherDAO");
 
     @Override
     public Long save(Teacher entity) {
@@ -33,37 +29,13 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
     }
 
     @Override
-    public Optional<Teacher> update(Teacher entity) {
+    public Teacher update(Teacher entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            User userIn = entity.getUser();
-            Query<Teacher> query = session.createQuery("SELECT t from Teacher t JOIN FETCH t.user " +
-                    "WHERE :name IS NOT NULL AND UPPER(t.user.name) = UPPER(:name) ", Teacher.class);
-            query.setParameter("name", userIn.getName());
-            Teacher teacher = Optional.ofNullable(query.getSingleResult()).orElseThrow(() -> new RuntimeException("Не смогли найти учителя по запросу"));
-            User userOut = teacher.getUser();
-            if (userIn.getDateTimeRegistered() != null) {
-                userOut.setDateTimeRegistered(userIn.getDateTimeRegistered());
-            }
-            if (userIn.getAge() != null) {
-                userOut.setAge(userIn.getAge());
-            }
-            if (userIn.getDescription() != null) {
-                userOut.setDescription(userIn.getDescription());
-            }
-            if (userIn.getEmail() != null) {
-                userOut.setEmail(userIn.getEmail());
-            }
-            if (userIn.getName() != null) {
-                userOut.setName(userIn.getName());
-            }
-            if (userIn.getPassword() != null) {
-                userOut.setPassword(userIn.getPassword());
-            }
-            session.update(teacher);
+            session.update(entity);
             transaction.commit();
-            return Optional.of(teacher);
+            return entity;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -85,7 +57,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
     }
 
     @Override
-    public List<Teacher> findAll(String text, int from, int size) {
+    public List<Teacher> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {

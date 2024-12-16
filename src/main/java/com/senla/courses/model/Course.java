@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Duration;
 import java.util.Set;
 
 @Entity
@@ -33,7 +32,7 @@ public class Course {
     private String description;
     private String field;
     private Integer complexity;
-    private Duration duration;
+    private Integer duration;
 
     @ManyToMany
     @JoinTable(name = "teachers_courses",

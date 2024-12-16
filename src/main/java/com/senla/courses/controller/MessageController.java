@@ -33,8 +33,8 @@ public class MessageController {
         return messageService.sendMessage(messageDTO, from, to);
     }
 
-    @PutMapping("/{id}/update")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public MessageFullDTO editMessage(@RequestBody MessageDTO messageDTO,
                             @PathVariable Long id) {
         return messageService.updateMessage(messageDTO, id);
@@ -50,7 +50,7 @@ public class MessageController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MessageFullDTO> getMessage(@RequestParam (required = false) String text,
+    public List<MessageFullDTO> getMessageByText(@RequestParam (required = false) String text,
                                            @RequestParam (required = false, defaultValue = "1") int from,
                                            @RequestParam (required = false, defaultValue = "10") int size) {
         return messageService.findMessagesByText(text, from, size);

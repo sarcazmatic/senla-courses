@@ -1,5 +1,7 @@
-package com.senla.courses.dto;
+package com.senla.courses.mapper;
 
+import com.senla.courses.dto.MessageDTO;
+import com.senla.courses.dto.MessageFullDTO;
 import com.senla.courses.model.Message;
 import org.springframework.stereotype.Component;
 

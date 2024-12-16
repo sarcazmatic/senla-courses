@@ -8,11 +8,11 @@ public interface GenericDAO<T, PK extends Serializable> {
 
     PK save(T entity);
 
-    Optional<T> update(T entity);
+    T update(T entity);
 
     Optional<T> find(PK id);
 
-    List<T> findAll(String text, int from, int size);
+    List<T> findAllByText(String text, int from, int size);
 
     void deleteById(PK id);
 

@@ -31,14 +31,15 @@ public class TeacherController {
         return teacherService.registerTeacher(userDTO);
     }
 
-    @PutMapping("/update")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO updateUser(@RequestBody UserDTO userDTO) {
-        return teacherService.updateTeacher(userDTO);
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO updateUser(@RequestBody UserDTO userDTO,
+                              @PathVariable Long id) {
+        return teacherService.updateTeacher(userDTO, id);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
@@ -46,13 +47,13 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDTO findUser(@PathVariable("id") Long id) {
-        return teacherService.findTeacher(id);
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO findById(@PathVariable("id") Long id) {
+        return teacherService.findById(id);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteTeacher(@PathVariable("id") Long id) {
         teacherService.deleteTeacher(id);
     }
