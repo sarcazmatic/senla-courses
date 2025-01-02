@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+
+@Builder
 @Getter
 @Setter
-@Builder
-public class TaskDTO {
+public class LiteratureDTO {
 
     private String name;
-    private String body;
+    private String author;
     private String url;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ModuleDTO module;

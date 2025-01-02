@@ -1,7 +1,9 @@
 package com.senla.courses.controller.admin;
 
+import com.senla.courses.dto.LiteratureDTO;
 import com.senla.courses.dto.ModuleDTO;
 import com.senla.courses.dto.TaskDTO;
+import com.senla.courses.service.literature.LiteratureService;
 import com.senla.courses.service.module.ModuleService;
 import com.senla.courses.service.tasks.TaskService;
 import jakarta.validation.Valid;
@@ -27,6 +29,7 @@ public class AdminModuleController {
 
     private final ModuleService moduleService;
     private final TaskService taskService;
+    private final LiteratureService literatureService;
 
 
     @PostMapping("/add")
@@ -63,6 +66,8 @@ public class AdminModuleController {
         moduleService.deleteModule(id);
     }
 
+    //ниже таски
+
     @PostMapping("/{id}/task")
     @ResponseStatus(HttpStatus.CREATED)
     public Long addTask(@RequestBody @Valid TaskDTO taskDTO, @PathVariable(name = "id") Long moduleId) {
@@ -92,7 +97,7 @@ public class AdminModuleController {
 
     @GetMapping("/{id}/task")
     @ResponseStatus(HttpStatus.OK)
-    public List<TaskDTO> findByModuleId(@PathVariable(name = "id") Long moduleId,
+    public List<TaskDTO> findTaskByModuleId(@PathVariable(name = "id") Long moduleId,
                                         @RequestParam(required = false, defaultValue = "1") int from,
                                         @RequestParam(required = false, defaultValue = "10") int size) {
         return taskService.findByModuleId(moduleId, from, size);
@@ -102,6 +107,49 @@ public class AdminModuleController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteTask(@PathVariable Long taskId) {
         taskService.delete(taskId);
+    }
+
+    //ниже литература
+
+    @PostMapping("/{id}/lit")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Long addLit(@RequestBody @Valid LiteratureDTO literatureDTO, @PathVariable(name = "id") Long moduleId) {
+        return literatureService.add(literatureDTO, moduleId);
+    }
+
+    @PutMapping("/lit/{litId}")
+    @ResponseStatus(HttpStatus.OK)
+    public LiteratureDTO editLit(@RequestBody @Valid LiteratureDTO literatureDTO,
+                            @PathVariable Long litId) {
+        return literatureService.edit(literatureDTO, litId);
+    }
+
+    @GetMapping("/lit/{litId}")
+    @ResponseStatus(HttpStatus.OK)
+    public LiteratureDTO findLitById(@PathVariable Long litId) {
+        return literatureService.findById(litId);
+    }
+
+    @GetMapping("/lit")
+    @ResponseStatus(HttpStatus.OK)
+    public List<LiteratureDTO> findLitByText(@RequestParam(required = false, name = "text") String text,
+                                        @RequestParam(required = false, defaultValue = "1") int from,
+                                        @RequestParam(required = false, defaultValue = "10") int size) {
+        return literatureService.findByText(text, from, size);
+    }
+
+    @GetMapping("/{id}/lit")
+    @ResponseStatus(HttpStatus.OK)
+    public List<LiteratureDTO> findLitByModuleId(@PathVariable(name = "id") Long moduleId,
+                                        @RequestParam(required = false, defaultValue = "1") int from,
+                                        @RequestParam(required = false, defaultValue = "10") int size) {
+        return literatureService.findByModuleId(moduleId, from, size);
+    }
+
+    @DeleteMapping("/lit/{litId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteLit(@PathVariable Long litId) {
+        literatureService.delete(litId);
     }
 
 }
