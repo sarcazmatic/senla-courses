@@ -4,7 +4,6 @@ import com.senla.courses.dto.FileDTO;
 import com.senla.courses.dto.LiteratureDTO;
 import com.senla.courses.dto.ModuleDTO;
 import com.senla.courses.dto.TaskDTO;
-import com.senla.courses.model.File;
 import com.senla.courses.service.files.FileService;
 import com.senla.courses.service.literature.LiteratureService;
 import com.senla.courses.service.module.ModuleService;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 import java.util.Arrays;
