@@ -8,11 +8,11 @@ public interface TeacherService {
 
     Long registerTeacher(UserDTO userDTO);
 
-    UserDTO updateTeacher(UserDTO userDTO);
+    UserDTO updateTeacher(UserDTO userDTO, Long id);
 
-    UserDTO findTeacher(Long id);
+    UserDTO findById(Long id);
 
-    List<UserDTO> findTeachers(String name, int from, int size);
+    List<UserDTO> findTeachersByName(String name, int from, int size);
 
     void deleteTeacher(Long id);
 }

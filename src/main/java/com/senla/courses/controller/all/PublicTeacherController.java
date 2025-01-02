@@ -1,7 +1,7 @@
 package com.senla.courses.controller.all;
 
-import com.senla.courses.dto.user.UserDTO;
-import com.senla.courses.service.users.UserService;
+import com.senla.courses.dto.UserDTO;
+import com.senla.courses.service.teachers.TeacherService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,42 +19,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/user")
+@RequestMapping("/all/teacher")
 @AllArgsConstructor
-public class UserController {
+public class TeacherController {
 
-    private final UserService userService;
-
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Long registerUser(@RequestBody @Valid UserDTO userDTO) {
-        return userService.registerUser(userDTO);
-    }
-
-    @PutMapping("/update")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO updateUser(@RequestBody UserDTO userDTO) {
-        return userService.updateUser(userDTO);
-    }
+    private final TeacherService teacherService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
-        return userService.findUsers(name, from, size);
+        return teacherService.findTeachersByName(name, from, size);
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public UserDTO findUser(@PathVariable("id") Long id) {
-        return userService.findUser(id);
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
+        return teacherService.findById(id);
     }
 
 }

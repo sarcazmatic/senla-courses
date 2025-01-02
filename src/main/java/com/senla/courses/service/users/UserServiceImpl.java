@@ -1,8 +1,10 @@
 package com.senla.courses.service.users;
 
 import com.senla.courses.dao.UserDAO;
-import com.senla.courses.dto.user.UserDTO;
-import com.senla.courses.dto.user.UserMapper;
+import com.senla.courses.dto.UserDTO;
+import com.senla.courses.mapper.UserMapper;
+import com.senla.courses.exception.EmptyListException;
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,20 +26,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(UserDTO userDTO) {
-        User user = userDao.update(userMapper.fromUserDTO(userDTO));
+    public UserDTO updateUser(UserDTO userDTO, Long id) {
+        User user = userDao.find(id)
+                .orElseThrow(() -> new NotFoundException("Не нашли пользователя по id " + id));
+        User userUpd = userMapper.updateUser(user, userDTO);
+        return userMapper.fromUser(userDao.update(userUpd));
+    }
+
+    @Override
+    public UserDTO findById(Long id) {
+        User user = userDao.find(id)
+                .orElseThrow(() -> new NotFoundException("Не нашли пользователя по id " + id));
         return userMapper.fromUser(user);
     }
 
     @Override
-    public UserDTO findUser(Long id) {
-        User user = userDao.find(id);
-        return userMapper.fromUser(user);
-    }
-
-    @Override
-    public List<UserDTO> findUsers(String name, int from, int size) {
-        return userDao.findAll(name, from, size).stream().map(userMapper::fromUser).toList();
+    public List<UserDTO> findUsersByName(String name, int from, int size) {
+        List<UserDTO> userDTOList = userDao.findAllByText(name, from, size).stream().map(userMapper::fromUser).toList();
+        if (userDTOList.isEmpty()) {
+            throw new EmptyListException("Список пуст");
+        }
+        return userDTOList;
     }
 
     @Override

@@ -8,11 +8,11 @@ public interface UserService {
 
     Long registerUser(UserDTO userDTO);
 
-    UserDTO updateUser(UserDTO userDTO);
+    UserDTO updateUser(UserDTO userDTO, Long id);
 
-    UserDTO findUser(Long id);
+    UserDTO findById(Long id);
 
-    List<UserDTO> findUsers(String name, int from, int size);
+    List<UserDTO> findUsersByName(String name, int from, int size);
 
     void deleteUser(Long id);
 }

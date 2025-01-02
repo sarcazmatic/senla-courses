@@ -9,11 +9,11 @@ public interface MessageService {
 
     Long sendMessage(MessageDTO messageDTO, Long from, Long to);
 
-    MessageFullDTO getMessage(Long id);
+    MessageFullDTO findById(Long id);
 
     List<MessageFullDTO> getMessagesBetween(List<Long> betweenIds, int from, int size);
 
-    List<MessageFullDTO> getMessages(String text, int from, int size);
+    List<MessageFullDTO> findMessagesByText(String text, int from, int size);
 
     MessageFullDTO updateMessage(MessageDTO messageDTO, Long id);
 

@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CourseDAO implements GenericDAO<Course, Long> {
@@ -32,29 +33,9 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Course> query = session.createQuery("SELECT c from Course c " +
-                    "WHERE :name IS NOT NULL AND UPPER(c.name) = UPPER(:name) ", Course.class);
-            query.setParameter("name", entity.getName());
-            Course course = query.getSingleResult();
-            System.out.println(course.getName());
-            if (entity.getComplexity() != null) {
-                course.setComplexity(entity.getComplexity());
-            }
-            if (entity.getDuration() != null) {
-                course.setDuration(entity.getDuration());
-            }
-            if (entity.getDescription() != null) {
-                course.setDescription(entity.getDescription());
-            }
-            if (entity.getField() != null) {
-                course.setField(entity.getField());
-            }
-            if (entity.getName() != null) {
-                course.setName(entity.getName());
-            }
-            session.update(course);
+            session.update(entity);
             transaction.commit();
-            return course;
+            return entity;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить курс");
@@ -64,18 +45,11 @@ public class CourseDAO implements GenericDAO<Course, Long> {
     }
 
     @Override
-    public Course find(Long id) {
+    public Optional<Course> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Course> query = session.createQuery("SELECT c from Course c " +
-                    "LEFT JOIN Module m ON c.id = m.course.id " +
-                    "WHERE c.id = :id", Course.class);
-            query.setParameter("id", id);
-            Course course = query.getSingleResult();
-            if (course == null) {
-                throw new NotFoundException("Курса с id " + id + "не найдено");
-            }
+            Optional<Course> course = Optional.ofNullable(session.get(Course.class, id));
             transaction.commit();
             return course;
         } catch (Exception e) {
@@ -84,8 +58,24 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         }
     }
 
+    public List<Course> findAll(int from, int size) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<Course> query = session.createQuery("SELECT c from Course c", Course.class);
+            query.setFirstResult(from - 1);
+            query.setMaxResults(size);
+            List<Course> courses = query.list();
+            transaction.commit();
+            return courses;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не нашли пользователей");
+        }
+    }
+
     @Override
-    public List<Course> findAll(String text, int from, int size) {
+    public List<Course> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -112,12 +102,9 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Course course = session.get(Course.class, id);
-            if (course != null) {
-                session.delete(course);
-            } else {
-                throw new NotFoundException("Не удалось найти курс по id " + id);
-            }
+            Course course = Optional.of(session.get(Course.class, id))
+                    .orElseThrow(() -> new RuntimeException("Не нашли курс на удаление"));
+            session.delete(course);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();

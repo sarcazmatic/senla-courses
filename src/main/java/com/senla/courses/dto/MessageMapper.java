@@ -1,4 +1,4 @@
-package com.senla.courses.dto.message;
+package com.senla.courses.dto;
 
 import com.senla.courses.model.Message;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,7 @@
 package com.senla.courses.service.students;
 
-import com.senla.courses.dto.user.UserDTO;
+import com.senla.courses.dto.StudentDTO;
+import com.senla.courses.dto.UserDTO;
 
 import java.util.List;
 
@@ -8,11 +9,11 @@ public interface StudentService {
 
     Long registerStudent(UserDTO userDTO);
 
-    UserDTO updateStudent(UserDTO userDTO);
+    StudentDTO updateStudent(StudentDTO studentDTO, Long id);
 
-    UserDTO findStudent(Long id);
+    StudentDTO findById(Long id);
 
-    List<UserDTO> findStudents(String name, int from, int size);
+    List<UserDTO> findStudentsByName(String name, int from, int size);
 
     void deleteStudent(Long id);
 }

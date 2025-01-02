@@ -1,4 +1,4 @@
 package com.senla.courses.controller.all;
 
-public class TaskController {
+public class AdminFileController {
 }

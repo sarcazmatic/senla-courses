@@ -1,4 +1,4 @@
-package com.senla.courses.dto.user;
+package com.senla.courses.dto;
 
 import com.senla.courses.model.User;
 import org.springframework.stereotype.Component;
