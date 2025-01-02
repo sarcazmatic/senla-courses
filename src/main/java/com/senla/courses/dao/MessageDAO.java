@@ -1,5 +1,6 @@
 package com.senla.courses.dao;
 
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Message;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
@@ -9,13 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class MessageDAO implements GenericDAO<Message, Long> {
-
-    Logger logger = Logger.getLogger("MessageDAO");
 
     @Override
     public Long save(Message entity) {
@@ -32,14 +29,12 @@ public class MessageDAO implements GenericDAO<Message, Long> {
     }
 
     @Override
-    public Optional<Message> update(Message entity) {
+    public Message update(Message entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Long pk = (long) session.save(entity);
-            Optional<Message> message = Optional.ofNullable(session.get(Message.class, pk));
-            transaction.commit();
-            return message;
+            session.update(entity);
+            return entity;
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");
@@ -61,7 +56,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
     }
 
     @Override
-    public List<Message> findAll(String text, int from, int size) {
+    public List<Message> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -75,7 +70,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
             return messages;
         } catch (RuntimeException e) {
             transaction.rollback();
-            throw new RuntimeException("Runtime исключение");
+            throw new NotFoundException("Не удалось найти пользователей");
         }
     }
 
@@ -94,7 +89,6 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         } finally {
             session.clear();
         }
-
     }
 
     public List<Message> findMessagesBetween(Long userOne, Long userTwo, int from, int size) {

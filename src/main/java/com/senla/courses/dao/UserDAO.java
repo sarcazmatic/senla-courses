@@ -1,5 +1,6 @@
 package com.senla.courses.dao;
 
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
@@ -9,13 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class UserDAO implements GenericDAO<User, Long> {
-
-    Logger logger = Logger.getLogger("UserDAO");
 
     @Override
     public Long save(User entity) {
@@ -32,36 +29,13 @@ public class UserDAO implements GenericDAO<User, Long> {
     }
 
     @Override
-    public Optional<User> update(User entity) {
+    public User update(User entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<User> query = session.createQuery("SELECT u from User u " +
-                    "WHERE :name IS NOT NULL AND UPPER(u.name) = UPPER(:name) ", User.class);
-            query.setParameter("name", entity.getName());
-            User user = Optional.ofNullable(query.getSingleResult())
-                    .orElseThrow(() -> new RuntimeException("Не нашли пользователя"));
-            if (entity.getDateTimeRegistered() != null) {
-                user.setDateTimeRegistered(entity.getDateTimeRegistered());
-            }
-            if (entity.getAge() != null) {
-                user.setAge(entity.getAge());
-            }
-            if (entity.getDescription() != null) {
-                user.setDescription(entity.getDescription());
-            }
-            if (entity.getEmail() != null) {
-                user.setEmail(entity.getEmail());
-            }
-            if (entity.getName() != null) {
-                user.setName(entity.getName());
-            }
-            if (entity.getPassword() != null) {
-                user.setPassword(entity.getPassword());
-            }
-            session.update(user);
+            session.update(entity);
             transaction.commit();
-            return Optional.of(user);
+            return entity;
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли обновить пользователя");
@@ -83,7 +57,7 @@ public class UserDAO implements GenericDAO<User, Long> {
     }
 
     @Override
-    public List<User> findAll(String text, int from, int size) {
+    public List<User> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {

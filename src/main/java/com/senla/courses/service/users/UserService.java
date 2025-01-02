@@ -9,9 +9,9 @@ public interface UserService {
 
     Long registerUser(UserDTO userDTO);
 
-    UserDTO updateUser(UserDTO userDTO);
+    UserDTO updateUser(UserDTO userDTO, Long id);
 
-    UserDTO findUser(Long id);
+    UserDTO findById(Long id);
 
     List<UserDTO> findUsersByName(String name, int from, int size);
 

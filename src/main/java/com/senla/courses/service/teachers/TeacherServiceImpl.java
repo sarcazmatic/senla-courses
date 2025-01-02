@@ -3,7 +3,8 @@ package com.senla.courses.service.teachers;
 import com.senla.courses.dao.TeacherDAO;
 import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.UserDTO;
-import com.senla.courses.dto.UserMapper;
+import com.senla.courses.mapper.UserMapper;
+import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -37,28 +37,31 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherDAO.save(teacher);
     }
 
-    public UserDTO updateTeacher(UserDTO userDTO) {
-        Teacher teacherIn = new Teacher();
-        teacherIn.setUser(userMapper.fromUserDTO(userDTO));
-        Teacher teacherOut = teacherDAO.update(teacherIn)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
-        return userMapper.fromUser(teacherOut.getUser());
+    @Override
+    public UserDTO updateTeacher(UserDTO userDTO, Long id) {
+        Teacher teacherUpd = teacherDAO.find(id)
+                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя по id " + id));
+        User user = userMapper.updateUser(teacherUpd.getUser(), userDTO);
+        teacherUpd.setUser(user);
+        teacherDAO.update(teacherUpd);
+        return userMapper.fromUser(teacherUpd.getUser());
     }
 
     @Override
-    public UserDTO findTeacher(Long id) {
-        Teacher teacher = teacherDAO.find(id).orElseThrow(() -> new RuntimeException("Не смогли найти учителя"));
+    public UserDTO findById(Long id) {
+        Teacher teacher = teacherDAO.find(id)
+                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя по id " + id));
         return userMapper.fromUser(teacher.getUser());
     }
 
     @Override
     public List<UserDTO> findTeachersByName(String name, int from, int size) {
-        List<UserDTO> userDTOList = teacherDAO.findAll(name, from, size)
+        List<UserDTO> userDTOList = teacherDAO.findAllByText(name, from, size)
                 .stream()
                 .map(t -> userMapper.fromUser(t.getUser()))
                 .toList();
         if (userDTOList.isEmpty()) {
-            throw new RuntimeException("Список учителей пуст");
+            throw new EmptyListException("Список учителей пуст");
         }
         return userDTOList;
     }
