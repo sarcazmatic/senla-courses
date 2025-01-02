@@ -15,7 +15,9 @@ import com.senla.courses.model.Task;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -23,17 +25,29 @@ public class ModuleServiceImpl implements ModuleService {
 
     private final CourseDAO courseDAO;
     private final ModuleDAO moduleDAO;
-    private final TaskDAO taskDAO;
     private final ModuleMapper moduleMapper;
-    private final TaskMapper taskMapper;
 
 
     public Long addModule(ModuleDTO moduleDTO) {
         Module module = moduleMapper.fromModuleDTO(moduleDTO);
         Course course = courseDAO.find(moduleDTO.getCourseId()).orElseThrow(()
-                        -> new NotFoundException("На нашли курса по id " + moduleDTO.getCourseId()));
+                -> new NotFoundException("На нашли курса по id " + moduleDTO.getCourseId()));
         module.setCourse(course);
-        return moduleDAO.save(module);
+        Long pk = moduleDAO.save(module);
+        Set<Module> courseModules;
+        try {
+            courseModules = course.getModules();
+        } catch (Exception e) {
+            courseModules = new HashSet<>();
+        }
+        Set<Module> newCourseModules = new HashSet<>();
+        newCourseModules.add(module);
+        if (!courseModules.isEmpty()) {
+            newCourseModules.addAll(courseModules);
+        }
+        course.setModules(newCourseModules);
+        courseDAO.update(course);
+        return pk;
     }
 
     @Override

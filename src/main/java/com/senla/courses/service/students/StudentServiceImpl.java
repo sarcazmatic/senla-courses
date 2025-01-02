@@ -3,10 +3,12 @@ package com.senla.courses.service.students;
 import com.senla.courses.dao.CourseDAO;
 import com.senla.courses.dao.StudentDAO;
 import com.senla.courses.dao.UserDAO;
-import com.senla.courses.dto.StudentCoursesDAO;
+import com.senla.courses.dao.StudentCoursesDAO;
 import com.senla.courses.dto.StudentDTO;
+import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.mapper.StudentMapper;
 import com.senla.courses.dto.UserDTO;
+import com.senla.courses.mapper.StudentsCoursesMapper;
 import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
@@ -15,6 +17,7 @@ import com.senla.courses.model.Student;
 import com.senla.courses.model.StudentsCourses;
 import com.senla.courses.model.StudentsCoursesPK;
 import com.senla.courses.model.User;
+import com.senla.courses.util.enums.StudentCourseRequestEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,7 @@ public class StudentServiceImpl implements StudentService {
     private final UserDAO userDAO;
     private final CourseDAO courseDAO;
     private final StudentCoursesDAO studentCoursesDAO;
+    private final StudentsCoursesMapper studentsCoursesMapper;
 
 
     @Override
@@ -95,15 +99,15 @@ public class StudentServiceImpl implements StudentService {
         StudentsCourses studentsCourses = StudentsCourses.builder()
                 .course(course)
                 .student(student)
-                .courseStarted(false)
+                .courseStatus(StudentCourseRequestEnum.REQUESTED)
                 .build();
         studentsCourses.setId(studentCoursesPK);
         return studentCoursesDAO.save(studentsCourses);
     }
 
     @Override
-    public StudentsCourses findStudentsCoursesById(Long studentId, Long courseId) {
-        return studentCoursesDAO.findByIds(studentId, courseId);
+    public StudentsCoursesDTO findStudentsCoursesById(Long studentId, Long courseId) {
+        return studentsCoursesMapper.fromStudentCourses(studentCoursesDAO.findByIds(studentId, courseId));
     }
 
 }

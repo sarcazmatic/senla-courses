@@ -25,8 +25,6 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли создать модуль");
-        } finally {
-            session.clear();
         }
     }
 

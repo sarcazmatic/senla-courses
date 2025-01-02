@@ -1,6 +1,7 @@
 package com.senla.courses.service.students;
 
 import com.senla.courses.dto.StudentDTO;
+import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.model.StudentsCourses;
 
@@ -20,7 +21,7 @@ public interface StudentService {
 
     Long registerCourseRequest(Long studentId, Long courseId);
 
-    StudentsCourses findStudentsCoursesById(Long studentId, Long courseId);
+    StudentsCoursesDTO findStudentsCoursesById(Long studentId, Long courseId);
 
 
 }

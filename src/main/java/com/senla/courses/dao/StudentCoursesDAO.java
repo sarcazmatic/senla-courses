@@ -1,4 +1,4 @@
-package com.senla.courses.dto;
+package com.senla.courses.dao;
 
 import com.senla.courses.dao.GenericDAO;
 import com.senla.courses.model.StudentsCourses;

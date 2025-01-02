@@ -1,5 +1,6 @@
 package com.senla.courses.controller.student;
 
+import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.model.StudentsCourses;
 import com.senla.courses.service.students.StudentService;
@@ -28,8 +29,8 @@ public class StudentCourseController {
 
     @GetMapping("/{studId}/{courseId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public StudentsCourses findCourseStudents(@PathVariable Long studId,
-                                              @PathVariable Long courseId) {
+    public StudentsCoursesDTO findCourseStudents(@PathVariable Long studId,
+                                                 @PathVariable Long courseId) {
         return studentService.findStudentsCoursesById(studId, courseId);
     }
 
