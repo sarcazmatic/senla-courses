@@ -22,5 +22,6 @@
         <mapping class="com.senla.courses.model.Task" />
         <mapping class="com.senla.courses.model.Literature" />
         <mapping class="com.senla.courses.model.File" />
+        <mapping class="com.senla.courses.model.StudentsCourses" />
     </session-factory>
 </hibernate-configuration>

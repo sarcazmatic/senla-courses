@@ -86,12 +86,13 @@ CREATE TABLE IF NOT EXISTS teachers_courses
 
 CREATE TABLE IF NOT EXISTS students_courses
 (
-    student_id     BIGINT   NOT NULL references teachers (id),
+    student_id     BIGINT   NOT NULL references students (id),
     course_id      BIGINT   NOT NULL references courses (id),
-    rating         DOUBLE   NOT NULL,
-    start_date     DATETIME NOT NULL,
-    end_date       DATETIME NOT NULL,
-    current_module INTEGER  NOT NULL,
+    rating         DOUBLE,
+    start_date     DATETIME,
+    end_date       DATETIME,
+    current_module INTEGER,
+    course_started BOOLEAN  NOT NULL,
     CONSTRAINT pk_students_courses PRIMARY KEY (student_id, course_id)
 );
 

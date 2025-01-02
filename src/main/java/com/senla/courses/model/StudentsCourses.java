@@ -3,6 +3,8 @@ package com.senla.courses.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
@@ -25,17 +27,18 @@ import java.time.LocalDateTime;
 public class StudentsCourses {
 
     @EmbeddedId
-    private StudentsCoursesPK pk;
+    private StudentsCoursesPK id;
 
     @OneToOne
-    @MapsId("studentId") //насколько я понял, тут мы берем Id из StudentCoursesPK
-    @JoinColumn(name = "student_id")
+    @MapsId("studentId")
+    @JoinColumn(name = "student_id", insertable = false, updatable = false)
     private Student student;
+
     @OneToOne
     @MapsId("courseId")
     @JoinColumn(name = "course_id")
     private Course course;
-    private String description;
+
     private Double rating;
     @Column(name = "start_date")
     private LocalDateTime startDate;
@@ -43,5 +46,6 @@ public class StudentsCourses {
     private LocalDateTime endDate;
     @Column(name = "current_module")
     private Integer currentModule;
-
+    @Column(name = "course_started")
+    private Boolean courseStarted;
 }

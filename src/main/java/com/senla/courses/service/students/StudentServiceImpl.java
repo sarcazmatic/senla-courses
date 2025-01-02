@@ -1,14 +1,19 @@
 package com.senla.courses.service.students;
 
+import com.senla.courses.dao.CourseDAO;
 import com.senla.courses.dao.StudentDAO;
 import com.senla.courses.dao.UserDAO;
+import com.senla.courses.dto.StudentCoursesDAO;
 import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.mapper.StudentMapper;
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
+import com.senla.courses.model.Course;
 import com.senla.courses.model.Student;
+import com.senla.courses.model.StudentsCourses;
+import com.senla.courses.model.StudentsCoursesPK;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,9 @@ public class StudentServiceImpl implements StudentService {
     private final StudentMapper studentMapper;
     private final StudentDAO studentDAO;
     private final UserDAO userDAO;
+    private final CourseDAO courseDAO;
+    private final StudentCoursesDAO studentCoursesDAO;
+
 
     @Override
     public Long registerStudent(UserDTO userDTO) {
@@ -75,6 +83,27 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteStudent(Long id) {
         studentDAO.deleteById(id);
+    }
+
+    @Override
+    public Long registerCourseRequest(Long studentId, Long courseId) {
+        Course course = courseDAO.find(courseId).orElseThrow(()
+                -> new NotFoundException("Не нашли курс по id " + courseId));
+        Student student = studentDAO.find(studentId).orElseThrow(()
+                -> new NotFoundException("Не нашли студента по id " + studentId));
+        StudentsCoursesPK studentCoursesPK = new StudentsCoursesPK(student.getId(), course.getId());
+        StudentsCourses studentsCourses = StudentsCourses.builder()
+                .course(course)
+                .student(student)
+                .courseStarted(false)
+                .build();
+        studentsCourses.setId(studentCoursesPK);
+        return studentCoursesDAO.save(studentsCourses);
+    }
+
+    @Override
+    public StudentsCourses findStudentsCoursesById(Long studentId, Long courseId) {
+        return studentCoursesDAO.findByIds(studentId, courseId);
     }
 
 }
