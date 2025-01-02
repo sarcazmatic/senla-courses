@@ -1,7 +1,7 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.exception.NotFoundException;
-import com.senla.courses.model.Module;
+import com.senla.courses.model.Task;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ModuleDAO implements GenericDAO<Module, Long> {
+public class TaskDAO implements GenericDAO<Task, Long> {
 
     @Override
-    public Long save(Module entity) {
+    public Long save(Task entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -24,14 +24,14 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
             return pk;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли создать модуль");
+            throw new RuntimeException("Не смогли создать задачу");
         } finally {
             session.clear();
         }
     }
 
     @Override
-    public Module update(Module entity) {
+    public Task update(Task entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -40,49 +40,66 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
             return entity;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли обновить модуль");
+            throw new RuntimeException("Не смогли обновить задачу");
         } finally {
             session.clear();
         }
     }
 
     @Override
-    public Optional<Module> find(Long id) {
+    public Optional<Task> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Module module = session.get(Module.class, id);
-            if (module == null) {
-                throw new NotFoundException("Модуль с id " + id + "не найден");
-            }
+            Optional<Task> task = Optional.ofNullable(session.get(Task.class, id));
             transaction.commit();
-            return Optional.of(module);
+            return task;
         } catch (Exception e) {
             transaction.rollback();
-            throw new NotFoundException("Не удалось найти модуль по id " + id);
+            throw new NotFoundException("Не удалось найти задачу по id " + id);
         }
     }
 
     @Override
-    public List<Module> findAllByText(String text, int from, int size) {
+    public List<Task> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Module> query = session.createQuery("SELECT m from Module m " +
+            Query<Task> query = session.createQuery("SELECT t from Task t " +
                     "WHERE ((:text IS NULL) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(m.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
+                    "AND UPPER(t.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(m.description) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Module.class);
+                    "AND UPPER(t.body) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Task.class);
             query.setParameter("text", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
-            List<Module> modules = query.list();
+            List<Task> tasks = query.list();
             transaction.commit();
-            return modules;
+            return tasks;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
+            throw new RuntimeException("Не нашли задач по тексту");
+        }
+    }
+
+    public List<Task> findAllByModuleId(Long moduleId, int from, int size) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<Task> query = session.createQuery("SELECT t from Task t JOIN FETCH t.module " +
+                    "WHERE (:moduleId IS NULL) " +
+                    "OR (:moduleId IS NOT NULL " +
+                    "AND (t.module.id = :moduleId))", Task.class);
+            query.setParameter("moduleId", moduleId);
+            query.setFirstResult(from - 1);
+            query.setMaxResults(size);
+            List<Task> tasks = query.list();
+            transaction.commit();
+            return tasks;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не нашли задач по тексту");
         }
     }
 
@@ -91,16 +108,13 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Module module = session.get(Module.class, id);
-            if (module != null) {
-                session.delete(module);
-            } else {
-                throw new NotFoundException("Не удалось найти курс по id " + id);
-            }
+            Task task = Optional.of(session.get(Task.class, id)).orElseThrow(()
+                    -> new NotFoundException("Не удалось найти задачу"));
+            session.delete(task);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не удалось удалить пользователя");
+            throw new RuntimeException("Не удалось удалить задачу");
         } finally {
             session.clear();
         }

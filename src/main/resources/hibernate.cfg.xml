@@ -19,5 +19,6 @@
         <mapping class="com.senla.courses.model.Course" />
         <mapping class="com.senla.courses.model.Module" />
         <mapping class="com.senla.courses.model.Message" />
+        <mapping class="com.senla.courses.model.Task" />
     </session-factory>
 </hibernate-configuration>

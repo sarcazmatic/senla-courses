@@ -2,9 +2,11 @@ package com.senla.courses.mapper;
 
 import com.senla.courses.dto.ModuleDTO;
 import com.senla.courses.model.Module;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ModuleMapper {
 
     public Module fromModuleDTO(ModuleDTO moduleDTO) {
@@ -23,6 +25,20 @@ public class ModuleMapper {
                 .courseName(module.getCourse().getName())
                 .name(module.getName())
                 .build();
+    }
+
+
+    public Module updateModule(Module module, ModuleDTO moduleDTO) {
+        if (moduleDTO.getPlaceInCourse() != null) {
+            module.setPlaceInCourse(moduleDTO.getPlaceInCourse());
+        }
+        if (moduleDTO.getDescription() != null) {
+            module.setDescription(moduleDTO.getDescription());
+        }
+        if (moduleDTO.getName() != null) {
+            module.setName(moduleDTO.getName());
+        }
+        return module;
     }
 
 }
