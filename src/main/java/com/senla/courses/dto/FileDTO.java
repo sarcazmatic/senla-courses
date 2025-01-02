@@ -5,14 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
-public class LiteratureDTO {
+@Builder
+public class FileDTO {
 
     private String name;
-    private String author;
+    private byte[] content;
     private String url;
+    private String contentType;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ModuleDTO module;
 
