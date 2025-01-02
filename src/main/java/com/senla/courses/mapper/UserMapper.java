@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/com/senla/courses/dto/user/UserMapper.java
-package com.senla.courses.dto.user;
-========
 package com.senla.courses.mapper;
->>>>>>>> main:src/main/java/com/senla/courses/mapper/UserMapper.java
 
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.model.User;

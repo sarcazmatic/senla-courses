@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/com/senla/courses/dto/message/MessageMapper.java
-package com.senla.courses.dto.message;
-========
 package com.senla.courses.mapper;
->>>>>>>> main:src/main/java/com/senla/courses/mapper/MessageMapper.java
 
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;

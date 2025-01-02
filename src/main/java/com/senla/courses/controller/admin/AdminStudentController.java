@@ -1,6 +1,7 @@
 package com.senla.courses.controller.admin;
 
-import com.senla.courses.dto.user.UserDTO;
+import com.senla.courses.dto.StudentDTO;
+import com.senla.courses.dto.UserDTO;
 import com.senla.courses.service.students.StudentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,29 +32,30 @@ public class AdminStudentController {
         return studentService.registerStudent(userDTO);
     }
 
-    @PutMapping("/update")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO updateStudent(@RequestBody UserDTO userDTO) {
-        return studentService.updateStudent(userDTO);
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public StudentDTO updateStudent(@RequestBody StudentDTO studentDTO,
+                                    @PathVariable Long id) {
+        return studentService.updateStudent(studentDTO, id);
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public UserDTO findStudent(@PathVariable("id") Long id) {
-        return studentService.findStudent(id);
+    @ResponseStatus(HttpStatus.OK)
+    public StudentDTO findStudent(@PathVariable("id") Long id) {
+        return studentService.findById(id);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findStudents(@RequestParam(required = false, name = "text") String text,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
-        return studentService.findStudents(text, from, size);
+        return studentService.findStudentsByName(text, from, size);
 
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteStudent(@PathVariable("id") Long id) {
         studentService.deleteStudent(id);
     }

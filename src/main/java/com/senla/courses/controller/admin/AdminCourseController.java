@@ -1,6 +1,6 @@
 package com.senla.courses.controller.admin;
 
-import com.senla.courses.dto.course.CourseDTO;
+import com.senla.courses.dto.CourseDTO;
 import com.senla.courses.service.courses.CourseService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

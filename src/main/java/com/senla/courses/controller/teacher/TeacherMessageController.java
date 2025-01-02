@@ -1,7 +1,7 @@
 package com.senla.courses.controller.teacher;
 
-import com.senla.courses.dto.message.MessageDTO;
-import com.senla.courses.dto.message.MessageFullDTO;
+import com.senla.courses.dto.MessageDTO;
+import com.senla.courses.dto.MessageFullDTO;
 import com.senla.courses.service.messages.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/admin/message")
+@RequestMapping("/teacher/message")
 @RequiredArgsConstructor
 public class TeacherMessageController {
 
@@ -34,7 +34,7 @@ public class TeacherMessageController {
     }
 
     @PutMapping("/{id}/update")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public MessageFullDTO editMessage(@RequestBody MessageDTO messageDTO,
                             @PathVariable Long id) {
         return messageService.updateMessage(messageDTO, id);
@@ -53,7 +53,7 @@ public class TeacherMessageController {
     public List<MessageFullDTO> getMessage(@RequestParam (required = false) String text,
                                            @RequestParam (required = false, defaultValue = "1") int from,
                                            @RequestParam (required = false, defaultValue = "10") int size) {
-        return messageService.getMessages(text, from, size);
+        return messageService.findMessagesByText(text, from, size);
     }
 
     @DeleteMapping("/{id}")

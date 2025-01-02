@@ -1,6 +1,6 @@
 package com.senla.courses.controller.admin;
 
-import com.senla.courses.dto.module.ModuleDTO;
+import com.senla.courses.dto.ModuleDTO;
 import com.senla.courses.service.module.ModuleService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/module")
+@RequestMapping("/admin/module")
 @AllArgsConstructor
 public class AdminModuleController {
 
@@ -32,19 +32,19 @@ public class AdminModuleController {
     }
 
     @PutMapping("/edit")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ModuleDTO editModule(@RequestBody @Valid ModuleDTO moduleDTO) {
         return moduleService.editModule(moduleDTO);
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ModuleDTO findModule(@PathVariable Long id) {
         return moduleService.findModule(id);
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public List<ModuleDTO> findModules(@RequestParam(required = false, name = "text") String text,
                                        @RequestParam (required = false, defaultValue = "1") int from,
                                        @RequestParam (required = false, defaultValue = "10") int size) {
@@ -53,7 +53,7 @@ public class AdminModuleController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteModule(@PathVariable("id") Long id) {
         moduleService.deleteModule(id);
     }

@@ -1,7 +1,5 @@
-package com.senla.courses.dto.message;
+package com.senla.courses.dto;
 
-import com.senla.courses.model.Student;
-import com.senla.courses.model.Teacher;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

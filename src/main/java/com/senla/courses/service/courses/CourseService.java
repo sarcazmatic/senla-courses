@@ -1,7 +1,6 @@
 package com.senla.courses.service.courses;
 
 import com.senla.courses.dto.CourseDTO;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 

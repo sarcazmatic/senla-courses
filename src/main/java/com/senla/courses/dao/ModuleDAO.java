@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ModuleDAO implements GenericDAO<Module, Long> {
@@ -63,7 +64,7 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
     }
 
     @Override
-    public Module find(Long id) {
+    public Optional<Module> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -72,7 +73,7 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
                 throw new NotFoundException("Модуль с id " + id + "не найден");
             }
             transaction.commit();
-            return module;
+            return Optional.of(module);
         } catch (Exception e) {
             transaction.rollback();
             throw new NotFoundException("Не удалось найти модуль по id " + id);
@@ -80,7 +81,7 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
     }
 
     @Override
-    public List<Module> findAll(String text, int from, int size) {
+    public List<Module> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {

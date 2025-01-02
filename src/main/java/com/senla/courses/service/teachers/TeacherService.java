@@ -1,6 +1,6 @@
 package com.senla.courses.service.teachers;
 
-import com.senla.courses.dto.user.UserDTO;
+import com.senla.courses.dto.UserDTO;
 
 import java.util.List;
 

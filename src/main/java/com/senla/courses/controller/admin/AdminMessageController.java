@@ -1,7 +1,7 @@
 package com.senla.courses.controller.admin;
 
-import com.senla.courses.dto.message.MessageDTO;
-import com.senla.courses.dto.message.MessageFullDTO;
+import com.senla.courses.dto.MessageDTO;
+import com.senla.courses.dto.MessageFullDTO;
 import com.senla.courses.service.messages.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

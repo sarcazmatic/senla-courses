@@ -1,7 +1,7 @@
 package com.senla.courses.service.messages;
 
-import com.senla.courses.dto.message.MessageDTO;
-import com.senla.courses.dto.message.MessageFullDTO;
+import com.senla.courses.dto.MessageDTO;
+import com.senla.courses.dto.MessageFullDTO;
 
 import java.util.List;
 

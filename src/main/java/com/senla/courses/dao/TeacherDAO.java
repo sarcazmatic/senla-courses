@@ -45,7 +45,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
     @Override
     public Optional<Teacher> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();;
         try {
             Optional<Teacher> teacher = Optional.ofNullable(session.get(Teacher.class, id));
             transaction.commit();

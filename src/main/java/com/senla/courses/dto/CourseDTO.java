@@ -1,8 +1,6 @@
 package com.senla.courses.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.senla.courses.model.Module;
-import com.senla.courses.model.Teacher;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

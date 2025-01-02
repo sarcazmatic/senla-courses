@@ -1,4 +1,4 @@
-package com.senla.courses.dto.module;
+package com.senla.courses.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
