@@ -1,7 +1,6 @@
 package com.senla.courses.util;
 
 import com.senla.courses.model.Privilege;
-import com.senla.courses.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +20,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-public class SpringSecConfig {
+public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public SpringSecConfig(UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(@Qualifier("customUserDetailsService") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -37,7 +36,6 @@ public class SpringSecConfig {
                 .authorizeHttpRequests(
                         (requests) -> requests
                                 .requestMatchers("/", "/special/**", "/all/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/special/**").permitAll()
                                 .requestMatchers("/student/**").hasAuthority(Privilege.STUDENT.getPrivilege())
                                 .requestMatchers("/teacher/**").hasAuthority(Privilege.TEACHER.getPrivilege())
                                 .requestMatchers("/admin/**").hasAuthority(Privilege.ADMIN.getPrivilege())
@@ -77,13 +75,7 @@ public class SpringSecConfig {
     protected DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
     }
 
 }

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Set;
@@ -53,12 +52,10 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails fromUser(User user) {
-        return new org.springframework.security.core.userdetails.User(
-                user.getName(),
-                user.getPassword(),
-                true, true, true, true,
-                user.getRole().getAuthorities()
-        );
+        return org.springframework.security.core.userdetails.User.withUsername(user.getName())
+                .password(user.getPassword())
+                .authorities(user.getRole().getAuthorities())
+                .build();
     }
 
 }
