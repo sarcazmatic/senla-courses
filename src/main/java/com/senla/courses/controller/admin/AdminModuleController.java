@@ -59,12 +59,21 @@ public class AdminModuleController {
         return moduleService.findModule(id);
     }
 
-    @GetMapping
+    @GetMapping("/desc")
     @ResponseStatus(HttpStatus.OK)
     public List<ModuleDTO> findByText(@RequestParam(required = false, name = "text") String text,
                                       @RequestParam(required = false, defaultValue = "1") int from,
                                       @RequestParam(required = false, defaultValue = "10") int size) {
-        return moduleService.findModules(text, from, size);
+        return moduleService.findModulesByDesc(text, from, size);
+
+    }
+
+    @GetMapping("/name")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ModuleDTO> findByName(@RequestParam(required = false, name = "text") String text,
+                                      @RequestParam(required = false, defaultValue = "1") int from,
+                                      @RequestParam(required = false, defaultValue = "10") int size) {
+        return moduleService.findModulesByName(text, from, size);
 
     }
 
@@ -138,12 +147,20 @@ public class AdminModuleController {
         return literatureService.findById(litId);
     }
 
-    @GetMapping("/lit")
+    @GetMapping("/lit/name")
     @ResponseStatus(HttpStatus.OK)
     public List<LiteratureDTO> findLitByText(@RequestParam(required = false, name = "text") String text,
                                              @RequestParam(required = false, defaultValue = "1") int from,
                                              @RequestParam(required = false, defaultValue = "10") int size) {
         return literatureService.findByText(text, from, size);
+    }
+
+    @GetMapping("/lit/author")
+    @ResponseStatus(HttpStatus.OK)
+    public List<LiteratureDTO> findLitByAuthor(@RequestParam(required = false, name = "text") String text,
+                                             @RequestParam(required = false, defaultValue = "1") int from,
+                                             @RequestParam(required = false, defaultValue = "10") int size) {
+        return literatureService.findByAuthor(text, from, size);
     }
 
     @GetMapping("/{id}/lit")
@@ -167,6 +184,7 @@ public class AdminModuleController {
     public Long uploadFile(@RequestParam(name = "file") MultipartFile mpFile,
                            @RequestParam(name = "url", required = false) String url,
                            @PathVariable(name = "id") Long moduleId) throws IOException {
+        System.out.println(mpFile.getOriginalFilename());
         return fileService.save(mpFile, url, moduleId);
     }
 

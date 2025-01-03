@@ -14,6 +14,8 @@ public interface LiteratureService {
 
     List<LiteratureDTO> findByText(String text, int from, int size);
 
+    List<LiteratureDTO> findByAuthor(String author, int from, int size);
+
     List<LiteratureDTO> findByModuleId(Long moduleId, int from, int size);
 
     void delete(Long id);

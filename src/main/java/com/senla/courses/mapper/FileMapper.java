@@ -1,27 +1,26 @@
 package com.senla.courses.mapper;
 
-import com.senla.courses.dao.ModuleDAO;
 import com.senla.courses.dto.FileDTO;
-import com.senla.courses.dto.TaskDTO;
 import com.senla.courses.model.File;
-import com.senla.courses.model.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
 public class FileMapper {
 
-    private final ModuleDAO moduleDAO;
     private final ModuleMapper moduleMapper;
 
 
-    public File fromFileDTO(FileDTO fileDTO) {
+    public File fromMPFile(MultipartFile mpFile, String url) throws IOException {
         return File.builder()
-                .name(fileDTO.getName())
-                .content(fileDTO.getContent())
-                .url(fileDTO.getUrl())
-                .contentType(fileDTO.getContentType())
+                .name(mpFile.getName())
+                .content(mpFile.getBytes())
+                .url(url)
+                .contentType(mpFile.getContentType())
                 .build();
     }
 
@@ -38,21 +37,14 @@ public class FileMapper {
         return fileDTO;
     }
 
-    public File updateFile(File file, FileDTO fileDTO) {
-        if (fileDTO.getContent() != null) {
-            file.setContent(fileDTO.getContent());
+    public File updateFile(File file, MultipartFile mpfile, String url) throws IOException {
+        file.setContent(mpfile.getBytes());
+        file.setName(mpfile.getName());
+        if (url != null) {
+            file.setUrl(url);
         }
-        if (fileDTO.getName() != null) {
-            file.setName(fileDTO.getName());
-        }
-        if (fileDTO.getUrl() != null) {
-            file.setUrl(fileDTO.getUrl());
-        }
-        if (fileDTO.getContentType() != null) {
-            file.setContentType(fileDTO.getContentType());
-        }
-        if (fileDTO.getModule() != null) {
-            file.setModule(moduleMapper.fromModuleDTO(fileDTO.getModule()));
+        if (mpfile.getContentType() != null) {
+            file.setContentType(mpfile.getContentType());
         }
 
         return file;

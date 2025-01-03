@@ -52,6 +52,15 @@ public class LiteratureServiceImpl implements LiteratureService {
     }
 
     @Override
+    public List<LiteratureDTO> findByAuthor(String author, int from, int size) {
+        List<Literature> literatureList = literatureDAO.findAllByAuthor(author, from, size);
+        if (literatureList.isEmpty()) {
+            throw new EmptyListException("Список пуст");
+        }
+        return literatureList.stream().map(literatureMapper::fromLiterature).toList();
+    }
+
+    @Override
     public List<LiteratureDTO> findByModuleId(Long moduleId, int from, int size) {
         List<Literature> literatureList = literatureDAO.findByModuleId(moduleId, from, size);
         if (literatureList.isEmpty()) {

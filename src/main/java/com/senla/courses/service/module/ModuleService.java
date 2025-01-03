@@ -1,7 +1,6 @@
 package com.senla.courses.service.module;
 
 import com.senla.courses.dto.ModuleDTO;
-import com.senla.courses.dto.TaskDTO;
 
 import java.util.List;
 
@@ -13,7 +12,10 @@ public interface ModuleService {
 
     ModuleDTO findModule(Long id);
 
-    List<ModuleDTO> findModules(String text, int from, int size);
+    List<ModuleDTO> findModulesByDesc(String text, int from, int size);
+
+    List<ModuleDTO> findModulesByName(String text, int from, int size);
+
 
     void deleteModule(Long id);
 

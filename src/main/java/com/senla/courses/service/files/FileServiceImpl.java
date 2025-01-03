@@ -22,13 +22,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Long save(MultipartFile mpFile, String url, Long moduleId) throws IOException {
-        FileDTO fileDTO = FileDTO.builder()
-                .name(mpFile.getOriginalFilename())
-                .content(mpFile.getBytes())
-                .contentType(mpFile.getContentType())
-                .url(url)
-                .build();
-        File file = fileMapper.fromFileDTO(fileDTO);
+        File file = fileMapper.fromMPFile(mpFile, url);
         file.setModule(moduleDAO.find(moduleId).orElseThrow(()
                 -> new NotFoundException("Не нашли модуля для прикрепления файла")));
         return fileDAO.save(file);
@@ -45,13 +39,7 @@ public class FileServiceImpl implements FileService {
     public FileDTO edit(MultipartFile mpFile, String url, Long fileId) throws IOException {
         File file = fileDAO.find(fileId).orElseThrow(()
                 -> new NotFoundException("Не нашли файл с id " + fileId));
-        FileDTO fileDTO = FileDTO.builder()
-                .name(mpFile.getOriginalFilename())
-                .content(mpFile.getBytes())
-                .contentType(mpFile.getContentType())
-                .url(url)
-                .build();
-        File fileOut = fileMapper.updateFile(file, fileDTO);
+        File fileOut = fileMapper.updateFile(file, mpFile, url);
         return fileMapper.fromFile(fileDAO.update(fileOut));
     }
 

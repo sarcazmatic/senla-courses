@@ -38,8 +38,9 @@ public class ModuleServiceImpl implements ModuleService {
         }
         Set<Module> newCourseModules = new HashSet<>();
         newCourseModules.add(module);
-        if (!courseModules.isEmpty()) {
+        try {
             newCourseModules.addAll(courseModules);
+        } catch (NullPointerException ignore) {
         }
         course.setModules(newCourseModules);
         courseDAO.update(course);
@@ -65,7 +66,16 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public List<ModuleDTO> findModules(String text, int from, int size) {
+    public List<ModuleDTO> findModulesByName(String text, int from, int size) {
+        List<Module> modules = moduleDAO.findAllByName(text, from, size);
+        if (modules.isEmpty()) {
+            throw new EmptyListException("Список пуст");
+        }
+        return modules.stream().map(moduleMapper::fromModule).toList();
+    }
+
+    @Override
+    public List<ModuleDTO> findModulesByDesc(String text, int from, int size) {
         List<Module> modules = moduleDAO.findAllByText(text, from, size);
         if (modules.isEmpty()) {
             throw new EmptyListException("Список пуст");

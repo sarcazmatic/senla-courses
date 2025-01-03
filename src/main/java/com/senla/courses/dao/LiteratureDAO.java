@@ -68,9 +68,7 @@ public class LiteratureDAO implements GenericDAO<Literature, Long> {
             Query<Literature> query = session.createQuery("SELECT l from Literature l " +
                     "WHERE ((:text IS NULL) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(l.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
-                    "OR (:text IS NOT NULL " +
-                    "AND UPPER(l.author) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Literature.class);
+                    "AND UPPER(l.name) LIKE CONCAT ('%', UPPER(:text), '%')))", Literature.class);
             query.setParameter("text", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
@@ -79,7 +77,27 @@ public class LiteratureDAO implements GenericDAO<Literature, Long> {
             return literatureList;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли задач по тексту");
+            throw new RuntimeException("Не нашли литературу по тексту");
+        }
+    }
+
+    public List<Literature> findAllByAuthor(String author, int from, int size) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<Literature> query = session.createQuery("SELECT l from Literature l " +
+                    "WHERE (:author IS NULL) " +
+                    "OR (:author IS NOT NULL " +
+                    "AND UPPER(l.author) LIKE CONCAT ('%', UPPER(:author), '%'))", Literature.class);
+            query.setParameter("author", author);
+            query.setFirstResult(from - 1);
+            query.setMaxResults(size);
+            List<Literature> literatureList = query.list();
+            transaction.commit();
+            return literatureList;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не нашли литературу по тексту");
         }
     }
 
@@ -88,8 +106,7 @@ public class LiteratureDAO implements GenericDAO<Literature, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             Query<Literature> query = session.createQuery("SELECT l from Literature l JOIN FETCH l.module " +
-                    "WHERE (:moduleId IS NULL) " +
-                    "OR (:moduleId IS NOT NULL " +
+                    "WHERE (:moduleId IS NOT NULL " +
                     "AND (l.module.id = :moduleId))", Literature.class);
             query.setParameter("moduleId", moduleId);
             query.setFirstResult(from - 1);
@@ -99,7 +116,7 @@ public class LiteratureDAO implements GenericDAO<Literature, Long> {
             return literatureList;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли задач по тексту");
+            throw new RuntimeException("Не нашли литературу по тексту");
         }
     }
 
@@ -109,12 +126,12 @@ public class LiteratureDAO implements GenericDAO<Literature, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             Literature literature = Optional.of(session.get(Literature.class, id)).orElseThrow(()
-                    -> new NotFoundException("Не удалось найти задачу"));
+                    -> new NotFoundException("Не удалось найти литературу"));
             session.delete(literature);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не удалось удалить задачу");
+            throw new RuntimeException("Не удалось удалить литературу");
         } finally {
             session.clear();
         }

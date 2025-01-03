@@ -69,8 +69,6 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
             Query<Module> query = session.createQuery("SELECT m from Module m " +
                     "WHERE ((:text IS NULL) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(m.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
-                    "OR (:text IS NOT NULL " +
                     "AND UPPER(m.description) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Module.class);
             query.setParameter("text", text);
             query.setFirstResult(from - 1);
@@ -80,7 +78,27 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
             return modules;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
+            throw new RuntimeException("Не нашли модулей");
+        }
+    }
+
+    public List<Module> findAllByName(String text, int from, int size) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<Module> query = session.createQuery("SELECT m from Module m " +
+                    "WHERE ((:text IS NULL) " +
+                    "OR (:text IS NOT NULL " +
+                    "AND UPPER(m.name) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Module.class);
+            query.setParameter("text", text);
+            query.setFirstResult(from - 1);
+            query.setMaxResults(size);
+            List<Module> modules = query.list();
+            transaction.commit();
+            return modules;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не нашли модулей");
         }
     }
 
@@ -93,12 +111,12 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
             if (module != null) {
                 session.delete(module);
             } else {
-                throw new NotFoundException("Не удалось найти курс по id " + id);
+                throw new NotFoundException("Не удалось найти модуль по id " + id);
             }
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не удалось удалить пользователя");
+            throw new RuntimeException("Не удалось удалить модуль");
         } finally {
             session.clear();
         }

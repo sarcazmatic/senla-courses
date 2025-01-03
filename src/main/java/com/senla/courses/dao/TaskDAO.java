@@ -88,8 +88,7 @@ public class TaskDAO implements GenericDAO<Task, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             Query<Task> query = session.createQuery("SELECT t from Task t JOIN FETCH t.module " +
-                    "WHERE (:moduleId IS NULL) " +
-                    "OR (:moduleId IS NOT NULL " +
+                    "WHERE (:moduleId IS NOT NULL " +
                     "AND (t.module.id = :moduleId))", Task.class);
             query.setParameter("moduleId", moduleId);
             query.setFirstResult(from - 1);
@@ -99,7 +98,7 @@ public class TaskDAO implements GenericDAO<Task, Long> {
             return tasks;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли задач по тексту");
+            throw new RuntimeException("Не удалось найти задач по id модуля " + moduleId);
         }
     }
 
