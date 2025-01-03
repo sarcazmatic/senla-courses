@@ -6,6 +6,7 @@ import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dao.StudentCoursesDAO;
 import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.StudentsCoursesDTO;
+import com.senla.courses.exception.ValidationException;
 import com.senla.courses.mapper.StudentMapper;
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.mapper.StudentsCoursesMapper;
@@ -108,6 +109,22 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentsCoursesDTO findStudentsCoursesById(Long studentId, Long courseId) {
         return studentsCoursesMapper.fromStudentCourses(studentCoursesDAO.findByIds(studentId, courseId));
+    }
+
+    @Override
+    public List<StudentsCoursesDTO> findStudentsCoursesByCourseId(Long courseId) {
+        return studentCoursesDAO.findAllByCourseId(courseId).stream().map(studentsCoursesMapper::fromStudentCourses).toList();
+    }
+
+    @Override
+    public Integer updateRequest(Long courseId, List<Long> ids, String response) {
+        if (response.toUpperCase().equals(StudentCourseRequestEnum.APPROVED.toString())
+                || response.toUpperCase().equals(StudentCourseRequestEnum.DECLINED.toString())) {
+            StudentCourseRequestEnum newResponse = StudentCourseRequestEnum.valueOf(response.toUpperCase());
+            return studentCoursesDAO.updateRequest(courseId, ids, newResponse);
+        } else {
+            throw new ValidationException("Передано неверное значение response -- " + response);
+        }
     }
 
 }

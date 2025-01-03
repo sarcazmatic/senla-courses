@@ -23,5 +23,9 @@ public interface StudentService {
 
     StudentsCoursesDTO findStudentsCoursesById(Long studentId, Long courseId);
 
+    List<StudentsCoursesDTO> findStudentsCoursesByCourseId(Long courseId);
+
+    Integer updateRequest(Long courseId, List<Long> ids, String response);
+
 
 }

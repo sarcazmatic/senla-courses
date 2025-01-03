@@ -1,10 +1,8 @@
 package com.senla.courses.dao;
 
-import com.senla.courses.dao.GenericDAO;
 import com.senla.courses.model.StudentsCourses;
-import com.senla.courses.model.StudentsCoursesPK;
-import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
+import com.senla.courses.util.enums.StudentCourseRequestEnum;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -67,4 +65,45 @@ public class StudentCoursesDAO implements GenericDAO<StudentsCourses, Long> {
     public void deleteById(Long id) {
 
     }
+
+    public List<StudentsCourses> findAllByCourseId(Long courseId) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<StudentsCourses> query = session.createQuery("SELECT sc from StudentsCourses sc " +
+                    "JOIN FETCH Student AS s JOIN FETCH Course AS c " +
+                    "WHERE c.id = :courseId", StudentsCourses.class);
+            query.setParameter("courseId", courseId);
+            List<StudentsCourses> studentsCourses = query.getResultList();
+            transaction.commit();
+            return studentsCourses;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public Integer updateRequest(Long courseId, List<Long> ids, StudentCourseRequestEnum response) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            String query = "UPDATE StudentsCourses sc SET " +
+                    "sc.courseStatus = :response " +
+                    "WHERE (sc.course.id = :courseId) AND (sc.student.id IN :ids)";
+            var sqlQuery = session.createQuery(query);
+            sqlQuery.setParameter("courseId", courseId);
+            sqlQuery.setParameter("ids", ids);
+            sqlQuery.setParameter("response", response);
+            int rows = sqlQuery.executeUpdate();
+            transaction.commit();
+            return rows;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            session.clear();
+            session.close();
+        }
+    }
+
 }
