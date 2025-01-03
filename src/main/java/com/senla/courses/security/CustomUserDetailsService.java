@@ -19,8 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDAO.findByName(username).orElseThrow(()
                 -> new NotFoundException("Не нашли пользователя по имени"));
-        System.out.println(user.getName());
-        System.out.println(user.getPassword());
         return SecurityUser.fromUser(user);
     }
 }

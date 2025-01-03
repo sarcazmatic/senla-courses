@@ -48,29 +48,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /*@Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails student =
-                User.withDefaultPasswordEncoder()
-                        .username("student")
-                        .password("student")
-                        .authorities(Role.STUDENT.getAuthorities())
-                        .build();
-        UserDetails teacher =
-                User.withDefaultPasswordEncoder()
-                        .username("teacher")
-                        .password("teacher")
-                        .authorities(Role.TEACHER.getAuthorities())
-                        .build();
-        UserDetails admin =
-                User.withDefaultPasswordEncoder()
-                        .username("admin")
-                        .password("admin")
-                        .authorities(Role.ADMIN.getAuthorities())
-                        .build();
-        return new InMemoryUserDetailsManager(student, teacher, admin);
-    }*/
-
     @Bean
     protected DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
