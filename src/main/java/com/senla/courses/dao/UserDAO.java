@@ -1,6 +1,5 @@
 package com.senla.courses.dao;
 
-import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;

@@ -5,20 +5,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
-
 @Builder
 @Getter
 @Setter
-public class CourseDTO {
+public class ModuleDTO {
 
     private String name;
     private String description;
-    private String field;
-    private Integer complexity;
-    private Integer duration;
+    private Integer placeInCourse;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Long courseId;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Set<UserDTO> teachers;
-    private Set<String> modulesNames;
+    private String courseName;
+
 }
