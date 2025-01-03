@@ -1,6 +1,7 @@
 package com.senla.courses.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.senla.courses.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -24,4 +25,6 @@ public class UserDTO {
     private Integer age;
     private String description;
     private LocalDateTime dateTimeRegistered;
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String role;
 }

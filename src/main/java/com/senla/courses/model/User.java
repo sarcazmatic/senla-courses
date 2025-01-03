@@ -2,6 +2,8 @@ package com.senla.courses.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,5 +36,8 @@ public class User {
     private String description;
     @Column(name = "date_time_registered")
     private LocalDateTime dateTimeRegistered;
+    @Enumerated(EnumType.STRING)
+    @Column(name="role")
+    private Role role;
 
 }

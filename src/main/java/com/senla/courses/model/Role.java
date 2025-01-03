@@ -1,33 +1,24 @@
 package com.senla.courses.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-@Entity
-@Table(name = "roles")
-@NoArgsConstructor
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
-@Builder
 @Getter
-@Setter
-public class Role {
+public enum Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    STUDENT(Set.of(Privilege.STUDENT)),
+    TEACHER(Set.of(Privilege.TEACHER)),
+    ADMIN(Set.of(Privilege.ADMIN, Privilege.TEACHER, Privilege.STUDENT));
+
+    private final Set<Privilege> privileges;
+
+    public Set<SimpleGrantedAuthority> getAuthorities() {
+        return privileges.stream().map(p -> new SimpleGrantedAuthority(p.getPrivilege())).collect(Collectors.toSet());
+    }
 
 }

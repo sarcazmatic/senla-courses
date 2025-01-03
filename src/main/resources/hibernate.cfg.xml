@@ -23,5 +23,7 @@
         <mapping class="com.senla.courses.model.Literature" />
         <mapping class="com.senla.courses.model.File" />
         <mapping class="com.senla.courses.model.StudentsCourses" />
+        <mapping class="com.senla.courses.model.Role" />
+        <mapping class="com.senla.courses.model.Privilege" />
     </session-factory>
 </hibernate-configuration>

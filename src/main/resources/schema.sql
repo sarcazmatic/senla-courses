@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS users
     pass                 VARCHAR                                 NOT NULL,
     description          VARCHAR,
     date_time_registered DATETIME                                NOT NULL,
+    role                 VARCHAR                                 NOT NULL,
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
 

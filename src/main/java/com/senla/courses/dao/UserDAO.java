@@ -55,6 +55,19 @@ public class UserDAO implements GenericDAO<User, Long> {
         }
     }
 
+    public Optional<User> findByName(String name) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Optional<User> user = Optional.ofNullable(session.get(User.class, name));
+            transaction.commit();
+            return user;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не нашли пользователя по id");
+        }
+    }
+
     @Override
     public List<User> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();

@@ -3,6 +3,7 @@ package com.senla.courses.service.teachers;
 import com.senla.courses.dao.TeacherDAO;
 import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.UserDTO;
+import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.model.Teacher;
@@ -28,7 +29,7 @@ public class TeacherServiceImpl implements TeacherService {
         user.setDateTimeRegistered(LocalDateTime.now());
         Long userPk = userDAO.save(user);
         User userTeacher = userDAO.find(userPk)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти такого пользовтеля"));
+                .orElseThrow(() -> new NotFoundException("Не смогли найти такого пользовтеля"));
         Teacher teacher = Teacher.builder()
                 .id(userPk)
                 .user(userTeacher)
@@ -40,7 +41,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public UserDTO updateTeacher(UserDTO userDTO, Long id) {
         Teacher teacherUpd = teacherDAO.find(id)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя по id " + id));
+                .orElseThrow(() -> new NotFoundException("Не смогли найти учителя по id " + id));
         User user = userMapper.updateUser(teacherUpd.getUser(), userDTO);
         teacherUpd.setUser(user);
         teacherDAO.update(teacherUpd);
@@ -50,7 +51,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public UserDTO findById(Long id) {
         Teacher teacher = teacherDAO.find(id)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя по id " + id));
+                .orElseThrow(() -> new NotFoundException("Не смогли найти учителя по id " + id));
         return userMapper.fromUser(teacher.getUser());
     }
 
