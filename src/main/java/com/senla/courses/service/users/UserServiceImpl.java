@@ -21,6 +21,8 @@ public class UserServiceImpl implements UserService {
 
     public Long registerUser(UserDTO userDTO) {
         User user = userMapper.fromUserDTO(userDTO);
+        System.out.println(user.getRole());
+        System.out.println(user);
         user.setDateTimeRegistered(LocalDateTime.now());
         return userDao.save(user);
     }

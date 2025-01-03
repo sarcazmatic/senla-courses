@@ -1,6 +1,5 @@
 package com.senla.courses.dao;
 
-import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
@@ -53,6 +52,23 @@ public class UserDAO implements GenericDAO<User, Long> {
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не нашли пользователя по id");
+        }
+    }
+
+    public Optional<User> findByName(String name) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<User> query = session.createQuery("SELECT u from User u " +
+                    "WHERE (:name IS NOT NULL " +
+                    "AND UPPER(u.name) LIKE CONCAT ('%', UPPER(:name), '%'))", User.class);
+            query.setParameter("name", name);
+            User user = query.getSingleResult();
+            transaction.commit();
+            return Optional.of(user);
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не нашли пользователя по имени");
         }
     }
 

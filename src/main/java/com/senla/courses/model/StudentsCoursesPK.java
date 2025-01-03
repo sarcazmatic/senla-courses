@@ -2,13 +2,18 @@ package com.senla.courses.model;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Embeddable
 public class StudentsCoursesPK implements Serializable {
 
