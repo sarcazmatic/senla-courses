@@ -56,11 +56,6 @@ public class FileDAO implements GenericDAO<File, Long> {
     }
 
     @Override
-    public List<File> findAllByText(String text, int from, int size) {
-        return null;
-    }
-
-    @Override
     public void deleteById(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();

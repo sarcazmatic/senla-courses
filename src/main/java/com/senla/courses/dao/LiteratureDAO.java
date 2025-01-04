@@ -60,7 +60,6 @@ public class LiteratureDAO implements GenericDAO<Literature, Long> {
         }
     }
 
-    @Override
     public List<Literature> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();

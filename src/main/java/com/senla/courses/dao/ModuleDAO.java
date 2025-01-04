@@ -61,7 +61,6 @@ public class ModuleDAO implements GenericDAO<Module, Long> {
         }
     }
 
-    @Override
     public List<Module> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();

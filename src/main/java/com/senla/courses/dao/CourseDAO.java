@@ -74,7 +74,6 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         }
     }
 
-    @Override
     public List<Course> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();

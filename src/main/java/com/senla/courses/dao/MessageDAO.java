@@ -59,7 +59,6 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         }
     }
 
-    @Override
     public List<Message> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();

@@ -31,14 +31,14 @@ public class LiteratureServiceImpl implements LiteratureService {
     @Override
     public LiteratureDTO edit(LiteratureDTO literatureDTO, Long id) {
         Literature literature = literatureDAO.find(id).orElseThrow(()
-                -> new NotFoundException("Не удалось найти задачу"));
+                -> new NotFoundException("Не удалось найти литературу"));
         return literatureMapper.fromLiterature(literatureDAO.update(literatureMapper.updateLiterature(literature, literatureDTO)));
     }
 
     @Override
     public LiteratureDTO findById(Long id) {
         Literature literature = literatureDAO.find(id).orElseThrow(()
-                -> new NotFoundException("Не удалось найти задачу"));
+                -> new NotFoundException("Не удалось найти литературу"));
         return literatureMapper.fromLiterature(literature);
     }
 
