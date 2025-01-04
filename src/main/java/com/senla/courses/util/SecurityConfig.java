@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(
                         (requests) -> requests
-                                .requestMatchers("/", "/special/**", "/all/**").permitAll()
+                                .requestMatchers("/", "/special/**", "/all/**", "/student/register").permitAll()
                                 .requestMatchers("/student/**").hasAuthority(Privilege.STUDENT.getPrivilege())
                                 .requestMatchers("/teacher/**").hasAuthority(Privilege.TEACHER.getPrivilege())
                                 .requestMatchers("/admin/**").hasAuthority(Privilege.ADMIN.getPrivilege())
