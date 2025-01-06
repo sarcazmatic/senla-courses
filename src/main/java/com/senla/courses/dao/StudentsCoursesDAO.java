@@ -2,7 +2,7 @@ package com.senla.courses.dao;
 
 import com.senla.courses.model.StudentsCourses;
 import com.senla.courses.util.HibernateUtil;
-import com.senla.courses.util.enums.StudentCourseRequestEnum;
+import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class StudentCoursesDAO implements GenericDAO<StudentsCourses, Long> {
+public class StudentsCoursesDAO implements GenericDAO<StudentsCourses, Long> {
 
     @Override
     public Long save(StudentsCourses entity) {
@@ -78,7 +78,7 @@ public class StudentCoursesDAO implements GenericDAO<StudentsCourses, Long> {
         }
     }
 
-    public Integer updateRequest(Long courseId, List<Long> ids, StudentCourseRequestEnum response) {
+    public Integer updateRequest(Long courseId, List<Long> ids, StudentsCoursesRequestEnum response) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {

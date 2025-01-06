@@ -99,8 +99,8 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         Transaction transaction = session.beginTransaction();;
         try {
             Query<Message> query = session.createQuery("SELECT m FROM Message m " +
-                    "WHERE m.student.id = :userOne AND m.teacher.id = :userTwo " +
-                    "OR m.teacher.id = :userOne AND m.student.id = :userTwo " +
+                    "WHERE m.from.id = :userOne AND m.to.id = :userTwo " +
+                    "OR m.to.id = :userOne AND m.from.id = :userTwo " +
                     "ORDER BY m.dateTimeSent DESC", Message.class);
             query.setParameter("userOne", userOne);
             query.setParameter("userTwo", userTwo);

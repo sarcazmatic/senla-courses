@@ -1,7 +1,6 @@
 package com.senla.courses.controller.special;
 
 import com.senla.courses.dto.UserDTO;
-import com.senla.courses.service.teachers.TeacherService;
 import com.senla.courses.service.users.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class SpecialController {
 
-    private final TeacherService teacherService;
+    private final UserService userService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public Long register(@RequestBody @Valid UserDTO userDTO) {
-        return teacherService.registerTeacher(userDTO);
+        return userService.registerUser(userDTO);
     }
 
 

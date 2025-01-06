@@ -1,10 +1,14 @@
-package com.senla.courses.controller.teacher;
+package com.senla.courses.controller.message;
 
+import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;
 import com.senla.courses.service.messages.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,40 +23,48 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/teacher/message")
+@RequestMapping("/message")
 @RequiredArgsConstructor
-public class TeacherMessageController {
+public class MessageController {
 
     private final MessageService messageService;
+    private final UserDAO userDAO;
 
-    @PostMapping("/send")
+    @PostMapping("/send/{to}")
     @ResponseStatus(HttpStatus.CREATED)
     public Long sendMessage(@RequestBody MessageDTO messageDTO,
-                            @RequestParam Long from,
-                            @RequestParam Long to) {
-        return messageService.sendMessage(messageDTO, from, to);
+                            @PathVariable Long to) {
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long from = userDAO.findByName(user.getUsername()).orElseThrow(()
+                    -> new AuthenticationException("Не пройдена аутентификация") {
+            }).getId();
+            return messageService.sendMessage(messageDTO, from, to);
+        } catch (ClassCastException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
-    @PutMapping("/{id}/update")
+    @PutMapping("/{id}/edit")
     @ResponseStatus(HttpStatus.OK)
     public MessageFullDTO editMessage(@RequestBody MessageDTO messageDTO,
-                            @PathVariable Long id) {
+                                      @PathVariable Long id) {
         return messageService.updateMessage(messageDTO, id);
     }
 
     @GetMapping("/between")
     @ResponseStatus(HttpStatus.OK)
     public List<MessageFullDTO> getMessage(@RequestParam(name = "ids") List<Long> betweenIds,
-                                           @RequestParam (required = false, defaultValue = "1") int from,
-                                           @RequestParam (required = false, defaultValue = "10") int size) {
+                                           @RequestParam(required = false, defaultValue = "1") int from,
+                                           @RequestParam(required = false, defaultValue = "10") int size) {
         return messageService.getMessagesBetween(betweenIds, from, size);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MessageFullDTO> getMessage(@RequestParam (required = false) String text,
-                                           @RequestParam (required = false, defaultValue = "1") int from,
-                                           @RequestParam (required = false, defaultValue = "10") int size) {
+    public List<MessageFullDTO> getMessage(@RequestParam(required = false) String text,
+                                           @RequestParam(required = false, defaultValue = "1") int from,
+                                           @RequestParam(required = false, defaultValue = "10") int size) {
         return messageService.findMessagesByText(text, from, size);
     }
 

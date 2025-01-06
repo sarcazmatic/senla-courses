@@ -42,13 +42,13 @@ public class AdminCourseController {
         return courseService.editCourse(courseDTO, id);
     }
 
-    @PutMapping("/{id}/add/teachers")
+    @PutMapping("/{id}/teachers/add")
     @ResponseStatus(HttpStatus.OK)
     public CourseDTO addTeachers(@PathVariable Long id, @RequestParam List<Long> ids) {
         return courseService.addTeachers(id, ids);
     }
 
-    @PutMapping("/{id}/rm/teachers")
+    @PutMapping("/{id}/teachers/rm")
     @ResponseStatus(HttpStatus.OK)
     public CourseDTO removeTeachers(@PathVariable Long id, @RequestParam List<Long> ids) {
         return courseService.removeTeachers(id, ids);

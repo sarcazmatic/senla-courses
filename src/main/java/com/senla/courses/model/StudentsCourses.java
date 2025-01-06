@@ -1,13 +1,11 @@
 package com.senla.courses.model;
 
-import com.senla.courses.util.enums.StudentCourseRequestEnum;
+import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
@@ -51,5 +49,5 @@ public class StudentsCourses {
     private Integer currentModule;
     @Enumerated(EnumType.STRING)
     @Column(name = "course_status")
-    private StudentCourseRequestEnum courseStatus;
+    private StudentsCoursesRequestEnum courseStatus;
 }

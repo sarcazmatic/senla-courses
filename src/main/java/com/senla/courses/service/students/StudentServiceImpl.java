@@ -2,8 +2,8 @@ package com.senla.courses.service.students;
 
 import com.senla.courses.dao.CourseDAO;
 import com.senla.courses.dao.StudentDAO;
+import com.senla.courses.dao.StudentsCoursesDAO;
 import com.senla.courses.dao.UserDAO;
-import com.senla.courses.dao.StudentCoursesDAO;
 import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.exception.ValidationException;
@@ -18,7 +18,7 @@ import com.senla.courses.model.Student;
 import com.senla.courses.model.StudentsCourses;
 import com.senla.courses.model.StudentsCoursesPK;
 import com.senla.courses.model.User;
-import com.senla.courses.util.enums.StudentCourseRequestEnum;
+import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentDAO studentDAO;
     private final UserDAO userDAO;
     private final CourseDAO courseDAO;
-    private final StudentCoursesDAO studentCoursesDAO;
+    private final StudentsCoursesDAO studentCoursesDAO;
     private final StudentsCoursesMapper studentsCoursesMapper;
 
 
@@ -100,7 +100,7 @@ public class StudentServiceImpl implements StudentService {
         StudentsCourses studentsCourses = StudentsCourses.builder()
                 .course(course)
                 .student(student)
-                .courseStatus(StudentCourseRequestEnum.REQUESTED)
+                .courseStatus(StudentsCoursesRequestEnum.REQUESTED)
                 .build();
         studentsCourses.setId(studentCoursesPK);
         return studentCoursesDAO.save(studentsCourses);
@@ -118,9 +118,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Integer updateRequest(Long courseId, List<Long> ids, String response) {
-        if (response.toUpperCase().equals(StudentCourseRequestEnum.APPROVED.toString())
-                || response.toUpperCase().equals(StudentCourseRequestEnum.DECLINED.toString())) {
-            StudentCourseRequestEnum newResponse = StudentCourseRequestEnum.valueOf(response.toUpperCase());
+        if (response.toUpperCase().equals(StudentsCoursesRequestEnum.APPROVED.toString())
+                || response.toUpperCase().equals(StudentsCoursesRequestEnum.DECLINED.toString())) {
+            StudentsCoursesRequestEnum newResponse = StudentsCoursesRequestEnum.valueOf(response.toUpperCase());
             return studentCoursesDAO.updateRequest(courseId, ids, newResponse);
         } else {
             throw new ValidationException("Передано неверное значение response -- " + response);

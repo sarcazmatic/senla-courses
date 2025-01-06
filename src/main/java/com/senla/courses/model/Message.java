@@ -33,10 +33,10 @@ public class Message {
     @Column(name = "date_time_sent")
     private LocalDateTime dateTimeSent;
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
+    @JoinColumn(name = "from_id")
+    private User from;
     @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
+    @JoinColumn(name = "to_id")
+    private User to;
 
 }

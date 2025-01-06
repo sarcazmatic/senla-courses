@@ -39,14 +39,19 @@ public class MessageServiceImpl implements MessageService{
                 throw new NotFoundException("Не смогли найти студента ни по from, не по to");
             }
             teacher = teacherDAO.find(from);
+            if (teacher.isEmpty()) {
+                throw new NotFoundException("Не смогли найти преподавателя по from");
+            }
+            message.setTo(student.get().getUser());
+            message.setFrom(teacher.get().getUser());
         } else {
             teacher = teacherDAO.find(to);
+            if (teacher.isEmpty()) {
+                throw new NotFoundException("Не смогли найти преподавателя по to");
+            }
+            message.setFrom(student.get().getUser());
+            message.setTo(teacher.get().getUser());
         }
-        if (teacher.isEmpty()) {
-            throw new NotFoundException("Не смогли найти преподавателя ни по from, не по to");
-        }
-        message.setStudent(student.get());
-        message.setTeacher(teacher.get());
         message.setDateTimeSent(LocalDateTime.now());
         return messageDAO.save(message);
     }
