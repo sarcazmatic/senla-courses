@@ -1,18 +1,12 @@
 package com.senla.courses.service.tasks;
 
-import com.senla.courses.dao.CourseDAO;
 import com.senla.courses.dao.ModuleDAO;
 import com.senla.courses.dao.TaskDAO;
-import com.senla.courses.dto.ModuleDTO;
 import com.senla.courses.dto.TaskDTO;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
-import com.senla.courses.mapper.ModuleMapper;
 import com.senla.courses.mapper.TaskMapper;
-import com.senla.courses.model.Course;
-import com.senla.courses.model.Module;
 import com.senla.courses.model.Task;
-import com.senla.courses.service.module.ModuleService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

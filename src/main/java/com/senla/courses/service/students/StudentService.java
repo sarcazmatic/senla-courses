@@ -3,7 +3,6 @@ package com.senla.courses.service.students;
 import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.dto.UserDTO;
-import com.senla.courses.model.StudentsCourses;
 
 import java.util.List;
 

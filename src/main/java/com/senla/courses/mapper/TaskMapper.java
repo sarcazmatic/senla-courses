@@ -1,16 +1,11 @@
 package com.senla.courses.mapper;
 
 import com.senla.courses.dao.ModuleDAO;
-import com.senla.courses.dto.CourseDTO;
-import com.senla.courses.dto.ModuleDTO;
 import com.senla.courses.dto.TaskDTO;
-import com.senla.courses.model.Course;
 import com.senla.courses.model.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor

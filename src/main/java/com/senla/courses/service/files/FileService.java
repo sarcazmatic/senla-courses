@@ -1,7 +1,6 @@
 package com.senla.courses.service.files;
 
 import com.senla.courses.dto.FileDTO;
-import com.senla.courses.model.File;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

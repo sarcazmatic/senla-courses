@@ -1,6 +1,5 @@
 package com.senla.courses.mapper;
 
-import com.senla.courses.dao.ModuleDAO;
 import com.senla.courses.dto.LiteratureDTO;
 import com.senla.courses.model.Literature;
 import lombok.RequiredArgsConstructor;
