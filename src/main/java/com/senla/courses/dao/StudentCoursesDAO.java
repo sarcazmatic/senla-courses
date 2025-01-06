@@ -57,11 +57,6 @@ public class StudentCoursesDAO implements GenericDAO<StudentsCourses, Long> {
     }
 
     @Override
-    public List<StudentsCourses> findAllByText(String text, int from, int size) {
-        return null;
-    }
-
-    @Override
     public void deleteById(Long id) {
 
     }

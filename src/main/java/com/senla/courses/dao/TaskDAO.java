@@ -60,7 +60,6 @@ public class TaskDAO implements GenericDAO<Task, Long> {
         }
     }
 
-    @Override
     public List<Task> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();

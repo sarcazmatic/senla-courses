@@ -26,12 +26,6 @@ public class AdminStudentController {
 
     private final StudentService studentService;
 
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Long registerUser(@RequestBody @Valid UserDTO userDTO) {
-        return studentService.registerStudent(userDTO);
-    }
-
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@RequestBody StudentDTO studentDTO,

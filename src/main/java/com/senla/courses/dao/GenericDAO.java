@@ -12,8 +12,6 @@ public interface GenericDAO<T, PK extends Serializable> {
 
     Optional<T> find(PK id);
 
-    List<T> findAllByText(String text, int from, int size);
-
     void deleteById(PK id);
 
 }
