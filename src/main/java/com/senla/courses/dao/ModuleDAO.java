@@ -1,7 +1,7 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.exception.NotFoundException;
-import com.senla.courses.model.Course;
+import com.senla.courses.model.Module;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CourseDAO implements GenericDAO<Course, Long> {
+public class ModuleDAO implements GenericDAO<Module, Long> {
 
     @Override
-    public Long save(Course entity) {
+    public Long save(Module entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -24,12 +24,12 @@ public class CourseDAO implements GenericDAO<Course, Long> {
             return pk;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли создать курс");
+            throw new RuntimeException("Не смогли создать модуль");
         }
     }
 
     @Override
-    public Course update(Course entity) {
+    public Module update(Module entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -38,61 +38,66 @@ public class CourseDAO implements GenericDAO<Course, Long> {
             return entity;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли обновить курс");
+            throw new RuntimeException("Не смогли обновить модуль");
         } finally {
             session.clear();
         }
     }
 
     @Override
-    public Optional<Course> find(Long id) {
+    public Optional<Module> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Optional<Course> course = Optional.ofNullable(session.get(Course.class, id));
+            Module module = session.get(Module.class, id);
+            if (module == null) {
+                throw new NotFoundException("Модуль с id " + id + "не найден");
+            }
             transaction.commit();
-            return course;
+            return Optional.of(module);
         } catch (Exception e) {
             transaction.rollback();
-            throw new NotFoundException("Не удалось найти курс по id " + id);
+            throw new NotFoundException("Не удалось найти модуль по id " + id);
         }
     }
 
-    public List<Course> findAll(int from, int size) {
+    public List<Module> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Course> query = session.createQuery("SELECT c from Course c", Course.class);
-            query.setFirstResult(from - 1);
-            query.setMaxResults(size);
-            List<Course> courses = query.list();
-            transaction.commit();
-            return courses;
-        } catch (Exception e) {
-            transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
-        }
-    }
-
-    public List<Course> findAllByText(String text, int from, int size) {
-        Session session = HibernateUtil.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            Query<Course> query = session.createQuery("SELECT c from Course c " +
+            Query<Module> query = session.createQuery("SELECT m from Module m " +
                     "WHERE ((:text IS NULL) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(c.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
-                    "OR (:text IS NOT NULL " +
-                    "AND UPPER(c.description) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Course.class);
+                    "AND UPPER(m.description) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Module.class);
             query.setParameter("text", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
-            List<Course> courses = query.list();
+            List<Module> modules = query.list();
             transaction.commit();
-            return courses;
+            return modules;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
+            throw new RuntimeException("Не нашли модулей");
+        }
+    }
+
+    public List<Module> findAllByName(String text, int from, int size) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<Module> query = session.createQuery("SELECT m from Module m " +
+                    "WHERE ((:text IS NULL) " +
+                    "OR (:text IS NOT NULL " +
+                    "AND UPPER(m.name) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Module.class);
+            query.setParameter("text", text);
+            query.setFirstResult(from - 1);
+            query.setMaxResults(size);
+            List<Module> modules = query.list();
+            transaction.commit();
+            return modules;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не нашли модулей");
         }
     }
 
@@ -101,13 +106,16 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Course course = Optional.of(session.get(Course.class, id))
-                    .orElseThrow(() -> new RuntimeException("Не нашли курс на удаление"));
-            session.delete(course);
+            Module module = session.get(Module.class, id);
+            if (module != null) {
+                session.delete(module);
+            } else {
+                throw new NotFoundException("Не удалось найти модуль по id " + id);
+            }
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не удалось удалить пользователя");
+            throw new RuntimeException("Не удалось удалить модуль");
         } finally {
             session.clear();
         }

@@ -1,4 +1,4 @@
-package com.senla.courses.controller;
+package com.senla.courses.controller.admin;
 
 import com.senla.courses.dto.CourseDTO;
 import com.senla.courses.service.courses.CourseService;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/course")
+@RequestMapping("/admin/course")
 @AllArgsConstructor
-public class CourseController {
+public class AdminCourseController {
 
     private final CourseService courseService;
 

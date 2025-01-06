@@ -1,6 +1,5 @@
 package com.senla.courses.dao;
 
-import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.User;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
@@ -56,7 +55,6 @@ public class UserDAO implements GenericDAO<User, Long> {
         }
     }
 
-    @Override
     public List<User> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();

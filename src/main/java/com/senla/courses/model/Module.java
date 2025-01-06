@@ -29,7 +29,7 @@ public class Module {
     private String name;
     private String description;
     @Column(name = "place_in_course")
-    private Integer PlaceInCourse;
+    private Integer placeInCourse;
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;

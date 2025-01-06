@@ -1,7 +1,8 @@
-package com.senla.courses.controller;
+package com.senla.courses.controller.admin;
 
+import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.UserDTO;
-import com.senla.courses.service.users.UserService;
+import com.senla.courses.service.students.StudentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,43 +20,38 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/user")
+@RequestMapping("/admin/student")
 @AllArgsConstructor
-public class UserController {
+public class AdminStudentController {
 
-    private final UserService userService;
-
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Long registerUser(@RequestBody @Valid UserDTO userDTO) {
-        return userService.registerUser(userDTO);
-    }
+    private final StudentService studentService;
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO updateUser(@RequestBody UserDTO userDTO,
-                              @PathVariable Long id) {
-        return userService.updateUser(userDTO, id);
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
-                                   @RequestParam (required = false, defaultValue = "1") int from,
-                                   @RequestParam (required = false, defaultValue = "10") int size) {
-        return userService.findUsersByName(name, from, size);
+    public StudentDTO updateStudent(@RequestBody StudentDTO studentDTO,
+                                    @PathVariable Long id) {
+        return studentService.updateStudent(studentDTO, id);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO findById(@PathVariable("id") Long id) {
-        return userService.findById(id);
+    public StudentDTO findStudent(@PathVariable("id") Long id) {
+        return studentService.findById(id);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDTO> findStudents(@RequestParam(required = false, name = "text") String text,
+                                   @RequestParam (required = false, defaultValue = "1") int from,
+                                   @RequestParam (required = false, defaultValue = "10") int size) {
+        return studentService.findStudentsByName(text, from, size);
+
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
+    public void deleteStudent(@PathVariable("id") Long id) {
+        studentService.deleteStudent(id);
     }
 
 }

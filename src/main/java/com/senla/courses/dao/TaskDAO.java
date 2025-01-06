@@ -1,7 +1,7 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.exception.NotFoundException;
-import com.senla.courses.model.Course;
+import com.senla.courses.model.Task;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CourseDAO implements GenericDAO<Course, Long> {
+public class TaskDAO implements GenericDAO<Task, Long> {
 
     @Override
-    public Long save(Course entity) {
+    public Long save(Task entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -24,12 +24,14 @@ public class CourseDAO implements GenericDAO<Course, Long> {
             return pk;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли создать курс");
+            throw new RuntimeException("Не смогли создать задачу");
+        } finally {
+            session.clear();
         }
     }
 
     @Override
-    public Course update(Course entity) {
+    public Task update(Task entity) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -38,61 +40,64 @@ public class CourseDAO implements GenericDAO<Course, Long> {
             return entity;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не смогли обновить курс");
+            throw new RuntimeException("Не смогли обновить задачу");
         } finally {
             session.clear();
         }
     }
 
     @Override
-    public Optional<Course> find(Long id) {
+    public Optional<Task> find(Long id) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Optional<Course> course = Optional.ofNullable(session.get(Course.class, id));
+            Optional<Task> task = Optional.ofNullable(session.get(Task.class, id));
             transaction.commit();
-            return course;
+            return task;
         } catch (Exception e) {
             transaction.rollback();
-            throw new NotFoundException("Не удалось найти курс по id " + id);
+            throw new NotFoundException("Не удалось найти задачу по id " + id);
         }
     }
 
-    public List<Course> findAll(int from, int size) {
+    public List<Task> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Query<Course> query = session.createQuery("SELECT c from Course c", Course.class);
-            query.setFirstResult(from - 1);
-            query.setMaxResults(size);
-            List<Course> courses = query.list();
-            transaction.commit();
-            return courses;
-        } catch (Exception e) {
-            transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
-        }
-    }
-
-    public List<Course> findAllByText(String text, int from, int size) {
-        Session session = HibernateUtil.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            Query<Course> query = session.createQuery("SELECT c from Course c " +
+            Query<Task> query = session.createQuery("SELECT t from Task t " +
                     "WHERE ((:text IS NULL) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(c.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
+                    "AND UPPER(t.name) LIKE CONCAT ('%', UPPER(:text), '%')) " +
                     "OR (:text IS NOT NULL " +
-                    "AND UPPER(c.description) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Course.class);
+                    "AND UPPER(t.body) LIKE CONCAT ('%', UPPER(:text), '%'))) ", Task.class);
             query.setParameter("text", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
-            List<Course> courses = query.list();
+            List<Task> tasks = query.list();
             transaction.commit();
-            return courses;
+            return tasks;
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователей");
+            throw new RuntimeException("Не нашли задач по тексту");
+        }
+    }
+
+    public List<Task> findAllByModuleId(Long moduleId, int from, int size) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<Task> query = session.createQuery("SELECT t from Task t JOIN FETCH t.module " +
+                    "WHERE (:moduleId IS NOT NULL " +
+                    "AND (t.module.id = :moduleId))", Task.class);
+            query.setParameter("moduleId", moduleId);
+            query.setFirstResult(from - 1);
+            query.setMaxResults(size);
+            List<Task> tasks = query.list();
+            transaction.commit();
+            return tasks;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не удалось найти задач по id модуля " + moduleId);
         }
     }
 
@@ -101,13 +106,13 @@ public class CourseDAO implements GenericDAO<Course, Long> {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
-            Course course = Optional.of(session.get(Course.class, id))
-                    .orElseThrow(() -> new RuntimeException("Не нашли курс на удаление"));
-            session.delete(course);
+            Task task = Optional.of(session.get(Task.class, id)).orElseThrow(()
+                    -> new NotFoundException("Не удалось найти задачу"));
+            session.delete(task);
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не удалось удалить пользователя");
+            throw new RuntimeException("Не удалось удалить задачу");
         } finally {
             session.clear();
         }

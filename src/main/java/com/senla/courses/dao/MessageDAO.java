@@ -25,6 +25,8 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли сохранить сообщение");
+        } finally {
+            session.clear();
         }
     }
 
@@ -38,6 +40,8 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");
+        } finally {
+            session.close();
         }
     }
 
@@ -55,7 +59,6 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         }
     }
 
-    @Override
     public List<Message> findAllByText(String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
@@ -93,7 +96,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
 
     public List<Message> findMessagesBetween(Long userOne, Long userTwo, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();;
         try {
             Query<Message> query = session.createQuery("SELECT m FROM Message m " +
                     "WHERE m.student.id = :userOne AND m.teacher.id = :userTwo " +
@@ -109,6 +112,8 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         } catch (RuntimeException e) {
             transaction.rollback();
             throw new RuntimeException("Runtime исключение");
+        } finally {
+            session.clear();
         }
     }
 

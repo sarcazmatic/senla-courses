@@ -1,4 +1,4 @@
-package com.senla.courses.controller;
+package com.senla.courses.controller.teacher;
 
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/message")
+@RequestMapping("/teacher/message")
 @RequiredArgsConstructor
-public class MessageController {
+public class TeacherMessageController {
 
     private final MessageService messageService;
 
@@ -33,7 +33,7 @@ public class MessageController {
         return messageService.sendMessage(messageDTO, from, to);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/update")
     @ResponseStatus(HttpStatus.OK)
     public MessageFullDTO editMessage(@RequestBody MessageDTO messageDTO,
                             @PathVariable Long id) {
@@ -50,7 +50,7 @@ public class MessageController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MessageFullDTO> getMessageByText(@RequestParam (required = false) String text,
+    public List<MessageFullDTO> getMessage(@RequestParam (required = false) String text,
                                            @RequestParam (required = false, defaultValue = "1") int from,
                                            @RequestParam (required = false, defaultValue = "10") int size) {
         return messageService.findMessagesByText(text, from, size);

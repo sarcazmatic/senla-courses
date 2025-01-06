@@ -1,4 +1,4 @@
-package com.senla.courses.controller;
+package com.senla.courses.controller.student;
 
 import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.UserDTO;
@@ -35,7 +35,7 @@ public class StudentController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@RequestBody StudentDTO studentDTO,
-                                 @PathVariable Long id) {
+                                    @PathVariable Long id) {
         return studentService.updateStudent(studentDTO, id);
     }
 
@@ -48,10 +48,9 @@ public class StudentController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findStudents(@RequestParam(required = false, name = "text") String name,
-                                   @RequestParam (required = false, defaultValue = "1") int from,
-                                   @RequestParam (required = false, defaultValue = "10") int size) {
+                                      @RequestParam(required = false, defaultValue = "1") int from,
+                                      @RequestParam(required = false, defaultValue = "10") int size) {
         return studentService.findStudentsByName(name, from, size);
-
     }
 
     @DeleteMapping("/{id}")

@@ -17,6 +17,11 @@
         <mapping class="com.senla.courses.model.Teacher" />
         <mapping class="com.senla.courses.model.Student" />
         <mapping class="com.senla.courses.model.Course" />
+        <mapping class="com.senla.courses.model.Module" />
         <mapping class="com.senla.courses.model.Message" />
+        <mapping class="com.senla.courses.model.Task" />
+        <mapping class="com.senla.courses.model.Literature" />
+        <mapping class="com.senla.courses.model.File" />
+        <mapping class="com.senla.courses.model.StudentsCourses" />
     </session-factory>
 </hibernate-configuration>

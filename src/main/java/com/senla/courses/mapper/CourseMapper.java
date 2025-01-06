@@ -2,6 +2,7 @@ package com.senla.courses.mapper;
 
 import com.senla.courses.dto.CourseDTO;
 import com.senla.courses.model.Course;
+import com.senla.courses.model.Module;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,13 @@ public class CourseMapper {
         } catch (NullPointerException e) {
             course.setTeachers(new HashSet<>());
         }
+
+        try {
+            courseDTO.setModulesNames(course.getModules().stream().map(Module::getName).collect(Collectors.toSet()));
+        } catch (Exception e) {
+            course.setTeachers(new HashSet<>());
+        }
+
         return courseDTO;
     }
 
