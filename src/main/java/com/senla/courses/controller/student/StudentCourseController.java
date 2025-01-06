@@ -18,7 +18,7 @@ public class StudentCourseController {
 
     private final StudentService studentService;
 
-    @PostMapping("/register/{studId}/{courseId}")
+    @PostMapping("/request/{studId}/{courseId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Long courseRequest(@PathVariable Long studId,
                               @PathVariable Long courseId) {

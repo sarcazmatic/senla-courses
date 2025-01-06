@@ -1,7 +1,9 @@
 package com.senla.courses.controller.admin;
 
 import com.senla.courses.dto.CourseDTO;
+import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.service.courses.CourseService;
+import com.senla.courses.service.students.StudentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,8 @@ import java.util.List;
 public class AdminCourseController {
 
     private final CourseService courseService;
+    private final StudentService studentService;
+
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
@@ -50,31 +54,24 @@ public class AdminCourseController {
         return courseService.removeTeachers(id, ids);
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public CourseDTO findById(@PathVariable Long id) {
-        return courseService.findById(id);
-    }
-
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public List<CourseDTO> findCourses(@RequestParam (required = false, defaultValue = "1") int from,
-                                       @RequestParam (required = false, defaultValue = "10") int size) {
-        return courseService.findCourses(from, size);
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<CourseDTO> findCoursesByText(@RequestParam(required = false, name = "text") String text,
-                                   @RequestParam (required = false, defaultValue = "1") int from,
-                                   @RequestParam (required = false, defaultValue = "10") int size) {
-        return courseService.findCoursesByText(text, from, size);
-    }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteCourse(@PathVariable("id") Long id) {
         courseService.deleteCourse(id);
+    }
+
+    @GetMapping("/student/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentsCoursesDTO> findStudentsCourses(@PathVariable Long courseId) {
+        return studentService.findStudentsCoursesByCourseId(courseId);
+    }
+
+    @PutMapping("/student/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer updateRequest(@PathVariable Long courseId,
+                                 @RequestParam(name = "ids") List<Long> ids,
+                                 @RequestParam(name = "response", defaultValue = "APPROVED") String response) {
+        return studentService.updateRequest(courseId, ids, response);
     }
 
 }

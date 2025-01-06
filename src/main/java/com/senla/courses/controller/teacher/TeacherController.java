@@ -33,23 +33,9 @@ public class TeacherController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO updateUser(@RequestBody UserDTO userDTO,
+    public UserDTO updateTeacher(@RequestBody UserDTO userDTO,
                               @PathVariable Long id) {
         return teacherService.updateTeacher(userDTO, id);
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
-                                   @RequestParam (required = false, defaultValue = "1") int from,
-                                   @RequestParam (required = false, defaultValue = "10") int size) {
-        return teacherService.findTeachersByName(name, from, size);
-    }
-
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserDTO findById(@PathVariable("id") Long id) {
-        return teacherService.findById(id);
     }
 
     @DeleteMapping("/{id}")
