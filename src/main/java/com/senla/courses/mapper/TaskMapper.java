@@ -25,6 +25,7 @@ public class TaskMapper {
 
     public TaskDTO fromTask(Task task) {
         TaskDTO taskDTO = TaskDTO.builder()
+                .id(task.getId())
                 .body(task.getBody())
                 .name(task.getName())
                 .url(task.getUrl())

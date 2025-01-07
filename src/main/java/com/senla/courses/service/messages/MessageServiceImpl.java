@@ -3,6 +3,7 @@ package com.senla.courses.service.messages;
 import com.senla.courses.dao.MessageDAO;
 import com.senla.courses.dao.StudentDAO;
 import com.senla.courses.dao.TeacherDAO;
+import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;
 import com.senla.courses.mapper.MessageMapper;
@@ -12,7 +13,10 @@ import com.senla.courses.model.Message;
 import com.senla.courses.model.Student;
 import com.senla.courses.model.Teacher;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.User;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,10 +30,14 @@ public class MessageServiceImpl implements MessageService{
     private final StudentDAO studentDAO;
     private final TeacherDAO teacherDAO;
     private final MessageDAO messageDAO;
+    private final UserDAO userDAO;
 
     @Override
-    public Long sendMessage(MessageDTO messageDTO, Long from, Long to) {
+    public Long sendMessage(MessageDTO messageDTO, User user, Long to) {
         Message message = messageMapper.fromMessageDTO(messageDTO);
+        Long from = userDAO.findByLogin(user.getUsername()).orElseThrow(()
+                -> new AuthenticationException("Не пройдена аутентификация") {
+        }).getId();
         Optional<Student> student;
         Optional<Teacher> teacher;
         student = studentDAO.find(from);

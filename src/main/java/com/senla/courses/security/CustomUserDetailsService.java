@@ -16,9 +16,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserDAO userDAO;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDAO.findByName(username).orElseThrow(()
-                -> new NotFoundException("Не нашли пользователя по имени"));
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        User user = userDAO.findByLogin(login).orElseThrow(()
+                -> new NotFoundException("Не нашли пользователя по логину"));
         return SecurityUser.fromUser(user);
     }
 }

@@ -16,6 +16,8 @@ public class UserDTO {
     @NotBlank
     private String name;
     @NotBlank
+    private String login;
+    @NotBlank
     @Email
     private String email;
     @NotBlank

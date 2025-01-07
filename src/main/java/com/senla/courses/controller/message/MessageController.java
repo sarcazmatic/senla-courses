@@ -34,15 +34,13 @@ public class MessageController {
     @ResponseStatus(HttpStatus.CREATED)
     public Long sendMessage(@RequestBody MessageDTO messageDTO,
                             @PathVariable Long to) {
+        User user;
         try {
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Long from = userDAO.findByName(user.getUsername()).orElseThrow(()
-                    -> new AuthenticationException("Не пройдена аутентификация") {
-            }).getId();
-            return messageService.sendMessage(messageDTO, from, to);
+            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         } catch (ClassCastException e) {
             throw new RuntimeException(e.getMessage());
         }
+        return messageService.sendMessage(messageDTO, user, to);
     }
 
     @PutMapping("/{id}/edit")

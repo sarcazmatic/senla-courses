@@ -4,7 +4,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.h2.Driver</property>
-        <property name="hibernate.connection.url">jdbc:h2:mem:default</property>
+        <property name="hibernate.connection.url">jdbc:h2:./db/db</property>
         <property name="hibernate.connection.username">user</property>
         <property name="hibernate.connection.password">user</property>
 

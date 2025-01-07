@@ -2,12 +2,14 @@ package com.senla.courses.service.messages;
 
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;
+import org.springframework.security.core.userdetails.User;
+
 
 import java.util.List;
 
 public interface MessageService {
 
-    Long sendMessage(MessageDTO messageDTO, Long from, Long to);
+    Long sendMessage(MessageDTO messageDTO, User user, Long to);
 
     MessageFullDTO findById(Long id);
 

@@ -34,7 +34,6 @@ public class ModuleFileController {
     public Long uploadFile(@RequestParam(name = "file") MultipartFile mpFile,
                            @RequestParam(name = "url", required = false) String url,
                            @PathVariable(name = "moduleId") Long moduleId) throws IOException {
-        System.out.println(mpFile.getOriginalFilename());
         return fileService.save(mpFile, url, moduleId);
     }
 
@@ -42,7 +41,6 @@ public class ModuleFileController {
     public ResponseEntity<byte[]> editFile(@RequestParam(name = "file") MultipartFile mpFile,
                                            @RequestParam(name = "url", required = false) String url,
                                            @PathVariable Long fileId) throws IOException {
-        System.out.println(Arrays.toString(mpFile.getBytes()));
         FileDTO fileDTO = fileService.edit(mpFile, url, fileId);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(fileDTO.getContentType()))

@@ -52,7 +52,7 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails fromUser(User user) {
-        return org.springframework.security.core.userdetails.User.withUsername(user.getName())
+        return org.springframework.security.core.userdetails.User.withUsername(user.getLogin())
                 .password(user.getPassword())
                 .authorities(user.getRole().getAuthorities())
                 .build();

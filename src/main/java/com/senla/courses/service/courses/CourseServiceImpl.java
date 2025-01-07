@@ -36,7 +36,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         Course courseUpd = courseMapper.updateCourse(course, courseDTO);
-        return courseMapper.fromCourse(courseUpd);
+        return courseMapper.fromCourse(courseDAO.update(courseUpd));
     }
 
     @Override

@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,18 +20,8 @@ public class UserServiceImpl implements UserService {
 
     public Long registerUser(UserDTO userDTO) {
         User user = userMapper.fromUserDTO(userDTO);
-        System.out.println(user.getRole());
-        System.out.println(user);
         user.setDateTimeRegistered(LocalDateTime.now());
         return userDao.save(user);
-    }
-
-    @Override
-    public UserDTO updateUser(UserDTO userDTO, Long id) {
-        User user = userDao.find(id)
-                .orElseThrow(() -> new NotFoundException("Не нашли пользователя по id " + id));
-        User userUpd = userMapper.updateUser(user, userDTO);
-        return userMapper.fromUser(userDao.update(userUpd));
     }
 
     @Override
@@ -40,20 +29,6 @@ public class UserServiceImpl implements UserService {
         User user = userDao.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли пользователя по id " + id));
         return userMapper.fromUser(user);
-    }
-
-    @Override
-    public List<UserDTO> findUsersByName(String name, int from, int size) {
-        List<UserDTO> userDTOList = userDao.findAllByText(name, from, size).stream().map(userMapper::fromUser).toList();
-        if (userDTOList.isEmpty()) {
-            throw new EmptyListException("Список пуст");
-        }
-        return userDTOList;
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        userDao.deleteById(id);
     }
 
 }

@@ -55,14 +55,15 @@ public class UserDAO implements GenericDAO<User, Long> {
         }
     }
 
-    public Optional<User> findByName(String name) {
+    public Optional<User> findByLogin(String login) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
+            System.out.println(login);
             Query<User> query = session.createQuery("SELECT u from User u " +
-                    "WHERE (:name IS NOT NULL " +
-                    "AND UPPER(u.name) LIKE CONCAT ('%', UPPER(:name), '%'))", User.class);
-            query.setParameter("name", name);
+                    "WHERE (:login IS NOT NULL " +
+                    "AND UPPER(u.login) LIKE CONCAT ('%', UPPER(:login), '%'))", User.class);
+            query.setParameter("login", login);
             User user = query.getSingleResult();
             transaction.commit();
             return Optional.of(user);
