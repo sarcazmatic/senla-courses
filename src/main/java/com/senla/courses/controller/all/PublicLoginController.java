@@ -17,8 +17,6 @@ public class PublicLoginController {
 
     @PostMapping("/log")
     public void login(@RequestBody LoginDTO loginDTO) {
-        System.out.println(loginDTO.getLogin());
-        System.out.println(loginDTO.getPassword());
         loginService.login(loginDTO);
     }
 
