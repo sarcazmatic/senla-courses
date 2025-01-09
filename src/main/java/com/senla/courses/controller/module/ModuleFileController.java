@@ -1,8 +1,10 @@
 package com.senla.courses.controller.module;
 
 import com.senla.courses.dto.FileDTO;
+import com.senla.courses.dto.ReturnFileDTO;
 import com.senla.courses.service.files.FileService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

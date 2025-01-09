@@ -1,6 +1,7 @@
 package com.senla.courses.mapper;
 
 import com.senla.courses.dto.FileDTO;
+import com.senla.courses.dto.ReturnFileDTO;
 import com.senla.courses.model.File;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,12 @@ import java.io.IOException;
 public class FileMapper {
 
     private final ModuleMapper moduleMapper;
+    private static final String FILES_LOC = "/module/file/";
 
 
     public File fromMPFile(MultipartFile mpFile, String url) throws IOException {
         return File.builder()
-                .name(mpFile.getName())
+                .name(mpFile.getOriginalFilename())
                 .content(mpFile.getBytes())
                 .url(url)
                 .contentType(mpFile.getContentType())
@@ -37,9 +39,16 @@ public class FileMapper {
         return fileDTO;
     }
 
+    public ReturnFileDTO fromFileToReturn(File file, String path) {
+        return ReturnFileDTO.builder()
+                .name(file.getName())
+                .endpoint(path + FILES_LOC + file.getId())
+                .build();
+    }
+
     public File updateFile(File file, MultipartFile mpfile, String url) throws IOException {
         file.setContent(mpfile.getBytes());
-        file.setName(mpfile.getName());
+        file.setName(mpfile.getOriginalFilename());
         if (url != null) {
             file.setUrl(url);
         }

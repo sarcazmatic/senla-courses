@@ -2,14 +2,20 @@ package com.senla.courses.controller.module;
 
 import com.senla.courses.dto.LiteratureDTO;
 import com.senla.courses.dto.ModuleDTO;
+import com.senla.courses.dto.ReturnFileDTO;
 import com.senla.courses.dto.TaskDTO;
+import com.senla.courses.service.files.FileService;
 import com.senla.courses.service.literature.LiteratureService;
 import com.senla.courses.service.module.ModuleService;
 import com.senla.courses.service.tasks.TaskService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +37,7 @@ public class ModuleController {
     private final ModuleService moduleService;
     private final TaskService taskService;
     private final LiteratureService literatureService;
+    private final FileService fileService;
 
 
     @PostMapping("/add")
@@ -93,6 +100,11 @@ public class ModuleController {
                                                  @RequestParam(required = false, defaultValue = "1") int from,
                                                  @RequestParam(required = false, defaultValue = "10") int size) {
         return literatureService.findByModuleId(moduleId, from, size);
+    }
+
+    @GetMapping("/{moduleId}/files")
+    public List<ReturnFileDTO> findFilesByModuleId(@PathVariable Long moduleId, HttpServletRequest request) {
+        return fileService.findFilesByModuleId(moduleId, request);
     }
 
 }

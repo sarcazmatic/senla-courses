@@ -28,7 +28,6 @@ import java.util.List;
 public class MessageController {
 
     private final MessageService messageService;
-    private final UserDAO userDAO;
 
     @PostMapping("/send/{to}")
     @ResponseStatus(HttpStatus.CREATED)

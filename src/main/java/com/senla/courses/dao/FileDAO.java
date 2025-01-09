@@ -1,11 +1,14 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.model.File;
+import com.senla.courses.model.Literature;
 import com.senla.courses.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -51,6 +54,23 @@ public class FileDAO implements GenericDAO<File, Long> {
         } catch (Exception e) {
             transaction.rollback();
             throw new RuntimeException("Не смогли найти файл");
+        }
+    }
+
+    public List<File> findAllByModuleId(Long moduleId) {
+        Session session = HibernateUtil.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            Query<File> query = session.createQuery("SELECT f from File f " +
+                    "WHERE (:moduleId IS NOT NULL) " +
+                    "AND (f.module.id = :moduleId)", File.class);
+            query.setParameter("moduleId", moduleId);
+            List<File> filesList = query.list();
+            transaction.commit();
+            return filesList;
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Не нашли литературу по тексту");
         }
     }
 
