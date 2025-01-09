@@ -68,7 +68,7 @@ public class UserDAO implements GenericDAO<User, Long> {
             return Optional.of(user);
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Не нашли пользователя по логину");
+            throw new RuntimeException("Ошибка про поиске пользователя по логину");
         }
     }
 
