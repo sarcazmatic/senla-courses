@@ -2,9 +2,9 @@ package com.senla.courses.controller.student;
 
 import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.service.students.StudentService;
+import com.senla.courses.util.UserDetailsExtractor;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,12 +24,7 @@ public class StudentsCoursesController {
     @ResponseStatus(HttpStatus.CREATED)
     public Long courseRequest(@PathVariable Long studId,
                               @PathVariable Long courseId) {
-        User user;
-        try {
-            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } catch (ClassCastException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        User user = UserDetailsExtractor.extractUserDetails();
         return studentService.registerCourseRequest(user, studId, courseId);
     }
 
@@ -37,12 +32,7 @@ public class StudentsCoursesController {
     @ResponseStatus(HttpStatus.CREATED)
     public StudentsCoursesDTO findCourseStudents(@PathVariable Long studId,
                                                  @PathVariable Long courseId) {
-        User user;
-        try {
-            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } catch (ClassCastException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        User user = UserDetailsExtractor.extractUserDetails();
         return studentService.findStudentsCoursesById(user, studId, courseId);
     }
 

@@ -3,10 +3,10 @@ package com.senla.courses.controller.student;
 import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.service.students.StudentService;
+import com.senla.courses.util.UserDetailsExtractor;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,12 +38,7 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@RequestBody StudentDTO studentDTO,
                                     @PathVariable Long id) {
-        User user;
-        try {
-            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } catch (ClassCastException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        User user = UserDetailsExtractor.extractUserDetails();
         return studentService.updateStudent(user, studentDTO, id);
     }
 
@@ -64,12 +59,7 @@ public class StudentController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteStudent(@PathVariable("id") Long id) {
-        User user;
-        try {
-            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } catch (ClassCastException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        User user = UserDetailsExtractor.extractUserDetails();
         studentService.deleteStudent(user, id);
     }
 

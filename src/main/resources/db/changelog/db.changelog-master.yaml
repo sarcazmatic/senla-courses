@@ -21,3 +21,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-students_courses-table.yaml
   - include:
       file: db/changelog/changeset/create-messages-table.yaml
+  - include:
+      file: db/changelog/changeset/insert-user-admin.yaml

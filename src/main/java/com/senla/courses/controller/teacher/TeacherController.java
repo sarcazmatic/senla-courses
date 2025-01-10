@@ -2,10 +2,10 @@ package com.senla.courses.controller.teacher;
 
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.service.teachers.TeacherService;
+import com.senla.courses.util.UserDetailsExtractor;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,24 +33,14 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.OK)
     public UserDTO updateTeacher(@RequestBody UserDTO userDTO,
                                  @PathVariable Long id) {
-        User user;
-        try {
-            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } catch (ClassCastException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        User user = UserDetailsExtractor.extractUserDetails();
         return teacherService.updateTeacher(user,userDTO, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteTeacher(@PathVariable("id") Long id) {
-        User user;
-        try {
-            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } catch (ClassCastException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        User user = UserDetailsExtractor.extractUserDetails();
         teacherService.deleteTeacher(user, id);
     }
 

@@ -25,11 +25,8 @@ public class LoginServiceImpl implements LoginService {
     public void login(LoginDTO loginDTO) {
         User userAuth = userDAO.findByLogin(loginDTO.getLogin()).orElseThrow(()
         -> new NotFoundException("Не нашли пользователя по логину"));
-        if (!userAuth.getPassword().equals("{noop}" + loginDTO.getPassword())) {
-            throw new ValidationException("Пароли не совпали");
-        }
         UsernamePasswordAuthenticationToken reqWithLoginAndPAss
-                = new UsernamePasswordAuthenticationToken(loginDTO.getLogin(), loginDTO.getPassword());
+                = new UsernamePasswordAuthenticationToken(userAuth.getLogin(), loginDTO.getPassword());
         Authentication auth = authenticationProvider.authenticate(reqWithLoginAndPAss);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
