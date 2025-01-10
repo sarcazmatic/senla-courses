@@ -1,8 +1,7 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.model.File;
-import com.senla.courses.model.Literature;
-import com.senla.courses.util.HibernateUtil;
+import com.senla.courses.config.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;

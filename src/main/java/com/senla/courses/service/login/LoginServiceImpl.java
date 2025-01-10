@@ -3,7 +3,6 @@ package com.senla.courses.service.login;
 import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.LoginDTO;
 import com.senla.courses.exception.NotFoundException;
-import com.senla.courses.exception.ValidationException;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

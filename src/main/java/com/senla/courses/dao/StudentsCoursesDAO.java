@@ -1,7 +1,7 @@
 package com.senla.courses.dao;
 
 import com.senla.courses.model.StudentsCourses;
-import com.senla.courses.util.HibernateUtil;
+import com.senla.courses.config.HibernateUtil;
 import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

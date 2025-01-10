@@ -6,7 +6,6 @@ import com.senla.courses.service.messages.MessageService;
 import com.senla.courses.util.UserDetailsExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,12 +48,7 @@ public class MessageController {
     public List<MessageFullDTO> getMessage(@RequestParam(name = "ids") List<Long> betweenIds,
                                            @RequestParam(required = false, defaultValue = "1") int from,
                                            @RequestParam(required = false, defaultValue = "10") int size) {
-        User user;
-        try {
-            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } catch (ClassCastException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        User user = UserDetailsExtractor.extractUserDetails();
         return messageService.getMessagesBetween(user, betweenIds, from, size);
     }
 

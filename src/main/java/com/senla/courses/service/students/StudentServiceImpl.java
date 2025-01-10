@@ -14,16 +14,13 @@ import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
-import com.senla.courses.model.Privilege;
 import com.senla.courses.model.Role;
 import com.senla.courses.model.Student;
 import com.senla.courses.model.StudentsCourses;
 import com.senla.courses.model.StudentsCoursesPK;
-import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
 import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
