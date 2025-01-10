@@ -59,12 +59,14 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         }
     }
 
-    public List<Message> findAllByText(String text, int from, int size) {
+    public List<Message> findAllByText(Long fromOrTo, String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
             Query<Message> query = session.createQuery("SELECT m from Message m " +
-                    "WHERE UPPER(m.body) LIKE CONCAT ('%', UPPER(:text), '%')", Message.class);
+                    "WHERE UPPER(m.body) LIKE CONCAT ('%', UPPER(:text), '%') " +
+                    "AND (m.from.id = :fromOrTo OR m.to.id = :fromOrTo)", Message.class);
+            query.setParameter("fromOrTo", fromOrTo);
             query.setParameter("text", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
@@ -96,7 +98,7 @@ public class MessageDAO implements GenericDAO<Message, Long> {
 
     public List<Message> findMessagesBetween(Long userOne, Long userTwo, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
-        Transaction transaction = session.beginTransaction();;
+        Transaction transaction = session.beginTransaction();
         try {
             Query<Message> query = session.createQuery("SELECT m FROM Message m " +
                     "WHERE m.from.id = :userOne AND m.to.id = :userTwo " +

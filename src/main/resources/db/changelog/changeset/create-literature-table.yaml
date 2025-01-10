@@ -27,7 +27,7 @@ databaseChangeLog:
                   name: url
                   type: VARCHAR(255)
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: module_id
                   type: BIGINT

@@ -1,12 +1,10 @@
 package com.senla.courses.controller.message;
 
-import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.MessageDTO;
 import com.senla.courses.dto.MessageFullDTO;
 import com.senla.courses.service.messages.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,7 +44,13 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     public MessageFullDTO editMessage(@RequestBody MessageDTO messageDTO,
                                       @PathVariable Long id) {
-        return messageService.updateMessage(messageDTO, id);
+        User user;
+        try {
+            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (ClassCastException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return messageService.updateMessage(user, messageDTO, id);
     }
 
     @GetMapping("/between")
@@ -54,7 +58,13 @@ public class MessageController {
     public List<MessageFullDTO> getMessage(@RequestParam(name = "ids") List<Long> betweenIds,
                                            @RequestParam(required = false, defaultValue = "1") int from,
                                            @RequestParam(required = false, defaultValue = "10") int size) {
-        return messageService.getMessagesBetween(betweenIds, from, size);
+        User user;
+        try {
+            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (ClassCastException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return messageService.getMessagesBetween(user, betweenIds, from, size);
     }
 
     @GetMapping
@@ -62,13 +72,25 @@ public class MessageController {
     public List<MessageFullDTO> getMessage(@RequestParam(required = false) String text,
                                            @RequestParam(required = false, defaultValue = "1") int from,
                                            @RequestParam(required = false, defaultValue = "10") int size) {
-        return messageService.findMessagesByText(text, from, size);
+        User user;
+        try {
+            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (ClassCastException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return messageService.findMessagesByText(user, text, from, size);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteMessage(@PathVariable Long id) {
-        messageService.deleteMessage(id);
+        User user;
+        try {
+            user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (ClassCastException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        messageService.deleteMessage(user, id);
     }
 
 }

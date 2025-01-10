@@ -32,8 +32,8 @@ public class Teacher {
 
     @ManyToMany
     @JoinTable(name = "teachers_courses",
-            joinColumns = {@JoinColumn(name = "fk_teacher")},
-            inverseJoinColumns = {@JoinColumn(name = "fk_courses")})
+            joinColumns = {@JoinColumn(name = "teacher_id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id")})
     private Set<Course> courses;
 
 }

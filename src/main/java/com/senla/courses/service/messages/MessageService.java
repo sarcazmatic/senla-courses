@@ -13,12 +13,12 @@ public interface MessageService {
 
     MessageFullDTO findById(Long id);
 
-    List<MessageFullDTO> getMessagesBetween(List<Long> betweenIds, int from, int size);
+    List<MessageFullDTO> getMessagesBetween(User user, List<Long> betweenIds, int from, int size);
 
-    List<MessageFullDTO> findMessagesByText(String text, int from, int size);
+    List<MessageFullDTO> findMessagesByText(User user, String text, int from, int size);
 
-    MessageFullDTO updateMessage(MessageDTO messageDTO, Long id);
+    MessageFullDTO updateMessage(User user, MessageDTO messageDTO, Long id);
 
-    void deleteMessage(Long id);
+    void deleteMessage(User user, Long id);
 
 }

@@ -14,12 +14,16 @@ import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
+import com.senla.courses.model.Privilege;
+import com.senla.courses.model.Role;
 import com.senla.courses.model.Student;
 import com.senla.courses.model.StudentsCourses;
 import com.senla.courses.model.StudentsCoursesPK;
+import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
 import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,9 +58,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDTO updateStudent(StudentDTO studentDTO, Long id) {
+    public StudentDTO updateStudent(org.springframework.security.core.userdetails.User userSec, StudentDTO studentDTO, Long id) {
         Student student = studentDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли студента по id " + id));
+        if (studentValidate(student, userSec)) {
+            throw new ValidationException("Поменять можно только информацию о себе");
+        }
         Student studentUpd = studentMapper.updateStudent(student, studentDTO);
         if (studentDTO.getUserDTO() != null) {
             User user = userMapper.updateUser(student.getUser(), studentDTO.getUserDTO());
@@ -86,16 +93,24 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void deleteStudent(Long id) {
+    public void deleteStudent(org.springframework.security.core.userdetails.User userSec, Long id) {
+        Student student = studentDAO.find(id)
+                .orElseThrow(() -> new NotFoundException("Не нашли студента по id " + id));
+        if (studentValidate(student, userSec)) {
+            throw new ValidationException("Удалить можно только информацию о себе");
+        }
         studentDAO.deleteById(id);
     }
 
     @Override
-    public Long registerCourseRequest(Long studentId, Long courseId) {
+    public Long registerCourseRequest(org.springframework.security.core.userdetails.User userSec, Long studentId, Long courseId) {
         Course course = courseDAO.find(courseId).orElseThrow(()
                 -> new NotFoundException("Не нашли курс по id " + courseId));
         Student student = studentDAO.find(studentId).orElseThrow(()
                 -> new NotFoundException("Не нашли студента по id " + studentId));
+        if (studentValidate(student, userSec)) {
+            throw new ValidationException("Заявку можно подать только от своего лица");
+        }
         StudentsCoursesPK studentCoursesPK = new StudentsCoursesPK(student.getId(), course.getId());
         StudentsCourses studentsCourses = StudentsCourses.builder()
                 .course(course)
@@ -107,7 +122,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentsCoursesDTO findStudentsCoursesById(Long studentId, Long courseId) {
+    public StudentsCoursesDTO findStudentsCoursesById(org.springframework.security.core.userdetails.User userSec, Long studentId, Long courseId) {
+        Student student = studentDAO.find(studentId).orElseThrow(()
+                -> new NotFoundException("Не нашли студента по id " + studentId));
+        if (studentValidate(student, userSec)) {
+            throw new ValidationException("Заявку можно подать только от своего лица");
+        }
         return studentsCoursesMapper.fromStudentCourses(studentCoursesDAO.findByIds(studentId, courseId));
     }
 
@@ -125,6 +145,11 @@ public class StudentServiceImpl implements StudentService {
         } else {
             throw new ValidationException("Передано неверное значение response -- " + response);
         }
+    }
+
+    private boolean studentValidate(Student student, org.springframework.security.core.userdetails.User userSec) {
+        return !student.getUser().getLogin().equals(userSec.getUsername())
+                && !userSec.getAuthorities().equals(Role.ADMIN.getAuthorities());
     }
 
 }
