@@ -2,7 +2,7 @@ package com.senla.courses.dao;
 
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Task;
-import com.senla.courses.util.HibernateUtil;
+import com.senla.courses.config.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;

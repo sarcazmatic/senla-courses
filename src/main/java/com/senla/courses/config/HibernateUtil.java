@@ -1,4 +1,4 @@
-package com.senla.courses.util;
+package com.senla.courses.config;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

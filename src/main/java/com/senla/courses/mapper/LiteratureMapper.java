@@ -1,6 +1,5 @@
 package com.senla.courses.mapper;
 
-import com.senla.courses.dao.ModuleDAO;
 import com.senla.courses.dto.LiteratureDTO;
 import com.senla.courses.model.Literature;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,7 @@ public class LiteratureMapper {
 
     public LiteratureDTO fromLiterature(Literature literature) {
         LiteratureDTO literatureDTO = LiteratureDTO.builder()
+                .id(literature.getId())
                 .author(literature.getAuthor())
                 .name(literature.getName())
                 .url(literature.getUrl())

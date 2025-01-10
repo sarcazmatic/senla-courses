@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-courses
+      author: sarcazmatic
+      changes:
+        - createTable:
+            tableName: courses
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: field
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: complexity
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration
+                  type: INTEGER
+                  constraints:
+                    nullable: false

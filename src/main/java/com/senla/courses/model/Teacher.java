@@ -1,8 +1,6 @@
 package com.senla.courses.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -34,8 +32,8 @@ public class Teacher {
 
     @ManyToMany
     @JoinTable(name = "teachers_courses",
-            joinColumns = {@JoinColumn(name = "fk_teacher")},
-            inverseJoinColumns = {@JoinColumn(name = "fk_courses")})
+            joinColumns = {@JoinColumn(name = "teacher_id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id")})
     private Set<Course> courses;
 
 }

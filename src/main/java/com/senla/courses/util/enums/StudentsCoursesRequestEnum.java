@@ -1,6 +1,6 @@
 package com.senla.courses.util.enums;
 
-public enum StudentCourseRequestEnum {
+public enum StudentsCoursesRequestEnum {
 
     NONE,
     REQUESTED,

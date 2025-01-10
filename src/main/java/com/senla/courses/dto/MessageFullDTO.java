@@ -13,7 +13,7 @@ public class MessageFullDTO {
 
     private String body;
     private LocalDateTime dateTimeSent;
-    private String teacherName;
-    private String studentName;
+    private String from;
+    private String to;
 
 }

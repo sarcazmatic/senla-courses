@@ -2,7 +2,7 @@ package com.senla.courses.dao;
 
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Message;
-import com.senla.courses.util.HibernateUtil;
+import com.senla.courses.config.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -59,12 +59,14 @@ public class MessageDAO implements GenericDAO<Message, Long> {
         }
     }
 
-    public List<Message> findAllByText(String text, int from, int size) {
+    public List<Message> findAllByText(Long fromOrTo, String text, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
             Query<Message> query = session.createQuery("SELECT m from Message m " +
-                    "WHERE UPPER(m.body) LIKE CONCAT ('%', UPPER(:text), '%')", Message.class);
+                    "WHERE UPPER(m.body) LIKE CONCAT ('%', UPPER(:text), '%') " +
+                    "AND (m.from.id = :fromOrTo OR m.to.id = :fromOrTo)", Message.class);
+            query.setParameter("fromOrTo", fromOrTo);
             query.setParameter("text", text);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
@@ -96,11 +98,11 @@ public class MessageDAO implements GenericDAO<Message, Long> {
 
     public List<Message> findMessagesBetween(Long userOne, Long userTwo, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
-        Transaction transaction = session.beginTransaction();;
+        Transaction transaction = session.beginTransaction();
         try {
             Query<Message> query = session.createQuery("SELECT m FROM Message m " +
-                    "WHERE m.student.id = :userOne AND m.teacher.id = :userTwo " +
-                    "OR m.teacher.id = :userOne AND m.student.id = :userTwo " +
+                    "WHERE m.from.id = :userOne AND m.to.id = :userTwo " +
+                    "OR m.to.id = :userOne AND m.from.id = :userTwo " +
                     "ORDER BY m.dateTimeSent DESC", Message.class);
             query.setParameter("userOne", userOne);
             query.setParameter("userTwo", userTwo);

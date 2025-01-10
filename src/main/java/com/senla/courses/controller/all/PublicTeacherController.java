@@ -22,7 +22,7 @@ public class PublicTeacherController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> findUsers(@RequestParam(required = false, name = "name") String name,
+    public List<UserDTO> findTeachersByName(@RequestParam(required = false, name = "name") String name,
                                    @RequestParam (required = false, defaultValue = "1") int from,
                                    @RequestParam (required = false, defaultValue = "10") int size) {
         return teacherService.findTeachersByName(name, from, size);
@@ -30,7 +30,7 @@ public class PublicTeacherController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO findUser(@PathVariable("id") Long id) {
+    public UserDTO findById(@PathVariable("id") Long id) {
         return teacherService.findById(id);
     }
 

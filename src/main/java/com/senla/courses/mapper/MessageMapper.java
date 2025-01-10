@@ -16,8 +16,8 @@ public class MessageMapper {
 
     public MessageFullDTO fromMessage(Message message) {
         return MessageFullDTO.builder()
-                .teacherName(message.getTeacher().getUser().getName())
-                .studentName(message.getStudent().getUser().getName())
+                .from(message.getFrom().getName())
+                .to(message.getTo().getName())
                 .body(message.getBody())
                 .dateTimeSent(message.getDateTimeSent())
                 .build();

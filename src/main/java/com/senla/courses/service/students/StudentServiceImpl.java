@@ -2,8 +2,8 @@ package com.senla.courses.service.students;
 
 import com.senla.courses.dao.CourseDAO;
 import com.senla.courses.dao.StudentDAO;
+import com.senla.courses.dao.StudentsCoursesDAO;
 import com.senla.courses.dao.UserDAO;
-import com.senla.courses.dao.StudentCoursesDAO;
 import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.exception.ValidationException;
@@ -14,11 +14,12 @@ import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
 import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
+import com.senla.courses.model.Role;
 import com.senla.courses.model.Student;
 import com.senla.courses.model.StudentsCourses;
 import com.senla.courses.model.StudentsCoursesPK;
 import com.senla.courses.model.User;
-import com.senla.courses.util.enums.StudentCourseRequestEnum;
+import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentDAO studentDAO;
     private final UserDAO userDAO;
     private final CourseDAO courseDAO;
-    private final StudentCoursesDAO studentCoursesDAO;
+    private final StudentsCoursesDAO studentCoursesDAO;
     private final StudentsCoursesMapper studentsCoursesMapper;
 
 
@@ -54,9 +55,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDTO updateStudent(StudentDTO studentDTO, Long id) {
+    public StudentDTO updateStudent(org.springframework.security.core.userdetails.User userSec, StudentDTO studentDTO, Long id) {
         Student student = studentDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли студента по id " + id));
+        if (studentValidate(student, userSec)) {
+            throw new ValidationException("Поменять можно только информацию о себе");
+        }
         Student studentUpd = studentMapper.updateStudent(student, studentDTO);
         if (studentDTO.getUserDTO() != null) {
             User user = userMapper.updateUser(student.getUser(), studentDTO.getUserDTO());
@@ -86,28 +90,41 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void deleteStudent(Long id) {
+    public void deleteStudent(org.springframework.security.core.userdetails.User userSec, Long id) {
+        Student student = studentDAO.find(id)
+                .orElseThrow(() -> new NotFoundException("Не нашли студента по id " + id));
+        if (studentValidate(student, userSec)) {
+            throw new ValidationException("Удалить можно только информацию о себе");
+        }
         studentDAO.deleteById(id);
     }
 
     @Override
-    public Long registerCourseRequest(Long studentId, Long courseId) {
+    public Long registerCourseRequest(org.springframework.security.core.userdetails.User userSec, Long studentId, Long courseId) {
         Course course = courseDAO.find(courseId).orElseThrow(()
                 -> new NotFoundException("Не нашли курс по id " + courseId));
         Student student = studentDAO.find(studentId).orElseThrow(()
                 -> new NotFoundException("Не нашли студента по id " + studentId));
+        if (studentValidate(student, userSec)) {
+            throw new ValidationException("Заявку можно подать только от своего лица");
+        }
         StudentsCoursesPK studentCoursesPK = new StudentsCoursesPK(student.getId(), course.getId());
         StudentsCourses studentsCourses = StudentsCourses.builder()
                 .course(course)
                 .student(student)
-                .courseStatus(StudentCourseRequestEnum.REQUESTED)
+                .courseStatus(StudentsCoursesRequestEnum.REQUESTED)
                 .build();
         studentsCourses.setId(studentCoursesPK);
         return studentCoursesDAO.save(studentsCourses);
     }
 
     @Override
-    public StudentsCoursesDTO findStudentsCoursesById(Long studentId, Long courseId) {
+    public StudentsCoursesDTO findStudentsCoursesById(org.springframework.security.core.userdetails.User userSec, Long studentId, Long courseId) {
+        Student student = studentDAO.find(studentId).orElseThrow(()
+                -> new NotFoundException("Не нашли студента по id " + studentId));
+        if (studentValidate(student, userSec)) {
+            throw new ValidationException("Заявку можно подать только от своего лица");
+        }
         return studentsCoursesMapper.fromStudentCourses(studentCoursesDAO.findByIds(studentId, courseId));
     }
 
@@ -118,13 +135,18 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Integer updateRequest(Long courseId, List<Long> ids, String response) {
-        if (response.toUpperCase().equals(StudentCourseRequestEnum.APPROVED.toString())
-                || response.toUpperCase().equals(StudentCourseRequestEnum.DECLINED.toString())) {
-            StudentCourseRequestEnum newResponse = StudentCourseRequestEnum.valueOf(response.toUpperCase());
+        if (response.toUpperCase().equals(StudentsCoursesRequestEnum.APPROVED.toString())
+                || response.toUpperCase().equals(StudentsCoursesRequestEnum.DECLINED.toString())) {
+            StudentsCoursesRequestEnum newResponse = StudentsCoursesRequestEnum.valueOf(response.toUpperCase());
             return studentCoursesDAO.updateRequest(courseId, ids, newResponse);
         } else {
             throw new ValidationException("Передано неверное значение response -- " + response);
         }
+    }
+
+    private boolean studentValidate(Student student, org.springframework.security.core.userdetails.User userSec) {
+        return !student.getUser().getLogin().equals(userSec.getUsername())
+                && !userSec.getAuthorities().equals(Role.ADMIN.getAuthorities());
     }
 
 }

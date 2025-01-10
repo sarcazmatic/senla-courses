@@ -38,8 +38,8 @@ public class Course {
 
     @ManyToMany
     @JoinTable(name = "teachers_courses",
-            joinColumns = {@JoinColumn(name = "fk_courses")},
-            inverseJoinColumns = {@JoinColumn(name = "fk_teacher")})
+            joinColumns = {@JoinColumn(name = "course_id")},
+            inverseJoinColumns = {@JoinColumn(name = "teacher_id")})
     private Set<Teacher> teachers;
 
     @OneToMany(mappedBy = "course",

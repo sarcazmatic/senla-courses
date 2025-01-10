@@ -1,7 +1,7 @@
 package com.senla.courses.dto;
 
 
-import com.senla.courses.util.enums.StudentCourseRequestEnum;
+import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,5 +20,5 @@ public class StudentsCoursesDTO {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Integer currentModule;
-    private StudentCourseRequestEnum courseStatus;
+    private StudentsCoursesRequestEnum courseStatus;
 }

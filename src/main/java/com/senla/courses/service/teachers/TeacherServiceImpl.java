@@ -3,8 +3,11 @@ package com.senla.courses.service.teachers;
 import com.senla.courses.dao.TeacherDAO;
 import com.senla.courses.dao.UserDAO;
 import com.senla.courses.dto.UserDTO;
+import com.senla.courses.exception.NotFoundException;
+import com.senla.courses.exception.ValidationException;
 import com.senla.courses.mapper.UserMapper;
 import com.senla.courses.exception.EmptyListException;
+import com.senla.courses.model.Role;
 import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;
@@ -28,7 +31,7 @@ public class TeacherServiceImpl implements TeacherService {
         user.setDateTimeRegistered(LocalDateTime.now());
         Long userPk = userDAO.save(user);
         User userTeacher = userDAO.find(userPk)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти такого пользовтеля"));
+                .orElseThrow(() -> new NotFoundException("Не смогли найти такого пользовтеля"));
         Teacher teacher = Teacher.builder()
                 .id(userPk)
                 .user(userTeacher)
@@ -38,9 +41,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public UserDTO updateTeacher(UserDTO userDTO, Long id) {
+    public UserDTO updateTeacher(org.springframework.security.core.userdetails.User userSec, UserDTO userDTO, Long id) {
         Teacher teacherUpd = teacherDAO.find(id)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя по id " + id));
+                .orElseThrow(() -> new NotFoundException("Не смогли найти учителя по id " + id));
+        if (teacherValidate(teacherUpd, userSec)) {
+            throw new ValidationException("Обновить можно только инфомрацию о себе");
+        }
         User user = userMapper.updateUser(teacherUpd.getUser(), userDTO);
         teacherUpd.setUser(user);
         teacherDAO.update(teacherUpd);
@@ -50,7 +56,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public UserDTO findById(Long id) {
         Teacher teacher = teacherDAO.find(id)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти учителя по id " + id));
+                .orElseThrow(() -> new NotFoundException("Не смогли найти учителя по id " + id));
         return userMapper.fromUser(teacher.getUser());
     }
 
@@ -68,8 +74,18 @@ public class TeacherServiceImpl implements TeacherService {
 
 
     @Override
-    public void deleteTeacher(Long id) {
+    public void deleteTeacher(org.springframework.security.core.userdetails.User userSec, Long id) {
+        Teacher teacher = teacherDAO.find(id)
+                .orElseThrow(() -> new NotFoundException("Не смогли найти учителя по id " + id));
+        if (teacherValidate(teacher, userSec)) {
+            throw new ValidationException("Удалить можно только информацию о себе");
+        }
         teacherDAO.deleteById(id);
+    }
+
+    private boolean teacherValidate(Teacher teacher, org.springframework.security.core.userdetails.User userSec) {
+        return !teacher.getUser().getLogin().equals(userSec.getUsername())
+                && !userSec.getAuthorities().equals(Role.ADMIN.getAuthorities());
     }
 
 }

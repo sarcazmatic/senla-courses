@@ -16,6 +16,8 @@ public class UserDTO {
     @NotBlank
     private String name;
     @NotBlank
+    private String login;
+    @NotBlank
     @Email
     private String email;
     @NotBlank
@@ -24,4 +26,6 @@ public class UserDTO {
     private Integer age;
     private String description;
     private LocalDateTime dateTimeRegistered;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String role;
 }

@@ -1,6 +1,7 @@
 package com.senla.courses.mapper;
 
 import com.senla.courses.dto.UserDTO;
+import com.senla.courses.model.Role;
 import com.senla.courses.model.User;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +12,11 @@ public class UserMapper {
         return User.builder()
                 .age(userDTO.getAge())
                 .description(userDTO.getDescription())
+                .login(userDTO.getLogin())
                 .email(userDTO.getEmail())
                 .name(userDTO.getName())
                 .password(userDTO.getPassword())
+                .role(Role.valueOf(userDTO.getRole().toUpperCase()))
                 .build();
     }
 
@@ -21,10 +24,12 @@ public class UserMapper {
         return UserDTO.builder()
                 .age(user.getAge())
                 .description(user.getDescription())
+                .login(user.getLogin())
                 .email(user.getEmail())
                 .name(user.getName())
                 .dateTimeRegistered(user.getDateTimeRegistered())
                 .password(user.getPassword())
+                .role(Role.valueOf(user.getRole().name()).toString())
                 .build();
     }
 

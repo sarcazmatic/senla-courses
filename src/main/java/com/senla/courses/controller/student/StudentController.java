@@ -3,9 +3,11 @@ package com.senla.courses.controller.student;
 import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.service.students.StudentService;
+import com.senla.courses.util.UserDetailsExtractor;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +38,8 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@RequestBody StudentDTO studentDTO,
                                     @PathVariable Long id) {
-        return studentService.updateStudent(studentDTO, id);
+        User user = UserDetailsExtractor.extractUserDetails();
+        return studentService.updateStudent(user, studentDTO, id);
     }
 
     @GetMapping("/{id}")
@@ -56,7 +59,8 @@ public class StudentController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteStudent(@PathVariable("id") Long id) {
-        studentService.deleteStudent(id);
+        User user = UserDetailsExtractor.extractUserDetails();
+        studentService.deleteStudent(user, id);
     }
 
 }
