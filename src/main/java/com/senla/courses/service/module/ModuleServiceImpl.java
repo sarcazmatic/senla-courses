@@ -9,6 +9,8 @@ import com.senla.courses.mapper.ModuleMapper;
 import com.senla.courses.model.Course;
 import com.senla.courses.model.Module;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -18,6 +20,8 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class ModuleServiceImpl implements ModuleService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ModuleServiceImpl.class);
 
     private final CourseDAO courseDAO;
     private final ModuleDAO moduleDAO;
@@ -44,6 +48,7 @@ public class ModuleServiceImpl implements ModuleService {
         }
         course.setModules(newCourseModules);
         courseDAO.update(course);
+        logger.info("Модуль с id {} для курса {} создан", pk, course.getName());
         return pk;
     }
 
@@ -56,12 +61,14 @@ public class ModuleServiceImpl implements ModuleService {
         moduleIn.setCourse(course);
         Module moduleOut = moduleMapper.updateModule(moduleIn, moduleDTO);
         Module module = moduleDAO.update(moduleOut);
+        logger.info("Модуль с id {} отредактирован", id);
         return moduleMapper.fromModule(module);
     }
 
     public ModuleDTO findModule(Long id) {
         Module module = moduleDAO.find(id).orElseThrow(()
                 -> new NotFoundException("На нашли модуля по id " + id));
+        logger.info("Модуль с id {} найден", id);
         return moduleMapper.fromModule(module);
     }
 
@@ -71,7 +78,9 @@ public class ModuleServiceImpl implements ModuleService {
         if (modules.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        return modules.stream().map(moduleMapper::fromModule).toList();
+        List<ModuleDTO> moduleDTOS = modules.stream().map(moduleMapper::fromModule).toList();
+        logger.info("Собран список модулей с названием {}", text);
+        return moduleDTOS;
     }
 
     @Override
@@ -80,12 +89,16 @@ public class ModuleServiceImpl implements ModuleService {
         if (modules.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        return modules.stream().map(moduleMapper::fromModule).toList();
+        List<ModuleDTO> moduleDTOS =  modules.stream().map(moduleMapper::fromModule).toList();
+        logger.info("Собран список модулей с описанием {}", text);
+        return moduleDTOS;
     }
 
     @Override
     public void deleteModule(Long id) {
         moduleDAO.deleteById(id);
+        logger.info("Модуль с id {} удален", id);
+
     }
 
 }

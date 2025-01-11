@@ -11,6 +11,8 @@ import com.senla.courses.model.Role;
 import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TeacherServiceImpl.class);
 
     private final UserMapper userMapper;
     private final TeacherDAO teacherDAO;
@@ -37,7 +41,9 @@ public class TeacherServiceImpl implements TeacherService {
                 .user(userTeacher)
                 .courses(new HashSet<>())
                 .build();
-        return teacherDAO.save(teacher);
+        Long id = teacherDAO.save(teacher);
+        logger.info("Учитель с логином {} зарегестрирован", userDTO.getLogin());
+        return id;
     }
 
     @Override
@@ -50,6 +56,7 @@ public class TeacherServiceImpl implements TeacherService {
         User user = userMapper.updateUser(teacherUpd.getUser(), userDTO);
         teacherUpd.setUser(user);
         teacherDAO.update(teacherUpd);
+        logger.info("Учитель с id {} обновлен", id);
         return userMapper.fromUser(teacherUpd.getUser());
     }
 
@@ -57,6 +64,7 @@ public class TeacherServiceImpl implements TeacherService {
     public UserDTO findById(Long id) {
         Teacher teacher = teacherDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не смогли найти учителя по id " + id));
+        logger.info("Учитель с id {} найден", id);
         return userMapper.fromUser(teacher.getUser());
     }
 
@@ -69,6 +77,7 @@ public class TeacherServiceImpl implements TeacherService {
         if (userDTOList.isEmpty()) {
             throw new EmptyListException("Список учителей пуст");
         }
+        logger.info("Список учителей с именем {} собран", name);
         return userDTOList;
     }
 
@@ -81,11 +90,18 @@ public class TeacherServiceImpl implements TeacherService {
             throw new ValidationException("Удалить можно только информацию о себе");
         }
         teacherDAO.deleteById(id);
+        logger.info("Учитель с id {} удален", id);
     }
 
     private boolean teacherValidate(Teacher teacher, org.springframework.security.core.userdetails.User userSec) {
-        return !teacher.getUser().getLogin().equals(userSec.getUsername())
+        boolean isValid = !teacher.getUser().getLogin().equals(userSec.getUsername())
                 && !userSec.getAuthorities().equals(Role.ADMIN.getAuthorities());
+        if (isValid) {
+            logger.info("Валидация студента успешна");
+        } else {
+            logger.info("Валидация студента не была успешна");
+        }
+        return isValid;
     }
 
 }

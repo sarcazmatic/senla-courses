@@ -10,16 +10,19 @@ import com.senla.courses.mapper.FileMapper;
 import com.senla.courses.model.File;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class FileServiceImpl implements FileService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
     private final FileDAO fileDAO;
     private final ModuleDAO moduleDAO;
@@ -30,13 +33,16 @@ public class FileServiceImpl implements FileService {
         File file = fileMapper.fromMPFile(mpFile, url);
         file.setModule(moduleDAO.find(moduleId).orElseThrow(()
                 -> new NotFoundException("Не нашли модуля для прикрепления файла")));
-        return fileDAO.save(file);
+        Long id = fileDAO.save(file);
+        logger.info("Сохранен файл с названием {}", mpFile.getOriginalFilename());
+        return id;
     }
 
     @Override
     public FileDTO findById(Long fileId) {
          File file = fileDAO.find(fileId).orElseThrow(()
                 -> new NotFoundException("Не нашли файл с id " + fileId));
+        logger.info("Найден файл с id {}", fileId);
         return fileMapper.fromFile(file);
     }
 
@@ -45,12 +51,15 @@ public class FileServiceImpl implements FileService {
         File file = fileDAO.find(fileId).orElseThrow(()
                 -> new NotFoundException("Не нашли файл с id " + fileId));
         File fileOut = fileMapper.updateFile(file, mpFile, url);
-        return fileMapper.fromFile(fileDAO.update(fileOut));
+        File fileRes = fileDAO.update(fileOut);
+        logger.info("Файл с id {} обновлен", fileId);
+        return fileMapper.fromFile(fileRes);
     }
 
     @Override
     public void delete(Long fileId) {
         fileDAO.deleteById(fileId);
+        logger.info("Файл с id {} удален", fileId);
     }
 
     @Override
@@ -60,7 +69,9 @@ public class FileServiceImpl implements FileService {
         if (files.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        return files.stream().map(f -> fileMapper.fromFileToReturn(f, path)).toList();
+        List<ReturnFileDTO> returnFileDTOS = files.stream().map(f -> fileMapper.fromFileToReturn(f, path)).toList();
+        logger.info("Возвращен список файлов модуля с id {}", moduleId);
+        return returnFileDTOS;
     }
 
 }

@@ -21,6 +21,8 @@ import com.senla.courses.model.StudentsCoursesPK;
 import com.senla.courses.model.User;
 import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,6 +31,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
+
+    private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     private final UserMapper userMapper;
     private final StudentMapper studentMapper;
@@ -51,7 +55,9 @@ public class StudentServiceImpl implements StudentService {
                 .user(userStudent)
                 .rating(0.0)
                 .build();
-        return studentDAO.save(student);
+        Long id = studentDAO.save(student);
+        logger.info("Студент с логином {} зарегестрирован", userDTO.getLogin());
+        return id;
     }
 
     @Override
@@ -67,6 +73,7 @@ public class StudentServiceImpl implements StudentService {
             studentUpd.setUser(user);
         }
         studentDAO.update(studentUpd);
+        logger.info("Студент с id {} обновлен", id);
         return studentMapper.fromStudent(studentUpd);
     }
 
@@ -74,6 +81,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentDTO findById(Long id) {
         Student student = studentDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли студента по id " + id));
+        logger.info("Студент с id {} найден", id);
         return studentMapper.fromStudent(student);
     }
 
@@ -86,6 +94,7 @@ public class StudentServiceImpl implements StudentService {
         if (userDTOList.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
+        logger.info("Список студентов с именем {} собран", name);
         return userDTOList;
     }
 
@@ -97,6 +106,7 @@ public class StudentServiceImpl implements StudentService {
             throw new ValidationException("Удалить можно только информацию о себе");
         }
         studentDAO.deleteById(id);
+        logger.info("Студент с id {} удален", id);
     }
 
     @Override
@@ -115,7 +125,9 @@ public class StudentServiceImpl implements StudentService {
                 .courseStatus(StudentsCoursesRequestEnum.REQUESTED)
                 .build();
         studentsCourses.setId(studentCoursesPK);
-        return studentCoursesDAO.save(studentsCourses);
+        Long id = studentCoursesDAO.save(studentsCourses);
+        logger.info("Заявка на курс {} от студента {} зарегестрирована", course.getName(), student.getUser().getName());
+        return id;
     }
 
     @Override
@@ -125,12 +137,16 @@ public class StudentServiceImpl implements StudentService {
         if (studentValidate(student, userSec)) {
             throw new ValidationException("Заявку можно подать только от своего лица");
         }
-        return studentsCoursesMapper.fromStudentCourses(studentCoursesDAO.findByIds(studentId, courseId));
+        StudentsCourses studentsCourses = studentCoursesDAO.findByIds(studentId, courseId);
+        logger.info("Заявка по id студента {} и курса {} найдена", studentId, courseId);
+        return studentsCoursesMapper.fromStudentCourses(studentsCourses);
     }
 
     @Override
     public List<StudentsCoursesDTO> findStudentsCoursesByCourseId(Long courseId) {
-        return studentCoursesDAO.findAllByCourseId(courseId).stream().map(studentsCoursesMapper::fromStudentCourses).toList();
+        List<StudentsCoursesDTO> studentsCoursesDTOS = studentCoursesDAO.findAllByCourseId(courseId).stream().map(studentsCoursesMapper::fromStudentCourses).toList();
+        logger.info("Список заявок на курс {} собран", courseId);
+        return studentsCoursesDTOS;
     }
 
     @Override
@@ -138,15 +154,23 @@ public class StudentServiceImpl implements StudentService {
         if (response.toUpperCase().equals(StudentsCoursesRequestEnum.APPROVED.toString())
                 || response.toUpperCase().equals(StudentsCoursesRequestEnum.DECLINED.toString())) {
             StudentsCoursesRequestEnum newResponse = StudentsCoursesRequestEnum.valueOf(response.toUpperCase());
-            return studentCoursesDAO.updateRequest(courseId, ids, newResponse);
+            Integer affectedRows = studentCoursesDAO.updateRequest(courseId, ids, newResponse);
+            logger.info("Заявки на курс {} от студентов {} переведены в статус {}", courseId, ids, response);
+            return affectedRows;
         } else {
             throw new ValidationException("Передано неверное значение response -- " + response);
         }
     }
 
     private boolean studentValidate(Student student, org.springframework.security.core.userdetails.User userSec) {
-        return !student.getUser().getLogin().equals(userSec.getUsername())
+        boolean isValid = !student.getUser().getLogin().equals(userSec.getUsername())
                 && !userSec.getAuthorities().equals(Role.ADMIN.getAuthorities());
+        if (isValid) {
+            logger.info("Валидация студента успешна");
+        } else {
+            logger.info("Валидация студента не была успешна");
+        }
+        return isValid;
     }
 
 }

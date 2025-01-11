@@ -82,7 +82,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             Teacher teacher = Optional.of(session.get(Teacher.class, id))
-                    .orElseThrow(() -> new RuntimeException("не нашли преподавателя"));
+                    .orElseThrow(() -> new RuntimeException("Не нашли преподавателя"));
             var query1 = session.createQuery("DELETE FROM Teacher t WHERE t.id = :teacherId");
             query1.setParameter("teacherId", teacher.getId());
             query1.executeUpdate();

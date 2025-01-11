@@ -31,6 +31,19 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Error handleEmptyListException(final EmptyListException e) {
+        logger.log(Level.SEVERE, "404 " + e.getMessage());
+        return Error.builder()
+                .errors(List.of(e.getClass().getName()))
+                .message(e.getLocalizedMessage())
+                .reason(Arrays.toString(e.getStackTrace()))
+                .status(HttpStatus.NOT_FOUND)
+                .timestamp(LocalDateTime.now().toString())
+                .build();
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Error handleValidationException(final ValidationException e) {
         logger.log(Level.SEVERE, "400 " + e.getMessage());
