@@ -14,8 +14,7 @@ import com.senla.courses.model.Message;
 import com.senla.courses.model.Student;
 import com.senla.courses.model.Teacher;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.User;
@@ -25,11 +24,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class MessageServiceImpl implements MessageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
     private final MessageMapper messageMapper;
     private final StudentDAO studentDAO;
     private final TeacherDAO teacherDAO;
@@ -66,7 +65,7 @@ public class MessageServiceImpl implements MessageService {
         }
         message.setDateTimeSent(LocalDateTime.now());
         Long id = messageDAO.save(message);
-        logger.info("Сообщение с id {} создано", id);
+        log.info("Сообщение с id {} создано", id);
         return id;
     }
 
@@ -82,7 +81,7 @@ public class MessageServiceImpl implements MessageService {
         }
         messageIn.setBody(messageDTO.getBody());
         Message messageOut = messageDAO.update(messageIn);
-        logger.info("Сообщение с id {} отредактировано", id);
+        log.info("Сообщение с id {} отредактировано", id);
         return messageMapper.fromMessage(messageOut);
     }
 
@@ -90,7 +89,7 @@ public class MessageServiceImpl implements MessageService {
     public MessageFullDTO findById(Long id) {
         Message message = messageDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не смогли найти сообщение"));
-        logger.info("Сообщение с id {} найдено", id);
+        log.info("Сообщение с id {} найдено", id);
         return messageMapper.fromMessage(message);
     }
 
@@ -107,7 +106,7 @@ public class MessageServiceImpl implements MessageService {
             throw new EmptyListException("Список сообщений между указанными id пусть");
         }
         List<MessageFullDTO> messageFullDTOList = messagesList.stream().map(messageMapper::fromMessage).toList();
-        logger.info("Список сообщений между {} собран", betweenIds);
+        log.info("Список сообщений между {} собран", betweenIds);
         return messageFullDTOList;
     }
 
@@ -121,7 +120,7 @@ public class MessageServiceImpl implements MessageService {
             throw new EmptyListException("Список сообщений между указанными id пусть");
         }
         List<MessageFullDTO> messageFullDTOList = messagesList.stream().map(messageMapper::fromMessage).toList();
-        logger.info("Список сообщений, содержащих текст {}, найден", text);
+        log.info("Список сообщений, содержащих текст {}, найден", text);
         return messageFullDTOList;
     }
 
@@ -137,6 +136,6 @@ public class MessageServiceImpl implements MessageService {
             throw new ValidationException("Можно удалять только сообщения, в которых вы -- отправитель");
         }
         messageDAO.deleteById(id);
-        logger.info("Сообщение с id {} удалено", id);
+        log.info("Сообщение с id {} удалено", id);
     }
 }

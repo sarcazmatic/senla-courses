@@ -9,20 +9,18 @@ import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.model.Course;
 import com.senla.courses.model.Teacher;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class CourseServiceImpl implements CourseService {
-
-    private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
 
     private final CourseMapper courseMapper;
     private final CourseDAO courseDAO;
@@ -33,7 +31,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseMapper.fromCourseDTO(courseDTO);
         course.setTeachers(new HashSet<>());
         Long id = courseDAO.save(course);
-        logger.info("Создан курс с названием {}", courseDTO.getName());
+        log.info("Создан курс с названием {}", courseDTO.getName());
         return id;
     }
 
@@ -43,7 +41,7 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         Course courseUpd = courseMapper.updateCourse(course, courseDTO);
         CourseDTO courseDTOResult = courseMapper.fromCourse(courseDAO.update(courseUpd));
-        logger.info("Обновлен курс с id {}", id);
+        log.info("Обновлен курс с id {}", id);
         return courseDTOResult;
     }
 
@@ -57,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
         teachers.addAll(addTeachers);
         course.setTeachers(teachers);
         courseDAO.update(course);
-        logger.info("Учителя с id {} добавлены в курс {}", ids, course.getName());
+        log.info("Учителя с id {} добавлены в курс {}", ids, course.getName());
         return courseMapper.fromCourse(course);
     }
 
@@ -72,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
         Set<Teacher> newTeachers = teachers.stream().filter(t -> !ids.contains(t.getId())).collect(Collectors.toSet());
         course.setTeachers(newTeachers);
         courseDAO.update(course);
-        logger.info("Учителя с id {} удалены из курса {}", ids, course.getName());
+        log.info("Учителя с id {} удалены из курса {}", ids, course.getName());
         return courseMapper.fromCourse(course);
     }
 
@@ -81,7 +79,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         CourseDTO courseDTO = courseMapper.fromCourse(course);
-        logger.info("Найден курс с id {}", id);
+        log.info("Найден курс с id {}", id);
         return courseDTO;
     }
 
@@ -91,7 +89,7 @@ public class CourseServiceImpl implements CourseService {
             throw new EmptyListException("Список пуст");
         }
         List<CourseDTO> courseDTOS = courses.stream().map(courseMapper::fromCourse).toList();
-        logger.info("Собран список всех курсов");
+        log.info("Собран список всех курсов");
         return courseDTOS;
     }
 
@@ -102,14 +100,14 @@ public class CourseServiceImpl implements CourseService {
             throw new EmptyListException("Список пуст");
         }
         List<CourseDTO> courseDTOS = courses.stream().map(courseMapper::fromCourse).toList();
-        logger.info("Собран список всех курсов по запросу: {}", text);
+        log.info("Собран список всех курсов по запросу: {}", text);
         return courseDTOS;
     }
 
     @Override
     public void deleteCourse(Long id) {
         courseDAO.deleteById(id);
-        logger.info("Курс с id {} удален", id);
+        log.info("Курс с id {} удален", id);
     }
 
 }

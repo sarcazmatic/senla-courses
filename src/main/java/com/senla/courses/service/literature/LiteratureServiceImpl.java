@@ -8,17 +8,15 @@ import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.mapper.LiteratureMapper;
 import com.senla.courses.model.Literature;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class LiteratureServiceImpl implements LiteratureService {
-
-    private static final Logger logger = LoggerFactory.getLogger(LiteratureServiceImpl.class);
 
     private final ModuleDAO moduleDAO;
     private final LiteratureDAO literatureDAO;
@@ -30,7 +28,7 @@ public class LiteratureServiceImpl implements LiteratureService {
         literature.setModule(moduleDAO.find(id).orElseThrow(()
                 -> new NotFoundException("На нашли модуля по id " + id)));
         Long idReturn = literatureDAO.save(literature);
-        logger.info("Сохранена литература с названием {} для модуля с id {}", literatureDTO.getName(), id);
+        log.info("Сохранена литература с названием {} для модуля с id {}", literatureDTO.getName(), id);
         return idReturn;
     }
 
@@ -39,7 +37,7 @@ public class LiteratureServiceImpl implements LiteratureService {
         Literature literature = literatureDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти литературу"));
         Literature literatureResult = literatureDAO.update(literatureMapper.updateLiterature(literature, literatureDTO));
-        logger.info("Отредактирована литература с id {}", id);
+        log.info("Отредактирована литература с id {}", id);
         return literatureMapper.fromLiterature(literatureResult);
     }
 
@@ -48,7 +46,7 @@ public class LiteratureServiceImpl implements LiteratureService {
         Literature literature = literatureDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти литературу"));
         LiteratureDTO literatureDTO = literatureMapper.fromLiterature(literature);
-        logger.info("Найдена литература с id {}", id);
+        log.info("Найдена литература с id {}", id);
         return literatureDTO;
     }
 
@@ -59,7 +57,7 @@ public class LiteratureServiceImpl implements LiteratureService {
             throw new EmptyListException("Список пуст");
         }
         List<LiteratureDTO> literatureDTOList = literatureList.stream().map(literatureMapper::fromLiterature).toList();
-        logger.info("Собран список литературы по тексту {}", text);
+        log.info("Собран список литературы по тексту {}", text);
         return literatureDTOList;
     }
 
@@ -70,7 +68,7 @@ public class LiteratureServiceImpl implements LiteratureService {
             throw new EmptyListException("Список пуст");
         }
         List<LiteratureDTO> literatureDTOList = literatureList.stream().map(literatureMapper::fromLiterature).toList();
-        logger.info("Собран список литературы по автору {}", author);
+        log.info("Собран список литературы по автору {}", author);
         return literatureDTOList;
     }
 
@@ -81,14 +79,14 @@ public class LiteratureServiceImpl implements LiteratureService {
             throw new EmptyListException("Список пуст");
         }
         List<LiteratureDTO> literatureDTOList =  literatureList.stream().map(literatureMapper::fromLiterature).toList();
-        logger.info("Собран список литературы модуля с id {}", moduleId);
+        log.info("Собран список литературы модуля с id {}", moduleId);
         return literatureDTOList;
     }
 
     @Override
     public void delete(Long id) {
         literatureDAO.deleteById(id);
-        logger.info("Удалена литература с id {}", id);
+        log.info("Удалена литература с id {}", id);
     }
 
 }

@@ -8,17 +8,15 @@ import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.mapper.TaskMapper;
 import com.senla.courses.model.Task;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TaskServiceImpl implements TaskService {
-
-    private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     private final ModuleDAO moduleDAO;
     private final TaskDAO taskDAO;
@@ -30,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
         task.setModule(moduleDAO.find(id).orElseThrow(()
                 -> new NotFoundException("На нашли модуля по id " + id)));
         Long idReturn = taskDAO.save(task);
-        logger.info("Задание зарегестрировано под id {}", idReturn);
+        log.info("Задание зарегестрировано под id {}", idReturn);
         return idReturn;
     }
 
@@ -39,7 +37,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти задачу"));
         Task taskResult = taskDAO.update(taskMapper.updateTask(task, taskDTO));
-        logger.info("Задание с id {} отредактировано", id);
+        log.info("Задание с id {} отредактировано", id);
         return taskMapper.fromTask(taskResult);
     }
 
@@ -47,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDTO findById(Long id) {
         Task task = taskDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти задачу"));
-        logger.info("Задание с id {} найдено", id);
+        log.info("Задание с id {} найдено", id);
         return taskMapper.fromTask(task);
     }
 
@@ -58,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
             throw new EmptyListException("Список пуст");
         }
         List<TaskDTO> taskDTOS = tasks.stream().map(taskMapper::fromTask).toList();
-        logger.info("Собран список задач с текстом {}", text);
+        log.info("Собран список задач с текстом {}", text);
         return taskDTOS;
     }
 
@@ -69,14 +67,14 @@ public class TaskServiceImpl implements TaskService {
             throw new EmptyListException("Список пуст");
         }
         List<TaskDTO> taskDTOS = tasks.stream().map(taskMapper::fromTask).toList();
-        logger.info("Собран список задач модуля с id {}", moduleId);
+        log.info("Собран список задач модуля с id {}", moduleId);
         return taskDTOS;
     }
 
     @Override
     public void delete(Long id) {
         taskDAO.deleteById(id);
-        logger.info("Задание с id {} удалено", id);
+        log.info("Задание с id {} удалено", id);
     }
 
 }
