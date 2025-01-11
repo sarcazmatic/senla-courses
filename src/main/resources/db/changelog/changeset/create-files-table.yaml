@@ -20,7 +20,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: content
-                  type: BLOB
+                  type: BYTEA
                   constraints:
                     nullable: false
               - column:
