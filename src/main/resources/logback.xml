@@ -10,6 +10,9 @@
     <appender name="FileAppender" class="ch.qos.logback.core.FileAppender">
         <file>./src/main/resources/logback.log</file>
         <append>true</append>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
         <immediateFlush>true</immediateFlush>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>WARN</level>
