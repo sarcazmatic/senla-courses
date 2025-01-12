@@ -31,7 +31,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseMapper.fromCourseDTO(courseDTO);
         course.setTeachers(new HashSet<>());
         Long id = courseDAO.save(course);
-        log.info("Создан курс с названием {} под id {}", courseDTO.getName(), id);
+        log.info("Создан курс с названием '{}' под id {}", courseDTO.getName(), id);
         return id;
     }
 
@@ -100,7 +100,7 @@ public class CourseServiceImpl implements CourseService {
             throw new EmptyListException("Список пуст");
         }
         List<CourseDTO> courseDTOS = courses.stream().map(courseMapper::fromCourse).toList();
-        log.info("Собран список всех курсов по запросу: {}. Найдено {} элементов", text, courseDTOS.size());
+        log.info("Собран список всех курсов по запросу: '{}'. Найдено {} элементов", text, courseDTOS.size());
         return courseDTOS;
     }
 

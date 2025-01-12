@@ -6,6 +6,7 @@ import com.senla.courses.service.students.StudentService;
 import com.senla.courses.util.UserDetailsExtractor;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import java.util.List;
 @RestController()
 @RequestMapping("/student")
 @AllArgsConstructor
+@Slf4j
 public class StudentController {
 
     private final StudentService studentService;
@@ -31,21 +33,30 @@ public class StudentController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public Long registerUser(@RequestBody @Valid UserDTO userDTO) {
-        return studentService.registerStudent(userDTO);
+        log.info("Получен запрос на регистрацию студента: {}", userDTO);
+        Long id = studentService.registerStudent(userDTO);
+        log.info("Студент успешно зарегистрирован с id: {}", id);
+        return id;
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@RequestBody StudentDTO studentDTO,
                                     @PathVariable Long id) {
+        log.info("Получен запрос на обновление данных студента с id: {}", id);
         User user = UserDetailsExtractor.extractUserDetails();
-        return studentService.updateStudent(user, studentDTO, id);
+        StudentDTO studentDTOUpd = studentService.updateStudent(user, studentDTO, id);
+        log.info("Данные студента с id: {} успешно обновлены", id);
+        return studentDTOUpd;
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO findById(@PathVariable("id") Long id) {
-        return studentService.findById(id);
+        log.info("Получен запрос на поиск студента с id: {}", id);
+        StudentDTO studentDTO = studentService.findById(id);
+        log.info("Студент с id: {} успешно найден", id);
+        return studentDTO;
     }
 
     @GetMapping
@@ -53,14 +64,19 @@ public class StudentController {
     public List<UserDTO> findStudents(@RequestParam(required = false, name = "text") String name,
                                       @RequestParam(required = false, defaultValue = "1") int from,
                                       @RequestParam(required = false, defaultValue = "10") int size) {
-        return studentService.findStudentsByName(name, from, size);
+        log.info("Получен запрос на поиск студентов по имени: '{}', страница: {}, размер: {}", name, from, size);
+        List<UserDTO> studentDTOS = studentService.findStudentsByName(name, from, size);
+        log.info("Найдено {} студентов по имени '{}'", studentDTOS.size(), name);
+        return studentDTOS;
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteStudent(@PathVariable("id") Long id) {
+        log.info("Получен запрос на удаление студента с id: {}", id);
         User user = UserDetailsExtractor.extractUserDetails();
         studentService.deleteStudent(user, id);
+        log.info("Студент с id: {} успешно удален", id);
     }
 
 }

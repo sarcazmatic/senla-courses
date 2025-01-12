@@ -56,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
             throw new EmptyListException("Список пуст");
         }
         List<TaskDTO> taskDTOS = tasks.stream().map(taskMapper::fromTask).toList();
-        log.info("Собран список задач с текстом {}. Найдено {} элементов", text, taskDTOS.size());
+        log.info("Собран список задач с текстом '{}'. Найдено {} элементов", text, taskDTOS.size());
         return taskDTOS;
     }
 

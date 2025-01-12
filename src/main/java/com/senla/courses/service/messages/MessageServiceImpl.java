@@ -120,7 +120,7 @@ public class MessageServiceImpl implements MessageService {
             throw new EmptyListException("Список сообщений между указанными id пусть");
         }
         List<MessageFullDTO> messageFullDTOList = messagesList.stream().map(messageMapper::fromMessage).toList();
-        log.info("Список сообщений, содержащих текст {}, найден. Найдено {} элементов", text, messageFullDTOList.size());
+        log.info("Список сообщений, содержащих текст '{}', найден. Найдено {} элементов", text, messageFullDTOList.size());
         return messageFullDTOList;
     }
 

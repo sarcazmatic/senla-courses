@@ -77,7 +77,7 @@ public class ModuleServiceImpl implements ModuleService {
             throw new EmptyListException("Список пуст");
         }
         List<ModuleDTO> moduleDTOS = modules.stream().map(moduleMapper::fromModule).toList();
-        log.info("Собран список модулей с названием {}. Найдено {} элементов", text, moduleDTOS.size());
+        log.info("Собран список модулей с названием '{}'. Найдено {} элементов", text, moduleDTOS.size());
         return moduleDTOS;
     }
 
@@ -88,7 +88,7 @@ public class ModuleServiceImpl implements ModuleService {
             throw new EmptyListException("Список пуст");
         }
         List<ModuleDTO> moduleDTOS =  modules.stream().map(moduleMapper::fromModule).toList();
-        log.info("Собран список модулей с описанием {}. Найдено {} элементов", text, moduleDTOS.size());
+        log.info("Собран список модулей с описанием '{}'. Найдено {} элементов", text, moduleDTOS.size());
         return moduleDTOS;
     }
 

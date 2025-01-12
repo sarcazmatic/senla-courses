@@ -28,7 +28,7 @@ public class LiteratureServiceImpl implements LiteratureService {
         literature.setModule(moduleDAO.find(id).orElseThrow(()
                 -> new NotFoundException("На нашли модуля по id " + id)));
         Long idReturn = literatureDAO.save(literature);
-        log.info("Сохранена литература под id {} с названием {}, автором {} для модуля с id {}", idReturn, literatureDTO.getName(), literatureDTO.getAuthor(), id);
+        log.info("Сохранена литература под id {} с названием '{}', автором '{}' для модуля с id {}", idReturn, literatureDTO.getName(), literatureDTO.getAuthor(), id);
         return idReturn;
     }
 
@@ -46,7 +46,7 @@ public class LiteratureServiceImpl implements LiteratureService {
         Literature literature = literatureDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти литературу"));
         LiteratureDTO literatureDTO = literatureMapper.fromLiterature(literature);
-        log.info("Найдена литература с id {}, названием {} и автором {}", id, literatureDTO.getName(), literatureDTO.getAuthor());
+        log.info("Найдена литература с id {}, названием '{}' и автором '{}'", id, literatureDTO.getName(), literatureDTO.getAuthor());
         return literatureDTO;
     }
 
@@ -57,7 +57,7 @@ public class LiteratureServiceImpl implements LiteratureService {
             throw new EmptyListException("Список пуст");
         }
         List<LiteratureDTO> literatureDTOList = literatureList.stream().map(literatureMapper::fromLiterature).toList();
-        log.info("Собран список литературы по тексту {}. Найдено {} элементов", text, literatureDTOList.size());
+        log.info("Собран список литературы по тексту '{}'. Найдено {} элементов", text, literatureDTOList.size());
         return literatureDTOList;
     }
 
@@ -68,7 +68,7 @@ public class LiteratureServiceImpl implements LiteratureService {
             throw new EmptyListException("Список пуст");
         }
         List<LiteratureDTO> literatureDTOList = literatureList.stream().map(literatureMapper::fromLiterature).toList();
-        log.info("Собран список литературы по автору {}. Найдено {} элементов", author, literatureDTOList.size());
+        log.info("Собран список литературы по автору '{}'. Найдено {} элементов", author, literatureDTOList.size());
         return literatureDTOList;
     }
 

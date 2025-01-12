@@ -55,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
                 .rating(0.0)
                 .build();
         Long id = studentDAO.save(student);
-        log.info("Студент с логином {} зарегестрирован под id {}", userDTO.getLogin(), id);
+        log.info("Студент с логином '{}' зарегестрирован под id {}", userDTO.getLogin(), id);
         return id;
     }
 
@@ -93,7 +93,7 @@ public class StudentServiceImpl implements StudentService {
         if (userDTOList.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        log.info("Список студентов с именем {} собран. Найдено {} элементов", name, userDTOList.size());
+        log.info("Список студентов с именем '{}' собран. Найдено {} элементов", name, userDTOList.size());
         return userDTOList;
     }
 
@@ -146,7 +146,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentsCoursesDTO> findStudentsCoursesByCourseId(Long courseId) {
         List<StudentsCoursesDTO> studentsCoursesDTOS = studentCoursesDAO.findAllByCourseId(courseId).stream().map(studentsCoursesMapper::fromStudentCourses).toList();
-        log.info("Список заявок на курс {} собран. Найден {} элементов.", courseId, studentsCoursesDTOS.size());
+        log.info("Список заявок на курс {} собран. Найдено {} элементов.", courseId, studentsCoursesDTOS.size());
         return studentsCoursesDTOS;
     }
 
@@ -156,7 +156,7 @@ public class StudentServiceImpl implements StudentService {
                 || response.toUpperCase().equals(StudentsCoursesRequestEnum.DECLINED.toString())) {
             StudentsCoursesRequestEnum newResponse = StudentsCoursesRequestEnum.valueOf(response.toUpperCase());
             Integer affectedRows = studentCoursesDAO.updateRequest(courseId, ids, newResponse);
-            log.info("Заявки на курс {} от студентов {} переведены в статус {}", courseId, ids, response);
+            log.info("Заявки на курс {} от студентов {} переведены в статус '{}'", courseId, ids, response);
             return affectedRows;
         } else {
             throw new ValidationException("Передано неверное значение response -- " + response);

@@ -40,7 +40,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .courses(new HashSet<>())
                 .build();
         Long id = teacherDAO.save(teacher);
-        log.info("Учитель с логином {} зарегестрирован под id {}", userDTO.getLogin(), id);
+        log.info("Учитель с логином '{}' зарегестрирован под id {}", userDTO.getLogin(), id);
         return id;
     }
 
@@ -75,7 +75,7 @@ public class TeacherServiceImpl implements TeacherService {
         if (userDTOList.isEmpty()) {
             throw new EmptyListException("Список учителей пуст");
         }
-        log.info("Список учителей с именем {} собран. Найдено {} элементов", name, userDTOList.size());
+        log.info("Список учителей с именем '{}' собран. Найдено {} элементов", name, userDTOList.size());
         return userDTOList;
     }
 

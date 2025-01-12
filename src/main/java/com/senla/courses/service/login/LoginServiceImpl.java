@@ -31,6 +31,6 @@ public class LoginServiceImpl implements LoginService {
         Authentication auth = authenticationProvider.authenticate(reqWithLoginAndPAss);
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
-        log.info("Пользователь с логином {} аутентифицирован", loginDTO.getLogin());
+        log.info("Пользователь с логином '{}' аутентифицирован", loginDTO.getLogin());
     }
 }

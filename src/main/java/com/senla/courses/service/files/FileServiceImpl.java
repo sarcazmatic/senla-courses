@@ -32,7 +32,7 @@ public class FileServiceImpl implements FileService {
         file.setModule(moduleDAO.find(moduleId).orElseThrow(()
                 -> new NotFoundException("Не нашли модуля для прикрепления файла")));
         Long id = fileDAO.save(file);
-        log.info("Сохранен файл с названием {} и типом контента {}", mpFile.getOriginalFilename(), mpFile.getContentType());
+        log.info("Сохранен файл с названием '{}' и типом контента {}", mpFile.getOriginalFilename(), mpFile.getContentType());
         return id;
     }
 
@@ -40,7 +40,7 @@ public class FileServiceImpl implements FileService {
     public FileDTO findById(Long fileId) {
          File file = fileDAO.find(fileId).orElseThrow(()
                 -> new NotFoundException("Не нашли файл с id " + fileId));
-        log.info("Найден файл с id {} и названием {}", fileId, file.getName());
+        log.info("Найден файл с id {} и названием '{}'", fileId, file.getName());
         return fileMapper.fromFile(file);
     }
 
