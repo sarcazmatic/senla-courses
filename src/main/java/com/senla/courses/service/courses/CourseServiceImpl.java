@@ -31,7 +31,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseMapper.fromCourseDTO(courseDTO);
         course.setTeachers(new HashSet<>());
         Long id = courseDAO.save(course);
-        log.info("Создан курс с названием {}", courseDTO.getName());
+        log.info("Создан курс с названием {} под id {}", courseDTO.getName(), id);
         return id;
     }
 
@@ -41,7 +41,7 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         Course courseUpd = courseMapper.updateCourse(course, courseDTO);
         CourseDTO courseDTOResult = courseMapper.fromCourse(courseDAO.update(courseUpd));
-        log.info("Обновлен курс с id {}", id);
+        log.info("Курс с id {} обновлен. Было: {}. Стало: {}", id, courseMapper.fromCourse(course).toString(), courseDTOResult.toString());
         return courseDTOResult;
     }
 
@@ -55,7 +55,7 @@ public class CourseServiceImpl implements CourseService {
         teachers.addAll(addTeachers);
         course.setTeachers(teachers);
         courseDAO.update(course);
-        log.info("Учителя с id {} добавлены в курс {}", ids, course.getName());
+        log.info("Учителя {} добавлены в курс {}", teachers, course.getName());
         return courseMapper.fromCourse(course);
     }
 
@@ -70,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
         Set<Teacher> newTeachers = teachers.stream().filter(t -> !ids.contains(t.getId())).collect(Collectors.toSet());
         course.setTeachers(newTeachers);
         courseDAO.update(course);
-        log.info("Учителя с id {} удалены из курса {}", ids, course.getName());
+        log.info("Учителя {} удалены из курса {}", teachers, course.getName());
         return courseMapper.fromCourse(course);
     }
 
@@ -79,7 +79,7 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         CourseDTO courseDTO = courseMapper.fromCourse(course);
-        log.info("Найден курс с id {}", id);
+        log.info("Найден курс с id {}: {}", id, course);
         return courseDTO;
     }
 
@@ -89,7 +89,7 @@ public class CourseServiceImpl implements CourseService {
             throw new EmptyListException("Список пуст");
         }
         List<CourseDTO> courseDTOS = courses.stream().map(courseMapper::fromCourse).toList();
-        log.info("Собран список всех курсов");
+        log.info("Собран список всех курсов. Найдено {} элементов", courseDTOS.size());
         return courseDTOS;
     }
 
@@ -100,14 +100,16 @@ public class CourseServiceImpl implements CourseService {
             throw new EmptyListException("Список пуст");
         }
         List<CourseDTO> courseDTOS = courses.stream().map(courseMapper::fromCourse).toList();
-        log.info("Собран список всех курсов по запросу: {}", text);
+        log.info("Собран список всех курсов по запросу: {}. Найдено {} элементов", text, courseDTOS.size());
         return courseDTOS;
     }
 
     @Override
     public void deleteCourse(Long id) {
+        Course course = courseDAO.find(id).orElseThrow(()
+                -> new NotFoundException("Не нашли курс по id " + id));
         courseDAO.deleteById(id);
-        log.info("Курс с id {} удален", id);
+        log.info("Курс с {} id {} удален", course, id);
     }
 
 }

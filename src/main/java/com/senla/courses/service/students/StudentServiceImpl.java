@@ -55,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
                 .rating(0.0)
                 .build();
         Long id = studentDAO.save(student);
-        log.info("Студент с логином {} зарегестрирован", userDTO.getLogin());
+        log.info("Студент с логином {} зарегестрирован под id {}", userDTO.getLogin(), id);
         return id;
     }
 
@@ -72,7 +72,7 @@ public class StudentServiceImpl implements StudentService {
             studentUpd.setUser(user);
         }
         studentDAO.update(studentUpd);
-        log.info("Студент с id {} обновлен", id);
+        log.info("Студент с id {} обновлен. Было: {}. Стало {}.", id, student, studentUpd);
         return studentMapper.fromStudent(studentUpd);
     }
 
@@ -80,7 +80,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentDTO findById(Long id) {
         Student student = studentDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли студента по id " + id));
-        log.info("Студент с id {} найден", id);
+        log.info("Студент {} с id {} найден", student, id);
         return studentMapper.fromStudent(student);
     }
 
@@ -93,7 +93,7 @@ public class StudentServiceImpl implements StudentService {
         if (userDTOList.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        log.info("Список студентов с именем {} собран", name);
+        log.info("Список студентов с именем {} собран. Найдено {} элементов", name, userDTOList.size());
         return userDTOList;
     }
 
@@ -105,7 +105,7 @@ public class StudentServiceImpl implements StudentService {
             throw new ValidationException("Удалить можно только информацию о себе");
         }
         studentDAO.deleteById(id);
-        log.info("Студент с id {} удален", id);
+        log.info("Студент {} с id {} удален", student, id);
     }
 
     @Override
@@ -131,20 +131,22 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentsCoursesDTO findStudentsCoursesById(org.springframework.security.core.userdetails.User userSec, Long studentId, Long courseId) {
+        Course course = courseDAO.find(courseId).orElseThrow(()
+                -> new NotFoundException("Не нашли курс по id " + courseId));
         Student student = studentDAO.find(studentId).orElseThrow(()
                 -> new NotFoundException("Не нашли студента по id " + studentId));
         if (studentValidate(student, userSec)) {
             throw new ValidationException("Заявку можно подать только от своего лица");
         }
         StudentsCourses studentsCourses = studentCoursesDAO.findByIds(studentId, courseId);
-        log.info("Заявка по id студента {} и курса {} найдена", studentId, courseId);
+        log.info("Заявка от студента {} на курс {} найдена. Статус: {}", student, course, studentsCourses.getCourseStatus());
         return studentsCoursesMapper.fromStudentCourses(studentsCourses);
     }
 
     @Override
     public List<StudentsCoursesDTO> findStudentsCoursesByCourseId(Long courseId) {
         List<StudentsCoursesDTO> studentsCoursesDTOS = studentCoursesDAO.findAllByCourseId(courseId).stream().map(studentsCoursesMapper::fromStudentCourses).toList();
-        log.info("Список заявок на курс {} собран", courseId);
+        log.info("Список заявок на курс {} собран. Найден {} элементов.", courseId, studentsCoursesDTOS.size());
         return studentsCoursesDTOS;
     }
 

@@ -46,7 +46,7 @@ public class ModuleServiceImpl implements ModuleService {
         }
         course.setModules(newCourseModules);
         courseDAO.update(course);
-        log.info("Модуль с id {} для курса {} создан", pk, course.getName());
+        log.info("Модуль {} с id {} для курса {} создан", module.getName(), pk, course.getName());
         return pk;
     }
 
@@ -59,14 +59,14 @@ public class ModuleServiceImpl implements ModuleService {
         moduleIn.setCourse(course);
         Module moduleOut = moduleMapper.updateModule(moduleIn, moduleDTO);
         Module module = moduleDAO.update(moduleOut);
-        log.info("Модуль с id {} отредактирован", id);
+        log.info("Модуль с id {} отредактирован. Было: {}. Стало {}.", id, moduleIn, moduleOut);
         return moduleMapper.fromModule(module);
     }
 
     public ModuleDTO findModule(Long id) {
         Module module = moduleDAO.find(id).orElseThrow(()
                 -> new NotFoundException("На нашли модуля по id " + id));
-        log.info("Модуль с id {} найден", id);
+        log.info("Модуль {} с id {} найден", module, id);
         return moduleMapper.fromModule(module);
     }
 
@@ -77,7 +77,7 @@ public class ModuleServiceImpl implements ModuleService {
             throw new EmptyListException("Список пуст");
         }
         List<ModuleDTO> moduleDTOS = modules.stream().map(moduleMapper::fromModule).toList();
-        log.info("Собран список модулей с названием {}", text);
+        log.info("Собран список модулей с названием {}. Найдено {} элементов", text, moduleDTOS.size());
         return moduleDTOS;
     }
 
@@ -88,14 +88,16 @@ public class ModuleServiceImpl implements ModuleService {
             throw new EmptyListException("Список пуст");
         }
         List<ModuleDTO> moduleDTOS =  modules.stream().map(moduleMapper::fromModule).toList();
-        log.info("Собран список модулей с описанием {}", text);
+        log.info("Собран список модулей с описанием {}. Найдено {} элементов", text, moduleDTOS.size());
         return moduleDTOS;
     }
 
     @Override
     public void deleteModule(Long id) {
+        Module module = moduleDAO.find(id).orElseThrow(()
+                -> new NotFoundException("На нашли модуля по id " + id));
         moduleDAO.deleteById(id);
-        log.info("Модуль с id {} удален", id);
+        log.info("Модуль {} с id {} удален", module, id);
 
     }
 

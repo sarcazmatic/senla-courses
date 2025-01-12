@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO findById(Long id) {
         User user = userDao.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли пользователя по id " + id));
-        log.info("Пользователь с id {} найден", id);
+        log.info("Пользователь {} с id {} найден", user, id);
         return userMapper.fromUser(user);
     }
 

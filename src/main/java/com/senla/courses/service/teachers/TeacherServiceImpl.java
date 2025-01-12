@@ -40,7 +40,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .courses(new HashSet<>())
                 .build();
         Long id = teacherDAO.save(teacher);
-        log.info("Учитель с логином {} зарегестрирован", userDTO.getLogin());
+        log.info("Учитель с логином {} зарегестрирован под id {}", userDTO.getLogin(), id);
         return id;
     }
 
@@ -54,7 +54,7 @@ public class TeacherServiceImpl implements TeacherService {
         User user = userMapper.updateUser(teacherUpd.getUser(), userDTO);
         teacherUpd.setUser(user);
         teacherDAO.update(teacherUpd);
-        log.info("Учитель с id {} обновлен", id);
+        log.info("Учитель с id {} обновлен. Стало: {}", id, teacherUpd);
         return userMapper.fromUser(teacherUpd.getUser());
     }
 
@@ -62,7 +62,7 @@ public class TeacherServiceImpl implements TeacherService {
     public UserDTO findById(Long id) {
         Teacher teacher = teacherDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не смогли найти учителя по id " + id));
-        log.info("Учитель с id {} найден", id);
+        log.info("Учитель {} с id {} найден", teacher, id);
         return userMapper.fromUser(teacher.getUser());
     }
 
@@ -75,7 +75,7 @@ public class TeacherServiceImpl implements TeacherService {
         if (userDTOList.isEmpty()) {
             throw new EmptyListException("Список учителей пуст");
         }
-        log.info("Список учителей с именем {} собран", name);
+        log.info("Список учителей с именем {} собран. Найдено {} элементов", name, userDTOList.size());
         return userDTOList;
     }
 
@@ -88,16 +88,16 @@ public class TeacherServiceImpl implements TeacherService {
             throw new ValidationException("Удалить можно только информацию о себе");
         }
         teacherDAO.deleteById(id);
-        log.info("Учитель с id {} удален", id);
+        log.info("Учитель {} с id {} удален", teacher, id);
     }
 
     private boolean teacherValidate(Teacher teacher, org.springframework.security.core.userdetails.User userSec) {
         boolean isValid = !teacher.getUser().getLogin().equals(userSec.getUsername())
                 && !userSec.getAuthorities().equals(Role.ADMIN.getAuthorities());
         if (isValid) {
-            log.info("Валидация студента успешна");
+            log.info("Валидация учителя успешна");
         } else {
-            log.info("Валидация студента не была успешна");
+            log.info("Валидация учителя не была успешна");
         }
         return isValid;
     }

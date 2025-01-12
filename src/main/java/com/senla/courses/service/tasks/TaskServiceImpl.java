@@ -28,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
         task.setModule(moduleDAO.find(id).orElseThrow(()
                 -> new NotFoundException("На нашли модуля по id " + id)));
         Long idReturn = taskDAO.save(task);
-        log.info("Задание зарегестрировано под id {}", idReturn);
+        log.info("Задание {} зарегестрировано под id {}", task, idReturn);
         return idReturn;
     }
 
@@ -37,7 +37,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти задачу"));
         Task taskResult = taskDAO.update(taskMapper.updateTask(task, taskDTO));
-        log.info("Задание с id {} отредактировано", id);
+        log.info("Задание с id {} отредактировано. Было: {}. Стало: {}", id, task, taskResult);
         return taskMapper.fromTask(taskResult);
     }
 
@@ -45,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDTO findById(Long id) {
         Task task = taskDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти задачу"));
-        log.info("Задание с id {} найдено", id);
+        log.info("Задание {} с id {} найдено", task, id);
         return taskMapper.fromTask(task);
     }
 
@@ -56,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
             throw new EmptyListException("Список пуст");
         }
         List<TaskDTO> taskDTOS = tasks.stream().map(taskMapper::fromTask).toList();
-        log.info("Собран список задач с текстом {}", text);
+        log.info("Собран список задач с текстом {}. Найдено {} элементов", text, taskDTOS.size());
         return taskDTOS;
     }
 
@@ -67,14 +67,16 @@ public class TaskServiceImpl implements TaskService {
             throw new EmptyListException("Список пуст");
         }
         List<TaskDTO> taskDTOS = tasks.stream().map(taskMapper::fromTask).toList();
-        log.info("Собран список задач модуля с id {}", moduleId);
+        log.info("Собран список задач модуля с id {}. Найдено {} элементов", moduleId, taskDTOS.size());
         return taskDTOS;
     }
 
     @Override
     public void delete(Long id) {
+        Task task = taskDAO.find(id).orElseThrow(()
+                -> new NotFoundException("Не удалось найти задачу"));
         taskDAO.deleteById(id);
-        log.info("Задание с id {} удалено", id);
+        log.info("Задание {} с id {} удалено", task, id);
     }
 
 }

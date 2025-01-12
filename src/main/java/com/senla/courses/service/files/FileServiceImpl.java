@@ -32,7 +32,7 @@ public class FileServiceImpl implements FileService {
         file.setModule(moduleDAO.find(moduleId).orElseThrow(()
                 -> new NotFoundException("Не нашли модуля для прикрепления файла")));
         Long id = fileDAO.save(file);
-        log.info("Сохранен файл с названием {}", mpFile.getOriginalFilename());
+        log.info("Сохранен файл с названием {} и типом контента {}", mpFile.getOriginalFilename(), mpFile.getContentType());
         return id;
     }
 
@@ -40,7 +40,7 @@ public class FileServiceImpl implements FileService {
     public FileDTO findById(Long fileId) {
          File file = fileDAO.find(fileId).orElseThrow(()
                 -> new NotFoundException("Не нашли файл с id " + fileId));
-        log.info("Найден файл с id {}", fileId);
+        log.info("Найден файл с id {} и названием {}", fileId, file.getName());
         return fileMapper.fromFile(file);
     }
 
@@ -50,14 +50,16 @@ public class FileServiceImpl implements FileService {
                 -> new NotFoundException("Не нашли файл с id " + fileId));
         File fileOut = fileMapper.updateFile(file, mpFile, url);
         File fileRes = fileDAO.update(fileOut);
-        log.info("Файл с id {} обновлен", fileId);
+        log.info("Файл с id {} обновлен. Было: {}. Стало {}.", fileId, file, fileRes);
         return fileMapper.fromFile(fileRes);
     }
 
     @Override
     public void delete(Long fileId) {
+        File file = fileDAO.find(fileId).orElseThrow(()
+                -> new NotFoundException("Не нашли файл с id " + fileId));
         fileDAO.deleteById(fileId);
-        log.info("Файл с id {} удален", fileId);
+        log.info("Файл {} с id {} удален", file, fileId);
     }
 
     @Override
@@ -68,7 +70,7 @@ public class FileServiceImpl implements FileService {
             throw new EmptyListException("Список пуст");
         }
         List<ReturnFileDTO> returnFileDTOS = files.stream().map(f -> fileMapper.fromFileToReturn(f, path)).toList();
-        log.info("Возвращен список файлов модуля с id {}", moduleId);
+        log.info("Возвращен список файлов модуля с id {}. Найдено {} элементов", moduleId, returnFileDTOS.size());
         return returnFileDTOS;
     }
 

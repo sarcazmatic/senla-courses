@@ -81,7 +81,7 @@ public class MessageServiceImpl implements MessageService {
         }
         messageIn.setBody(messageDTO.getBody());
         Message messageOut = messageDAO.update(messageIn);
-        log.info("Сообщение с id {} отредактировано", id);
+        log.info("Сообщение с id {} отредактировано. Было: {}. Стало {}", id, messageIn, messageOut);
         return messageMapper.fromMessage(messageOut);
     }
 
@@ -106,7 +106,7 @@ public class MessageServiceImpl implements MessageService {
             throw new EmptyListException("Список сообщений между указанными id пусть");
         }
         List<MessageFullDTO> messageFullDTOList = messagesList.stream().map(messageMapper::fromMessage).toList();
-        log.info("Список сообщений между {} собран", betweenIds);
+        log.info("Список сообщений между {} собран. Найдено {} элементов", betweenIds, messageFullDTOList.size());
         return messageFullDTOList;
     }
 
@@ -120,7 +120,7 @@ public class MessageServiceImpl implements MessageService {
             throw new EmptyListException("Список сообщений между указанными id пусть");
         }
         List<MessageFullDTO> messageFullDTOList = messagesList.stream().map(messageMapper::fromMessage).toList();
-        log.info("Список сообщений, содержащих текст {}, найден", text);
+        log.info("Список сообщений, содержащих текст {}, найден. Найдено {} элементов", text, messageFullDTOList.size());
         return messageFullDTOList;
     }
 
