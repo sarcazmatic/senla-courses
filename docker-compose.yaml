@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  senla-db: # название контейнера для баз
+    image: postgres:14-alpine
+    volumes:
+      - senladbvolume:/var/lib/postgresql/data
+    container_name: senla-db
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_DB=senla
+      - POSTGRES_USER=senla
+      - POSTGRES_PASSWORD=senla
+      - POSTGRES_INITDB_ARGS="-E UTF8"
+
+  senla-main: # название контейнера для приложульки
+    build: . #название папки/модуля в корневой директории, где докерфайлы лежат; . - значит в корне
+    image: senla_image
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 15s
+      timeout: 1m
+      retries: 3
+    container_name: senla_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - senla-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://senla-db:5432/senla #тут вместо локалхост – название контейнера с дб
+      - POSTGRES_USER=senla
+      - POSTGRES_PASSWORD=senla
+
+volumes:
+  senladbvolume:
+    external: false

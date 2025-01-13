@@ -11,12 +11,14 @@ import com.senla.courses.model.Role;
 import com.senla.courses.model.Teacher;
 import com.senla.courses.model.User;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
@@ -37,7 +39,9 @@ public class TeacherServiceImpl implements TeacherService {
                 .user(userTeacher)
                 .courses(new HashSet<>())
                 .build();
-        return teacherDAO.save(teacher);
+        Long id = teacherDAO.save(teacher);
+        log.info("Учитель с логином '{}' зарегестрирован под id {}", userDTO.getLogin(), id);
+        return id;
     }
 
     @Override
@@ -50,6 +54,7 @@ public class TeacherServiceImpl implements TeacherService {
         User user = userMapper.updateUser(teacherUpd.getUser(), userDTO);
         teacherUpd.setUser(user);
         teacherDAO.update(teacherUpd);
+        log.info("Учитель с id {} обновлен. Стало: {}", id, teacherUpd);
         return userMapper.fromUser(teacherUpd.getUser());
     }
 
@@ -57,6 +62,7 @@ public class TeacherServiceImpl implements TeacherService {
     public UserDTO findById(Long id) {
         Teacher teacher = teacherDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не смогли найти учителя по id " + id));
+        log.info("Учитель {} с id {} найден", teacher, id);
         return userMapper.fromUser(teacher.getUser());
     }
 
@@ -69,6 +75,7 @@ public class TeacherServiceImpl implements TeacherService {
         if (userDTOList.isEmpty()) {
             throw new EmptyListException("Список учителей пуст");
         }
+        log.info("Список учителей с именем '{}' собран. Найдено {} элементов", name, userDTOList.size());
         return userDTOList;
     }
 
@@ -81,11 +88,18 @@ public class TeacherServiceImpl implements TeacherService {
             throw new ValidationException("Удалить можно только информацию о себе");
         }
         teacherDAO.deleteById(id);
+        log.info("Учитель {} с id {} удален", teacher, id);
     }
 
     private boolean teacherValidate(Teacher teacher, org.springframework.security.core.userdetails.User userSec) {
-        return !teacher.getUser().getLogin().equals(userSec.getUsername())
+        boolean isValid = !teacher.getUser().getLogin().equals(userSec.getUsername())
                 && !userSec.getAuthorities().equals(Role.ADMIN.getAuthorities());
+        if (isValid) {
+            log.info("Валидация учителя успешна");
+        } else {
+            log.info("Валидация учителя не была успешна");
+        }
+        return isValid;
     }
 
 }

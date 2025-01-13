@@ -9,12 +9,14 @@ import com.senla.courses.mapper.ModuleMapper;
 import com.senla.courses.model.Course;
 import com.senla.courses.model.Module;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ModuleServiceImpl implements ModuleService {
@@ -44,6 +46,7 @@ public class ModuleServiceImpl implements ModuleService {
         }
         course.setModules(newCourseModules);
         courseDAO.update(course);
+        log.info("Модуль {} с id {} для курса {} создан", module.getName(), pk, course.getName());
         return pk;
     }
 
@@ -56,12 +59,14 @@ public class ModuleServiceImpl implements ModuleService {
         moduleIn.setCourse(course);
         Module moduleOut = moduleMapper.updateModule(moduleIn, moduleDTO);
         Module module = moduleDAO.update(moduleOut);
+        log.info("Модуль с id {} отредактирован. Было: {}. Стало {}.", id, moduleIn, moduleOut);
         return moduleMapper.fromModule(module);
     }
 
     public ModuleDTO findModule(Long id) {
         Module module = moduleDAO.find(id).orElseThrow(()
                 -> new NotFoundException("На нашли модуля по id " + id));
+        log.info("Модуль {} с id {} найден", module, id);
         return moduleMapper.fromModule(module);
     }
 
@@ -71,7 +76,9 @@ public class ModuleServiceImpl implements ModuleService {
         if (modules.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        return modules.stream().map(moduleMapper::fromModule).toList();
+        List<ModuleDTO> moduleDTOS = modules.stream().map(moduleMapper::fromModule).toList();
+        log.info("Собран список модулей с названием '{}'. Найдено {} элементов", text, moduleDTOS.size());
+        return moduleDTOS;
     }
 
     @Override
@@ -80,12 +87,18 @@ public class ModuleServiceImpl implements ModuleService {
         if (modules.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        return modules.stream().map(moduleMapper::fromModule).toList();
+        List<ModuleDTO> moduleDTOS =  modules.stream().map(moduleMapper::fromModule).toList();
+        log.info("Собран список модулей с описанием '{}'. Найдено {} элементов", text, moduleDTOS.size());
+        return moduleDTOS;
     }
 
     @Override
     public void deleteModule(Long id) {
+        Module module = moduleDAO.find(id).orElseThrow(()
+                -> new NotFoundException("На нашли модуля по id " + id));
         moduleDAO.deleteById(id);
+        log.info("Модуль {} с id {} удален", module, id);
+
     }
 
 }

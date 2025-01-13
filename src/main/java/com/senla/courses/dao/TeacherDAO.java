@@ -56,7 +56,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
         }
     }
 
-    public List<Teacher> findAllByText(String text, int from, int size) {
+    public List<Teacher> findAllByText(String name, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -64,7 +64,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
                     "WHERE (:name IS NULL) " +
                     "OR (:name IS NOT NULL " +
                     "AND UPPER(t.user.name) LIKE CONCAT ('%', UPPER(:name), '%'))", Teacher.class);
-            query.setParameter("name", text);
+            query.setParameter("name", name);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
             List<Teacher> teachers = query.list();
@@ -82,7 +82,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             Teacher teacher = Optional.of(session.get(Teacher.class, id))
-                    .orElseThrow(() -> new RuntimeException("не нашли преподавателя"));
+                    .orElseThrow(() -> new RuntimeException("Не нашли преподавателя"));
             var query1 = session.createQuery("DELETE FROM Teacher t WHERE t.id = :teacherId");
             query1.setParameter("teacherId", teacher.getId());
             query1.executeUpdate();

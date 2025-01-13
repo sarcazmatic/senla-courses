@@ -2,8 +2,10 @@ package com.senla.courses.controller.module;
 
 import com.senla.courses.dto.LiteratureDTO;
 import com.senla.courses.service.literature.LiteratureService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,15 +24,19 @@ import java.util.List;
 @RestController()
 @RequestMapping("/module/lit")
 @AllArgsConstructor
+@Slf4j
 public class ModuleLiteratureController {
 
     private final LiteratureService literatureService;
 
-
     @PostMapping("/{moduleId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('teacher:write')")
-    public Long addLit(@RequestBody @Valid LiteratureDTO literatureDTO, @PathVariable(name = "moduleId") Long moduleId) {
+    public Long addLit(@RequestBody @Valid LiteratureDTO literatureDTO,
+                       @PathVariable(name = "moduleId") Long moduleId,
+                       HttpServletRequest request) {
+        log.info("Получен запрос на добавление литературы в модуль с id: {}. Эндпоинт {}. Метод {}",
+                moduleId, request.getRequestURL(), request.getMethod());
         return literatureService.add(literatureDTO, moduleId);
     }
 
@@ -38,13 +44,19 @@ public class ModuleLiteratureController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('teacher:write')")
     public LiteratureDTO editLit(@RequestBody @Valid LiteratureDTO literatureDTO,
-                                 @PathVariable Long litId) {
+                                 @PathVariable Long litId,
+                                 HttpServletRequest request) {
+        log.info("Получен запрос на редактирование литературы с id: {}. Эндпоинт {}. Метод {}",
+                litId, request.getRequestURL(), request.getMethod());
         return literatureService.edit(literatureDTO, litId);
     }
 
     @GetMapping("/{litId}")
     @ResponseStatus(HttpStatus.OK)
-    public LiteratureDTO findLitById(@PathVariable Long litId) {
+    public LiteratureDTO findLitById(@PathVariable Long litId,
+                                     HttpServletRequest request) {
+        log.info("Получен запрос на поиск литературы по id: {}. Эндпоинт {}. Метод {}",
+                litId, request.getRequestURL(), request.getMethod());
         return literatureService.findById(litId);
     }
 
@@ -52,7 +64,10 @@ public class ModuleLiteratureController {
     @ResponseStatus(HttpStatus.OK)
     public List<LiteratureDTO> findLitByText(@RequestParam(required = false, name = "text") String text,
                                              @RequestParam(required = false, defaultValue = "1") int from,
-                                             @RequestParam(required = false, defaultValue = "10") int size) {
+                                             @RequestParam(required = false, defaultValue = "10") int size,
+                                             HttpServletRequest request) {
+        log.info("Получен запрос на поиск литературы по названию, текст: '{}', страница: {}, размер: {}. Эндпоинт {}. Метод {}",
+                text, from, size, request.getRequestURL(), request.getMethod());
         return literatureService.findByText(text, from, size);
     }
 
@@ -60,14 +75,20 @@ public class ModuleLiteratureController {
     @ResponseStatus(HttpStatus.OK)
     public List<LiteratureDTO> findLitByAuthor(@RequestParam(required = false, name = "text") String text,
                                                @RequestParam(required = false, defaultValue = "1") int from,
-                                               @RequestParam(required = false, defaultValue = "10") int size) {
+                                               @RequestParam(required = false, defaultValue = "10") int size,
+                                               HttpServletRequest request) {
+        log.info("Получен запрос на поиск литературы по автору, текст: '{}', страница: {}, размер: {}. Эндпоинт {}. Метод {}",
+                text, from, size, request.getRequestURL(), request.getMethod());
         return literatureService.findByAuthor(text, from, size);
     }
 
     @DeleteMapping("/{litId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('teacher:write')")
-    public void deleteLit(@PathVariable Long litId) {
+    public void deleteLit(@PathVariable Long litId,
+                          HttpServletRequest request) {
+        log.info("Получен запрос на удаление литературы с id: {}. Эндпоинт {}. Метод {}",
+                litId, request.getRequestURL(), request.getMethod());
         literatureService.delete(litId);
     }
 

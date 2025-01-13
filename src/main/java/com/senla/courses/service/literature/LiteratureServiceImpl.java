@@ -8,10 +8,12 @@ import com.senla.courses.exception.NotFoundException;
 import com.senla.courses.mapper.LiteratureMapper;
 import com.senla.courses.model.Literature;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class LiteratureServiceImpl implements LiteratureService {
@@ -24,22 +26,28 @@ public class LiteratureServiceImpl implements LiteratureService {
     public Long add(LiteratureDTO literatureDTO, Long id) {
         Literature literature = literatureMapper.fromLiteratureDTO(literatureDTO);
         literature.setModule(moduleDAO.find(id).orElseThrow(()
-                -> new NotFoundException("На нашли литературы по id " + id)));
-        return literatureDAO.save(literature);
+                -> new NotFoundException("На нашли модуля по id " + id)));
+        Long idReturn = literatureDAO.save(literature);
+        log.info("Сохранена литература под id {} с названием '{}', автором '{}' для модуля с id {}", idReturn, literatureDTO.getName(), literatureDTO.getAuthor(), id);
+        return idReturn;
     }
 
     @Override
     public LiteratureDTO edit(LiteratureDTO literatureDTO, Long id) {
         Literature literature = literatureDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти литературу"));
-        return literatureMapper.fromLiterature(literatureDAO.update(literatureMapper.updateLiterature(literature, literatureDTO)));
+        Literature literatureResult = literatureDAO.update(literatureMapper.updateLiterature(literature, literatureDTO));
+        log.info("Отредактирована литература с id {}. Стало {}.", id, literatureResult);
+        return literatureMapper.fromLiterature(literatureResult);
     }
 
     @Override
     public LiteratureDTO findById(Long id) {
         Literature literature = literatureDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти литературу"));
-        return literatureMapper.fromLiterature(literature);
+        LiteratureDTO literatureDTO = literatureMapper.fromLiterature(literature);
+        log.info("Найдена литература с id {}, названием '{}' и автором '{}'", id, literatureDTO.getName(), literatureDTO.getAuthor());
+        return literatureDTO;
     }
 
     @Override
@@ -48,7 +56,9 @@ public class LiteratureServiceImpl implements LiteratureService {
         if (literatureList.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        return literatureList.stream().map(literatureMapper::fromLiterature).toList();
+        List<LiteratureDTO> literatureDTOList = literatureList.stream().map(literatureMapper::fromLiterature).toList();
+        log.info("Собран список литературы по тексту '{}'. Найдено {} элементов", text, literatureDTOList.size());
+        return literatureDTOList;
     }
 
     @Override
@@ -57,7 +67,9 @@ public class LiteratureServiceImpl implements LiteratureService {
         if (literatureList.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        return literatureList.stream().map(literatureMapper::fromLiterature).toList();
+        List<LiteratureDTO> literatureDTOList = literatureList.stream().map(literatureMapper::fromLiterature).toList();
+        log.info("Собран список литературы по автору '{}'. Найдено {} элементов", author, literatureDTOList.size());
+        return literatureDTOList;
     }
 
     @Override
@@ -66,12 +78,17 @@ public class LiteratureServiceImpl implements LiteratureService {
         if (literatureList.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
-        return literatureList.stream().map(literatureMapper::fromLiterature).toList();
+        List<LiteratureDTO> literatureDTOList =  literatureList.stream().map(literatureMapper::fromLiterature).toList();
+        log.info("Собран список литературы модуля с id {}. Найдено {} элементов", moduleId, literatureDTOList.size());
+        return literatureDTOList;
     }
 
     @Override
     public void delete(Long id) {
+        Literature literature = literatureDAO.find(id).orElseThrow(()
+                -> new NotFoundException("Не удалось найти литературу"));
         literatureDAO.deleteById(id);
+        log.info("Удалена литература {} с id {}", literature, id);
     }
 
 }

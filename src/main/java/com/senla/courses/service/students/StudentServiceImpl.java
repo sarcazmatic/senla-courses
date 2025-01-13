@@ -21,14 +21,17 @@ import com.senla.courses.model.StudentsCoursesPK;
 import com.senla.courses.model.User;
 import com.senla.courses.util.enums.StudentsCoursesRequestEnum;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
+
 
     private final UserMapper userMapper;
     private final StudentMapper studentMapper;
@@ -45,13 +48,15 @@ public class StudentServiceImpl implements StudentService {
         user.setDateTimeRegistered(LocalDateTime.now());
         Long userPk = userDAO.save(user);
         User userStudent = userDAO.find(userPk)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти такого пользовтеля"));
+                .orElseThrow(() -> new NotFoundException("Не смогли найти такого пользовтеля"));
         Student student = Student.builder()
                 .id(userPk)
                 .user(userStudent)
                 .rating(0.0)
                 .build();
-        return studentDAO.save(student);
+        Long id = studentDAO.save(student);
+        log.info("Студент с логином '{}' зарегестрирован под id {}", userDTO.getLogin(), id);
+        return id;
     }
 
     @Override
@@ -67,6 +72,7 @@ public class StudentServiceImpl implements StudentService {
             studentUpd.setUser(user);
         }
         studentDAO.update(studentUpd);
+        log.info("Студент с id {} обновлен. Было: {}. Стало {}.", id, student, studentUpd);
         return studentMapper.fromStudent(studentUpd);
     }
 
@@ -74,6 +80,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentDTO findById(Long id) {
         Student student = studentDAO.find(id)
                 .orElseThrow(() -> new NotFoundException("Не нашли студента по id " + id));
+        log.info("Студент {} с id {} найден", student, id);
         return studentMapper.fromStudent(student);
     }
 
@@ -86,6 +93,7 @@ public class StudentServiceImpl implements StudentService {
         if (userDTOList.isEmpty()) {
             throw new EmptyListException("Список пуст");
         }
+        log.info("Список студентов с именем '{}' собран. Найдено {} элементов", name, userDTOList.size());
         return userDTOList;
     }
 
@@ -97,6 +105,7 @@ public class StudentServiceImpl implements StudentService {
             throw new ValidationException("Удалить можно только информацию о себе");
         }
         studentDAO.deleteById(id);
+        log.info("Студент {} с id {} удален", student, id);
     }
 
     @Override
@@ -115,22 +124,30 @@ public class StudentServiceImpl implements StudentService {
                 .courseStatus(StudentsCoursesRequestEnum.REQUESTED)
                 .build();
         studentsCourses.setId(studentCoursesPK);
-        return studentCoursesDAO.save(studentsCourses);
+        Long id = studentCoursesDAO.save(studentsCourses);
+        log.info("Заявка на курс {} от студента {} зарегестрирована", course.getName(), student.getUser().getName());
+        return id;
     }
 
     @Override
     public StudentsCoursesDTO findStudentsCoursesById(org.springframework.security.core.userdetails.User userSec, Long studentId, Long courseId) {
+        Course course = courseDAO.find(courseId).orElseThrow(()
+                -> new NotFoundException("Не нашли курс по id " + courseId));
         Student student = studentDAO.find(studentId).orElseThrow(()
                 -> new NotFoundException("Не нашли студента по id " + studentId));
         if (studentValidate(student, userSec)) {
             throw new ValidationException("Заявку можно подать только от своего лица");
         }
-        return studentsCoursesMapper.fromStudentCourses(studentCoursesDAO.findByIds(studentId, courseId));
+        StudentsCourses studentsCourses = studentCoursesDAO.findByIds(studentId, courseId);
+        log.info("Заявка от студента {} на курс {} найдена. Статус: {}", student, course, studentsCourses.getCourseStatus());
+        return studentsCoursesMapper.fromStudentCourses(studentsCourses);
     }
 
     @Override
     public List<StudentsCoursesDTO> findStudentsCoursesByCourseId(Long courseId) {
-        return studentCoursesDAO.findAllByCourseId(courseId).stream().map(studentsCoursesMapper::fromStudentCourses).toList();
+        List<StudentsCoursesDTO> studentsCoursesDTOS = studentCoursesDAO.findAllByCourseId(courseId).stream().map(studentsCoursesMapper::fromStudentCourses).toList();
+        log.info("Список заявок на курс {} собран. Найдено {} элементов.", courseId, studentsCoursesDTOS.size());
+        return studentsCoursesDTOS;
     }
 
     @Override
@@ -138,15 +155,23 @@ public class StudentServiceImpl implements StudentService {
         if (response.toUpperCase().equals(StudentsCoursesRequestEnum.APPROVED.toString())
                 || response.toUpperCase().equals(StudentsCoursesRequestEnum.DECLINED.toString())) {
             StudentsCoursesRequestEnum newResponse = StudentsCoursesRequestEnum.valueOf(response.toUpperCase());
-            return studentCoursesDAO.updateRequest(courseId, ids, newResponse);
+            Integer affectedRows = studentCoursesDAO.updateRequest(courseId, ids, newResponse);
+            log.info("Заявки на курс {} от студентов {} переведены в статус '{}'", courseId, ids, response);
+            return affectedRows;
         } else {
             throw new ValidationException("Передано неверное значение response -- " + response);
         }
     }
 
     private boolean studentValidate(Student student, org.springframework.security.core.userdetails.User userSec) {
-        return !student.getUser().getLogin().equals(userSec.getUsername())
+        boolean isValid = !student.getUser().getLogin().equals(userSec.getUsername())
                 && !userSec.getAuthorities().equals(Role.ADMIN.getAuthorities());
+        if (isValid) {
+            log.info("Валидация студента успешна");
+        } else {
+            log.info("Валидация студента не была успешна");
+        }
+        return isValid;
     }
 
 }
