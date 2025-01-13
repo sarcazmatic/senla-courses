@@ -48,7 +48,7 @@ public class StudentServiceImpl implements StudentService {
         user.setDateTimeRegistered(LocalDateTime.now());
         Long userPk = userDAO.save(user);
         User userStudent = userDAO.find(userPk)
-                .orElseThrow(() -> new RuntimeException("Не смогли найти такого пользовтеля"));
+                .orElseThrow(() -> new NotFoundException("Не смогли найти такого пользовтеля"));
         Student student = Student.builder()
                 .id(userPk)
                 .user(userStudent)

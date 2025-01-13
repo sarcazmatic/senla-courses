@@ -56,7 +56,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
         }
     }
 
-    public List<Student> findAllByText(String text, int from, int size) {
+    public List<Student> findAllByText(String name, int from, int size) {
         Session session = HibernateUtil.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -64,7 +64,7 @@ public class StudentDAO implements GenericDAO<Student, Long> {
                     "WHERE (:name IS NULL) " +
                     "OR (:name IS NOT NULL " +
                     "AND UPPER(s.user.name) LIKE CONCAT ('%', UPPER(:name), '%'))", Student.class);
-            query.setParameter("name", text);
+            query.setParameter("name", name);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
             List<Student> students = query.list();
