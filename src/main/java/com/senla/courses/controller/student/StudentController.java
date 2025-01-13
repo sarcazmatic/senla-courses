@@ -4,6 +4,7 @@ import com.senla.courses.dto.StudentDTO;
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.service.students.StudentService;
 import com.senla.courses.util.UserDetailsExtractor;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,51 +33,52 @@ public class StudentController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public Long registerUser(@RequestBody @Valid UserDTO userDTO) {
-        log.info("Получен запрос на регистрацию студента: {}", userDTO);
-        Long id = studentService.registerStudent(userDTO);
-        log.info("Студент успешно зарегистрирован с id: {}", id);
-        return id;
+    public Long registerUser(@RequestBody @Valid UserDTO userDTO,
+                             HttpServletRequest request) {
+        log.info("Получен запрос на регистрацию студента: {}. Эндпоинт {}. Метод {}",
+                userDTO, request.getRequestURL(), request.getMethod());
+        return studentService.registerStudent(userDTO);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@RequestBody StudentDTO studentDTO,
-                                    @PathVariable Long id) {
-        log.info("Получен запрос на обновление данных студента с id: {}", id);
+                                    @PathVariable Long id,
+                                    HttpServletRequest request) {
+        log.info("Получен запрос на обновление данных студента с id: {}. Эндпоинт {}. Метод {}",
+                id, request.getRequestURL(), request.getMethod());
         User user = UserDetailsExtractor.extractUserDetails();
-        StudentDTO studentDTOUpd = studentService.updateStudent(user, studentDTO, id);
-        log.info("Данные студента с id: {} успешно обновлены", id);
-        return studentDTOUpd;
+        return studentService.updateStudent(user, studentDTO, id);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public StudentDTO findById(@PathVariable("id") Long id) {
-        log.info("Получен запрос на поиск студента с id: {}", id);
-        StudentDTO studentDTO = studentService.findById(id);
-        log.info("Студент с id: {} успешно найден", id);
-        return studentDTO;
+    public StudentDTO findById(@PathVariable("id") Long id,
+                               HttpServletRequest request) {
+        log.info("Получен запрос на поиск студента с id: {}. Эндпоинт {}. Метод {}",
+                id, request.getRequestURL(), request.getMethod());
+        return studentService.findById(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findStudents(@RequestParam(required = false, name = "text") String name,
                                       @RequestParam(required = false, defaultValue = "1") int from,
-                                      @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на поиск студентов по имени: '{}', страница: {}, размер: {}", name, from, size);
-        List<UserDTO> studentDTOS = studentService.findStudentsByName(name, from, size);
-        log.info("Найдено {} студентов по имени '{}'", studentDTOS.size(), name);
-        return studentDTOS;
+                                      @RequestParam(required = false, defaultValue = "10") int size,
+                                      HttpServletRequest request) {
+        log.info("Получен запрос на поиск студентов по имени: '{}', страница: {}, размер: {}. Эндпоинт {}. Метод {}",
+                name, from, size, request.getRequestURL(), request.getMethod());
+        return studentService.findStudentsByName(name, from, size);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteStudent(@PathVariable("id") Long id) {
-        log.info("Получен запрос на удаление студента с id: {}", id);
+    public void deleteStudent(@PathVariable("id") Long id,
+                              HttpServletRequest request) {
+        log.info("Получен запрос на удаление студента с id: {}. Эндпоинт {}. Метод {}",
+                id, request.getRequestURL(), request.getMethod());
         User user = UserDetailsExtractor.extractUserDetails();
         studentService.deleteStudent(user, id);
-        log.info("Студент с id: {} успешно удален", id);
     }
 
 }

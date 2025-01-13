@@ -3,6 +3,7 @@ package com.senla.courses.controller.student;
 import com.senla.courses.dto.StudentsCoursesDTO;
 import com.senla.courses.service.students.StudentService;
 import com.senla.courses.util.UserDetailsExtractor;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,23 +26,23 @@ public class StudentsCoursesController {
     @PostMapping("/request/{studId}/{courseId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Long courseRequest(@PathVariable Long studId,
-                              @PathVariable Long courseId) {
-        log.info("Получен запрос на регистрацию заявки на доступ для студента с id: {} на курс с id: {}", studId, courseId);
+                              @PathVariable Long courseId,
+                              HttpServletRequest request) {
+        log.info("Получен запрос на регистрацию заявки на доступ для студента с id: {} на курс с id: {}. Эндпоинт {}. Метод {}",
+                studId, courseId, request.getRequestURL(), request.getMethod());
         User user = UserDetailsExtractor.extractUserDetails();
-        Long id = studentService.registerCourseRequest(user, studId, courseId);
-        log.info("Заявка на курс успешно зарегистрирована для студента с id: {} на курс с id: {} под id {}", studId, courseId, id);
-        return id;
+        return studentService.registerCourseRequest(user, studId, courseId);
     }
 
     @GetMapping("/{studId}/{courseId}")
     @ResponseStatus(HttpStatus.OK)
     public StudentsCoursesDTO findByIds(@PathVariable Long studId,
-                                                 @PathVariable Long courseId) {
-        log.info("Получен запрос на получение информации о статусе студенте с id: {} и курса с id: {}", studId, courseId);
+                                        @PathVariable Long courseId,
+                                        HttpServletRequest request) {
+        log.info("Получен запрос на получение информации о статусе студенте с id: {} и курса с id: {}. Эндпоинт {}. Метод {}",
+                studId, courseId, request.getRequestURL(), request.getMethod());
         User user = UserDetailsExtractor.extractUserDetails();
-        StudentsCoursesDTO studentsCoursesDTO = studentService.findStudentsCoursesById(user, studId, courseId);
-        log.info("Информация о статусе студента с id: {} и курса с id: {} успешно получена", studId, courseId);
-        return studentsCoursesDTO;
+        return studentService.findStudentsCoursesById(user, studId, courseId);
     }
 
 }

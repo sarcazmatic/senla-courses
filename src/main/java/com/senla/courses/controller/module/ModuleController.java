@@ -42,92 +42,92 @@ public class ModuleController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('teacher:write')")
-    public Long addModule(@RequestBody @Valid ModuleDTO moduleDTO) {
-        log.info("Получен запрос на добавление модуля: {}", moduleDTO);
-        Long id = moduleService.addModule(moduleDTO);
-        log.info("Модуль успешно добавлен с id: {}", id);
-        return id;
+    public Long addModule(@RequestBody @Valid ModuleDTO moduleDTO,
+                          HttpServletRequest request) {
+        log.info("Получен запрос на добавление модуля: {}. Эндпоинт {}. Метод {}",
+                moduleDTO, request.getRequestURL(), request.getMethod());
+        return moduleService.addModule(moduleDTO);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('teacher:write')")
     public ModuleDTO editModule(@RequestBody @Valid ModuleDTO moduleDTO,
-                                @PathVariable Long id) {
-        log.info("Получен запрос на редактирование модуля с id: {}, новые данные: {}", id, moduleDTO);
-        ModuleDTO moduleDTOUpd = moduleService.editModule(moduleDTO, id);
-        log.info("Модуль с id: {} успешно отредактирован", id);
-        return moduleDTOUpd;
+                                @PathVariable Long id,
+                                HttpServletRequest request) {
+        log.info("Получен запрос на редактирование модуля с id: {}, новые данные: {}. Эндпоинт {}. Метод {}",
+                id, moduleDTO, request.getRequestURL(), request.getMethod());
+        return moduleService.editModule(moduleDTO, id);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ModuleDTO findById(@PathVariable Long id) {
-        log.info("Получен запрос на получение модуля с id: {}", id);
-        ModuleDTO moduleDTO = moduleService.findModule(id);
-        log.info("Модуль с id: {} успешно найден", id);
-        return moduleDTO;
+    public ModuleDTO findById(@PathVariable Long id,
+                              HttpServletRequest request) {
+        log.info("Получен запрос на получение модуля с id: {}. Эндпоинт {}. Метод {}",
+                id, request.getRequestURL(), request.getMethod());
+        return moduleService.findModule(id);
     }
 
     @GetMapping("/find")
     @ResponseStatus(HttpStatus.OK)
     public List<ModuleDTO> findByText(@RequestParam(required = false, name = "text") String text,
                                       @RequestParam(required = false, defaultValue = "1") int from,
-                                      @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на поиск модулей по описанию: '{}', параметры: from={}, size={}", text, from, size);
-        List<ModuleDTO> moduleDTOS = moduleService.findModulesByDesc(text, from, size);
-        log.info("Модули успешно найдены по описанию: '{}', параметры: from={}, size={}", text, from, size);
-        return moduleDTOS;
+                                      @RequestParam(required = false, defaultValue = "10") int size,
+                                      HttpServletRequest request) {
+        log.info("Получен запрос на поиск модулей по описанию: '{}', параметры: from={}, size={}. Эндпоинт {}. Метод {}",
+                text, from, size, request.getRequestURL(), request.getMethod());
+        return moduleService.findModulesByDesc(text, from, size);
     }
 
     @GetMapping("/name")
     @ResponseStatus(HttpStatus.OK)
     public List<ModuleDTO> findByName(@RequestParam(required = false, name = "text") String text,
                                       @RequestParam(required = false, defaultValue = "1") int from,
-                                      @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на поиск модулей по имени: '{}', параметры: from={}, size={}", text, from, size);
-        List<ModuleDTO> moduleDTOS = moduleService.findModulesByName(text, from, size);
-        log.info("Модули успешно найдены по названию: '{}', параметры: from={}, size={}", text, from, size);
-        return moduleDTOS;
+                                      @RequestParam(required = false, defaultValue = "10") int size,
+                                      HttpServletRequest request) {
+        log.info("Получен запрос на поиск модулей по имени: '{}', параметры: from={}, size={}. Эндпоинт {}. Метод {}",
+                text, from, size, request.getRequestURL(), request.getMethod());
+        return moduleService.findModulesByName(text, from, size);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('admin:write')")
-    public void deleteModule(@PathVariable("id") Long id) {
-        log.info("Получен запрос на удаление модуля с id: {}", id);
+    public void deleteModule(@PathVariable("id") Long id,
+                             HttpServletRequest request) {
+        log.info("Получен запрос на удаление модуля с id: {}. Эндпоинт {}. Метод {}",
+                id, request.getRequestURL(), request.getMethod());
         moduleService.deleteModule(id);
-        log.info("Модуль с id: {} успешно удалён", id);
     }
 
     @GetMapping("/{moduleId}/tasks")
     @ResponseStatus(HttpStatus.OK)
     public List<TaskDTO> findTaskByModuleId(@PathVariable(name = "moduleId") Long moduleId,
                                             @RequestParam(required = false, defaultValue = "1") int from,
-                                            @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на получение задач для модуля с id: {}, параметры: from={}, size={}", moduleId, from, size);
-        List<TaskDTO> taskDTOS = taskService.findByModuleId(moduleId, from, size);
-        log.info("Задачи для модуля с id: {} успешно найдены, параметры: from={}, size={}", moduleId, from, size);
-        return taskDTOS;
+                                            @RequestParam(required = false, defaultValue = "10") int size,
+                                            HttpServletRequest request) {
+        log.info("Получен запрос на получение задач для модуля с id: {}, параметры: from={}, size={}. Эндпоинт {}. Метод {}",
+                moduleId, from, size, request.getRequestURL(), request.getMethod());
+        return taskService.findByModuleId(moduleId, from, size);
     }
 
     @GetMapping("/{moduleId}/lit")
     @ResponseStatus(HttpStatus.OK)
     public List<LiteratureDTO> findLitByModuleId(@PathVariable(name = "moduleId") Long moduleId,
                                                  @RequestParam(required = false, defaultValue = "1") int from,
-                                                 @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на получение литературы для модуля с id: {}, параметры: from={}, size={}", moduleId, from, size);
-        List<LiteratureDTO> literatureDTOS = literatureService.findByModuleId(moduleId, from, size);
-        log.info("Литература для модуля с id: {} успешно найдена, параметры: from={}, size={}", moduleId, from, size);
-        return literatureDTOS;
+                                                 @RequestParam(required = false, defaultValue = "10") int size,
+                                                 HttpServletRequest request) {
+        log.info("Получен запрос на получение литературы для модуля с id: {}, параметры: from={}, size={}. Эндпоинт {}. Метод {}",
+                moduleId, from, size, request.getRequestURL(), request.getMethod());
+        return literatureService.findByModuleId(moduleId, from, size);
     }
 
     @GetMapping("/{moduleId}/files")
     public List<ReturnFileDTO> findFilesByModuleId(@PathVariable Long moduleId, HttpServletRequest request) {
-        log.info("Получен запрос на получение файлов для модуля с id: {}", moduleId);
-        List<ReturnFileDTO> fileDTOS = fileService.findFilesByModuleId(moduleId, request);
-        log.info("Файлы для модуля с id: {} успешно найдены", moduleId);
-        return fileDTOS;
+        log.info("Получен запрос на получение файлов для модуля с id: {}. Эндпоинт {}. Метод {}",
+                moduleId, request.getRequestURL(), request.getMethod());
+        return fileService.findFilesByModuleId(moduleId, request);
     }
 
 }

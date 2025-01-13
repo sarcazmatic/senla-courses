@@ -2,6 +2,7 @@ package com.senla.courses.controller.module;
 
 import com.senla.courses.dto.TaskDTO;
 import com.senla.courses.service.tasks.TaskService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,51 +32,53 @@ public class ModuleTaskController {
     @PostMapping("/{moduleId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('teacher:write')")
-    public Long addTask(@RequestBody @Valid TaskDTO taskDTO, @PathVariable(name = "moduleId") Long moduleId) {
-        log.info("Получен запрос на добавление задачи в модуль с id: {}", moduleId);
-        Long id = taskService.add(taskDTO, moduleId);
-        log.info("Задача успешно добавлена в модуль с id: {}, id задачи: {}", moduleId, id);
-        return id;
+    public Long addTask(@RequestBody @Valid TaskDTO taskDTO,
+                        @PathVariable(name = "moduleId") Long moduleId,
+                        HttpServletRequest request) {
+        log.info("Получен запрос на добавление задачи в модуль с id: {}. Эндпоинт {}. Метод {}",
+                moduleId, request.getRequestURL(), request.getMethod());
+        return taskService.add(taskDTO, moduleId);
     }
 
     @PutMapping("/{taskId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('teacher:write')")
     public TaskDTO editTask(@RequestBody @Valid TaskDTO taskDTO,
-                            @PathVariable Long taskId) {
-        log.info("Получен запрос на редактирование задачи с id: {}", taskId);
-        TaskDTO taskDTOUpd = taskService.edit(taskDTO, taskId);
-        log.info("Задача с id: {} успешно отредактирована", taskId);
-        return taskDTOUpd;
+                            @PathVariable Long taskId,
+                            HttpServletRequest request) {
+        log.info("Получен запрос на редактирование задачи с id: {}. Эндпоинт {}. Метод {}",
+                taskId, request.getRequestURL(), request.getMethod());
+        return taskService.edit(taskDTO, taskId);
     }
 
     @GetMapping("/{taskId}")
     @ResponseStatus(HttpStatus.OK)
-    public TaskDTO findTaskById(@PathVariable Long taskId) {
-        log.info("Получен запрос на поиск задачи с id: {}", taskId);
-        TaskDTO taskDTO = taskService.findById(taskId);
-        log.info("Задача с id: {} успешно найдена", taskId);
-        return taskDTO;
+    public TaskDTO findTaskById(@PathVariable Long taskId,
+                                HttpServletRequest request) {
+        log.info("Получен запрос на поиск задачи с id: {}. Эндпоинт {}. Метод {}",
+                taskId, request.getRequestURL(), request.getMethod());
+        return taskService.findById(taskId);
     }
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public List<TaskDTO> findTaskByText(@RequestParam(required = false, name = "text") String text,
                                         @RequestParam(required = false, defaultValue = "1") int from,
-                                        @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на поиск задач по тексту: '{}', страница: {}, размер: {}", text, from, size);
-        List<TaskDTO> taskDTOS = taskService.findByText(text, from, size);
-        log.info("Найдено {} задач по тексту '{}'", taskDTOS.size(), text);
-        return taskDTOS;
+                                        @RequestParam(required = false, defaultValue = "10") int size,
+                                        HttpServletRequest request) {
+        log.info("Получен запрос на поиск задач по тексту: '{}', страница: {}, размер: {}. Эндпоинт {}. Метод {}",
+                text, from, size, request.getRequestURL(), request.getMethod());
+        return taskService.findByText(text, from, size);
     }
 
     @DeleteMapping("/{taskId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('teacher:write')")
-    public void deleteTask(@PathVariable Long taskId) {
-        log.info("Получен запрос на удаление задачи с id: {}", taskId);
+    public void deleteTask(@PathVariable Long taskId,
+                           HttpServletRequest request) {
+        log.info("Получен запрос на удаление задачи с id: {}. Эндпоинт {}. Метод {}",
+                taskId, request.getRequestURL(), request.getMethod());
         taskService.delete(taskId);
-        log.info("Задача с id: {} успешно удалена", taskId);
     }
 
 }

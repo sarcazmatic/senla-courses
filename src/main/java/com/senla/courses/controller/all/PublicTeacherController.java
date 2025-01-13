@@ -2,6 +2,7 @@ package com.senla.courses.controller.all;
 
 import com.senla.courses.dto.UserDTO;
 import com.senla.courses.service.teachers.TeacherService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,20 +27,19 @@ public class PublicTeacherController {
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> findTeachersByName(@RequestParam(required = false, name = "name") String name,
                                             @RequestParam(required = false, defaultValue = "1") int from,
-                                            @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на поиск преподавателей по имени: '{}', параметры: from={}, size={}", name, from, size);
-        List<UserDTO> teachersDTOS = teacherService.findTeachersByName(name, from, size);
-        log.info("Преподаватели успешно найдены по имени: '{}', параметры: from={}, size={}", name, from, size);
-        return teachersDTOS;
+                                            @RequestParam(required = false, defaultValue = "10") int size,
+                                            HttpServletRequest request) {
+        log.info("Получен запрос на поиск преподавателей по имени: '{}', параметры: from={}, size={}. Эндпоинт {}. Метод {}",
+                name, from, size, request.getRequestURL(), request.getMethod());
+        return teacherService.findTeachersByName(name, from, size);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO findById(@PathVariable("id") Long id) {
-        log.info("Получен запрос на поиск преподавателя с id: {}", id);
-        UserDTO teacherDTO = teacherService.findById(id);
-        log.info("Преподаватель с id: {} успешно найден", id);
-        return teacherDTO;
+    public UserDTO findById(@PathVariable("id") Long id, HttpServletRequest request) {
+        log.info("Получен запрос на поиск преподавателя с id: {}. Эндпоинт {}. Метод {}",
+                id, request.getRequestURL(), request.getMethod());
+        return teacherService.findById(id);
     }
 
 }

@@ -2,6 +2,7 @@ package com.senla.courses.controller.all;
 
 import com.senla.courses.dto.ModuleDTO;
 import com.senla.courses.service.module.ModuleService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,33 +25,31 @@ public class PublicModuleController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ModuleDTO findById(@PathVariable Long id) {
-        log.info("Получен запрос на поиск модуля с id: {}", id);
-        ModuleDTO moduleDTO = moduleService.findModule(id);
-        log.info("Модуль с id: {} успешно найден", id);
-        return moduleDTO;
+    public ModuleDTO findById(@PathVariable Long id, HttpServletRequest request) {
+        log.info("Получен запрос на поиск модуля с id: {}. Эндпоинт {}. Метод {}", id, request.getRequestURL(), request.getMethod());
+        return moduleService.findModule(id);
     }
 
     @GetMapping("/find")
     @ResponseStatus(HttpStatus.OK)
     public List<ModuleDTO> findByText(@RequestParam(required = false, name = "text") String text,
                                       @RequestParam(required = false, defaultValue = "1") int from,
-                                      @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на поиск модулей по описанию: '{}', параметры: from={}, size={}", text, from, size);
-        List<ModuleDTO> modulesDTOS = moduleService.findModulesByDesc(text, from, size);
-        log.info("Модули успешно найдены по описанию: '{}', параметры: from={}, size={}", text, from, size);
-        return modulesDTOS;
+                                      @RequestParam(required = false, defaultValue = "10") int size,
+                                      HttpServletRequest request) {
+        log.info("Получен запрос на поиск модулей по описанию: '{}', параметры: from={}, size={}. Эндпоинт {}. Метод {}",
+                text, from, size, request.getRequestURL(), request.getMethod());
+        return moduleService.findModulesByDesc(text, from, size);
     }
 
     @GetMapping("/name")
     @ResponseStatus(HttpStatus.OK)
     public List<ModuleDTO> findByName(@RequestParam(required = false, name = "text") String text,
                                       @RequestParam(required = false, defaultValue = "1") int from,
-                                      @RequestParam(required = false, defaultValue = "10") int size) {
-        log.info("Получен запрос на поиск модулей по названию: '{}', параметры: from={}, size={}", text, from, size);
-        List<ModuleDTO> modulesDTOS = moduleService.findModulesByName(text, from, size);
-        log.info("Модули успешно найдены по названию: '{}', параметры: from={}, size={}", text, from, size);
-        return modulesDTOS;
+                                      @RequestParam(required = false, defaultValue = "10") int size,
+                                      HttpServletRequest request) {
+        log.info("Получен запрос на поиск модулей по названию: '{}', параметры: from={}, size={}. Эндпоинт {}. Метод {}",
+                text, from, size, request.getRequestURL(), request.getMethod());
+        return moduleService.findModulesByName(text, from, size);
     }
 
 }
