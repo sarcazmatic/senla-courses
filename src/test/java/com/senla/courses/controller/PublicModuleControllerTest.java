@@ -51,7 +51,6 @@ public class PublicModuleControllerTest {
 
     @Test
     public void testFindById() throws Exception {
-        // Arrange
         Long moduleId = 1L;
         ModuleDTO moduleDTO = ModuleDTO.builder()
                 .description("Тест описание модуля")
@@ -60,11 +59,9 @@ public class PublicModuleControllerTest {
                 .courseId(1L)
                 .build();
 
-        // Mock service call
         given(moduleService.findModule(moduleId)).willReturn(moduleDTO);
 
-        // Act & Assert
-        MvcResult result = mockMvc.perform(get("/all/module/{id}", moduleId))
+        mockMvc.perform(get("/all/module/{id}", moduleId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(moduleDTO)))
                 .andReturn();

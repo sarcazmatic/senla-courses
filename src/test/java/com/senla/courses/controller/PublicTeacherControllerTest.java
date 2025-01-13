@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -53,15 +52,15 @@ public class PublicTeacherControllerTest {
         Long teacherId = 1L;
         UserDTO userDTO = UserDTO.builder()
                 .login("testUser2")
-                .name("Ванька-Встанька")
+                .name("ASDasdasdas")
                 .email("user2@test.ru")
                 .build();
 
-        given(teacherService.registerTeacher(userDTO)).willReturn(1L);
+        given(teacherService.findById(1L)).willReturn(userDTO);
 
-        MvcResult result = mockMvc.perform(get("/all/teacher/{id}", teacherId))
-                .andExpect(status().isCreated())
-                .andExpect(content().json(objectMapper.writeValueAsString(userDTO)))
+        mockMvc.perform(get("/all/teacher/{id}", teacherId))
+                .andExpect(status().isOk())
+                .andExpect(result -> result.equals(userDTO))
                 .andReturn();
     }
 

@@ -7,31 +7,31 @@ import com.senla.courses.dto.UserDTO;
 import com.senla.courses.service.teachers.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.test.context.support.WithMockUser;
+
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
-import java.util.Set;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @WebMvcTest(controllers = TeacherController.class)
 @AutoConfigureMockMvc
@@ -49,21 +49,12 @@ public class TeacherControllerTest {
 
     private ObjectMapper objectMapper;
 
-    @Mock
-    private User userSec;
-
-    @Mock
-    private Authentication authentication;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         objectMapper = new ObjectMapper();
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken("admin", "admin", List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
     }
 
@@ -90,30 +81,40 @@ public class TeacherControllerTest {
     }
 
     @Test
-    @PreAuthorize("hasAuthority('admin:write')")
-    public void testUpdateTeacher() throws Exception {
+    @WithMockUser(username = "admin", password = "admin", authorities = "admin:write")
+    void testUpdateTeacher() throws Exception {
         Long teacherId = 1L;
-        UserDTO userDTO = UserDTO.builder()
+        UserDTO updatedUserDTO = UserDTO.builder()
                 .name("Валя")
-                .login("tea")
+                .login("admin")
                 .email("valya@thebest.com")
-                .password("{noop}tea")
+                .password("{noop}admin")
                 .age(25)
                 .description("Let's go!")
                 .role("TEACHER")
                 .build();
 
-        when(authentication.getPrincipal()).thenReturn("admin:write");
-        when(userSec.getUsername()).thenReturn("tea");
-        when(userSec.getPassword()).thenReturn("tea");
-        when(userSec.getAuthorities()).thenReturn(Set.of(new SimpleGrantedAuthority("teacher:write")));
-        given(teacherService.updateTeacher(userSec, userDTO, teacherId)).willReturn(userDTO);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        given(teacherService.updateTeacher(eq(user), eq(updatedUserDTO), eq(teacherId))).willReturn(updatedUserDTO);
 
         mockMvc.perform(put("/teacher/{id}", teacherId)
-                        .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(userDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedUserDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(userDTO)));
+                .andExpect(result -> result.equals(updatedUserDTO));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", password = "admin", authorities = "admin:write")
+    void testDeleteTeacher() throws Exception {
+        Long teacherId = 1L;
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/teacher/{id}", teacherId))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(teacherService, times(1)).deleteTeacher(any(), eq(teacherId));
     }
 
 }
