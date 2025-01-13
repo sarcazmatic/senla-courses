@@ -1,0 +1,3282 @@
+{
+	"info": {
+		"_postman_id": "d988bb79-90af-4079-95b6-50bf9389fcf4",
+		"name": "senla-courses",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24192179"
+	},
+	"item": [
+		{
+			"name": "Login Special id 1",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://192.168.0.192:8080/log",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"log"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Teacher id 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Надежда Степановна\",\r\n    \"login\": \"nadya\",\r\n    \"email\": \"ns@thebest.com\",\r\n    \"password\": \"{noop}nadyamakesitreal\",\r\n    \"age\": 77,\r\n    \"description\": \"Let's go!\",\r\n    \"role\": \"teacher\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/teacher/register",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Teacher id 3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Владлен Все Тлен\",\r\n    \"login\": \"vLad\",\r\n    \"email\": \"vlad@verysad.com\",\r\n    \"password\": \"{noop}asdfjhsdfjn\",\r\n    \"age\": 25,\r\n    \"description\": \"Oh hi!\",\r\n    \"role\": \"teacher\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/teacher/register",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Teacher id 4",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Тинки Винковна\",\r\n    \"login\": \"tinVin\",\r\n    \"email\": \"tinky@winky.com\",\r\n    \"password\": \"{noop}vxcxccbvvbgfhbfgh\",\r\n    \"age\": 125,\r\n    \"description\": \"Я родился!\",\r\n    \"role\": \"teacher\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/teacher/register",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Teacher id 5",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Валя\",\r\n    \"login\": \"valya\",\r\n    \"email\": \"valya@thebest.com\",\r\n    \"password\": \"{noop}nadyamakesitreal\",\r\n    \"age\": 25,\r\n    \"description\": \"Let's go!\",\r\n    \"role\": \"teacher\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/teacher/register",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Teacher by Id 2",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/all/teacher/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"all",
+						"teacher",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Teacher by Id 3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/all/teacher/3",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"all",
+						"teacher",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Teacher by Id 4",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "valya",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/all/teacher/4",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"all",
+						"teacher",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Teacher update id 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Надежда Степановна\",\r\n    \"email\": \"ns@thebest.com\",\r\n    \"password\": \"{noop}nadyamakesitreal\",\r\n    \"age\": 77,\r\n    \"description\": \"Чего летс гоу-то?\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/teacher/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Teacher update id 3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "asdfjhsdfjn",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "vLad",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Валя\",\r\n    \"email\": \"vlad@verysad22.com\",\r\n    \"password\": \"asdas\",\r\n    \"age\": 25,\r\n    \"description\": \"Ну летс гоу так летс гоу\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/teacher/3",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Teacher List Pageable",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/all/teacher?from=1&size=2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"all",
+						"teacher"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Teacher id 3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/teacher/3",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Teacher id 4",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "tinvin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "vxcxccbvvbgfhbfgh",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/teacher/4",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"teacher",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Student id 6",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Отличник\",\r\n    \"login\": \"otl\",\r\n    \"email\": \"very@best.com\",\r\n    \"password\": \"{noop}cleverPassword&141\",\r\n    \"age\": 16,\r\n    \"description\": \"I am clever!\",\r\n    \"role\": \"stuDenT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/student/register",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Student id 7",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Хорошист\",\r\n    \"login\": \"hor\",\r\n    \"email\": \"very@business.com\",\r\n    \"password\": \"{noop}Password123123\",\r\n    \"age\": 17,\r\n    \"description\": \"I am ambitious!\",\r\n    \"role\": \"stuDenT\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/student/register",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Student update id 6 empty UserDTO",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"rating\": 3.0,\r\n    \"userDTO\": {\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/student/6",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Student update id 7 NOUserDTO",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"rating\": 4.0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/student/6",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Student by Id 6",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/student/6",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Student by Id 7",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/student/7",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Student List Pageable",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hor",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Password123123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/student?from=1&size=2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Student id 7",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hor",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Password123123",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/student/7",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Message 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"body\": \"hi, Bobby\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/message/send/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"message",
+						"send",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Message update 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"body\": \"hi, Dear teacherere\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/message/1/edit",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"message",
+						"1",
+						"edit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Message 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"body\": \"hi, Teach\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/message/send/6",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"message",
+						"send",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Message between ADMIN NO",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/message/between?ids=2,6",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"message",
+						"between"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "2,6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Message between",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/message/between?ids=2,6",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"message",
+						"between"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "2,6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Message like body",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/message?text=hi",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"message"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "hi"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Message id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/message/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"message",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Course 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Java Junior\",\r\n    \"description\": \"Only for those who want to become the best Java dev in history OF THIS WORLD\",\r\n    \"field\": \"Java\",\r\n    \"complexity\": 5,\r\n    \"duration\": 6\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/add",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Course 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Python Junior\",\r\n    \"description\": \"Ok too\",\r\n    \"field\": \"Python\",\r\n    \"complexity\": 4,\r\n    \"duration\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/add",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Course 3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Python Junior+\",\r\n    \"description\": \"They are going to delete me, help!\",\r\n    \"field\": \"Python\",\r\n    \"complexity\": 16,\r\n    \"duration\": 989\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/add",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Course by id 1",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/all/course/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"all",
+						"course",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Course 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Python Junior\",\r\n    \"description\": \"Ok for the BeSt PythON dev in history OF THIS WORLD too\",\r\n    \"field\": \"Python\",\r\n    \"complexity\": 8,\r\n    \"duration\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Course Add Teacher 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Python Junior\",\r\n    \"description\": \"Ok for the BeSt PythON dev in history OF THIS WORLD too\",\r\n    \"field\": \"Python\",\r\n    \"complexity\": 8,\r\n    \"duration\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/1/teachers/add?ids=2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"1",
+						"teachers",
+						"add"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Course Remove Teacher 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Python Junior\",\r\n    \"description\": \"Ok for the BeSt PythON dev in history OF THIS WORLD too\",\r\n    \"field\": \"Python\",\r\n    \"complexity\": 8,\r\n    \"duration\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/1/teachers/rm?ids=2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"1",
+						"teachers",
+						"rm"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Course Add Teacher 2,3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Python Junior\",\r\n    \"description\": \"Ok for the BeSt PythON dev in history OF THIS WORLD too\",\r\n    \"field\": \"Python\",\r\n    \"complexity\": 8,\r\n    \"duration\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/1/teachers/add?ids=2,3",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"1",
+						"teachers",
+						"add"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "2,3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Course Remove Teacher 2,3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Python Junior\",\r\n    \"description\": \"Ok for the BeSt PythON dev in history OF THIS WORLD too\",\r\n    \"field\": \"Python\",\r\n    \"complexity\": 8,\r\n    \"duration\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/1/teachers/rm?ids=2,3",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"1",
+						"teachers",
+						"rm"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "2,3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Course Add Teacher 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Senla Python Junior\",\r\n    \"description\": \"Ok for the BeSt PythON dev in history OF THIS WORLD too\",\r\n    \"field\": \"Python\",\r\n    \"complexity\": 8,\r\n    \"duration\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/1/teachers/add?ids=2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"1",
+						"teachers",
+						"add"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Course by params",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/all/course?text=sEnLa",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"all",
+						"course"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "sEnLa"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Course by params descr",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/all/course?text=OF THIS WORLD",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"all",
+						"course"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "OF THIS WORLD"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Course by id 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/3",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Module 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Введение в ООП. Часть 1\",\r\n    \"description\": \"Объектно-ориентированное программирование основано на «трех китах» - трех важнейших принципах, придающих объектам новые свойства. Этими принципами являются инкапсуляция, наследование и полиморфизм. И абстракция!\",\r\n    \"placeInCourse\": 1,\r\n    \"courseId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/add",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Module 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Введение в ООП. Часть 2\",\r\n    \"description\": \"Абстракция В ООП все крутится вокруг абстракции. Существуют фанатики, утверждающие, что абстракция должна быть частью ООП-троицы.\",\r\n    \"placeInCourse\": 2,\r\n    \"courseId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/add",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Module 3 NO",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Введение в ООП. Часть 2\",\r\n    \"description\": \"Абстракция В ООП все крутится вокруг абстракции. Существуют фанатики, утверждающие, что абстракция должна быть частью ООП-троицы.\",\r\n    \"placeInCourse\": 2,\r\n    \"courseId\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/add",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Module by id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Module 2 Student NO",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Введение в ООП. Часть 2\",\r\n    \"placeInCourse\": 1,\r\n    \"courseId\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Module 2 Teacher",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Введение в ООП. Часть 2\",\r\n    \"placeInCourse\": 1,\r\n    \"courseId\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Module by desc",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/find?text=Объектно-ориентированное программирование",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"find"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "Объектно-ориентированное программирование"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Module by name",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/all/module/name?text=ооп",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"all",
+						"module",
+						"name"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "ооп"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Module by id 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Task 1 for Module 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Написать hello world\",\r\n    \"body\": \"Невеорятно сложное задание, которое невероятно сложyое\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/task/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"task",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Task 2 for Module 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Написать bye world\",\r\n    \"body\": \"Невеорятно сложное задание, которое невероятно слонжое вдойне\",\r\n    \"url\": \"ya.ru\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/task/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"task",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Task by mod id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/1/tasks",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"1",
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tasks by mod id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/task/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"task",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tasks by text",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/task?text=написать",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"task"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "написать"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Task 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Написать hello, it's me\",\r\n    \"body\": \"Невеорятно сложное задание, которое невероятно слонжое\",\r\n    \"url\": \"adele.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/task/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"task",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Task by id 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/task/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"task",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Lit 1 for Module 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"50 оттенков серого\",\r\n    \"author\": \"Э. Л. Джеймс\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/lit/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"lit",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Lit 2 for Module 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Сумерки\",\r\n    \"author\": \"Стефани Майер\",\r\n    \"url\": \"ya.ru\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/lit/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"lit",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Lit 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Рассвет\",\r\n    \"author\": \"Стефани Майер\",\r\n    \"url\": \"ya.ru\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/lit/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"lit",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lit by mod/task id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/lit/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"lit",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lit by mod id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/1/lit",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"1",
+						"lit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lit by name",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/lit/name?text=рАсС",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"lit",
+						"name"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "рАсС"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lit by author",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/lit/author?text=сте",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"lit",
+						"author"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "сте"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Lit by id 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/lit/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"lit",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post File 1 for Module 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/eutik/OneDrive/Изображения/img0.jpg"
+						},
+						{
+							"key": "url",
+							"value": "ya.ru",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/file/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"file",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post File 2 for Module 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "nadya",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "nadyamakesitreal",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/eutik/OneDrive/Документы/senla-courses.postman_collection.json"
+						},
+						{
+							"key": "url",
+							"value": "senla.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/file/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"file",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get File by mod/task id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/file/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"file",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get File by mod/task id 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/file/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"file",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Files by module id",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/1/files",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"1",
+						"files"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put File 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "url",
+							"value": "senla-courses.com/ru",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/eutik/OneDrive/Документы/tasktracker.txt"
+						}
+					]
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/module/file/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"file",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete File by id 2",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/file/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"file",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get File by mod/task id 2 again",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/module/file/2",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"module",
+						"file",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Request Course 1 Stud 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Написать hello world\",\r\n    \"body\": \"Невеорятно сложное задание, которое невероятно слонжое\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "192.168.0.192:8080/student/course/request/6/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"course",
+						"request",
+						"6",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SK by course/stud id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "cleverPassword&141",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "otl",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/student/course/6/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"student",
+						"course",
+						"6",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SK ADMIN by course id 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/student/1",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"student",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SK ADMIN by course id 1 Copy",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "192.168.0.192:8080/admin/course/student/1?ids=6&response=approved",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"192"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"course",
+						"student",
+						"1"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "6"
+						},
+						{
+							"key": "response",
+							"value": "approved"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
