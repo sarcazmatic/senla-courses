@@ -41,7 +41,7 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new NotFoundException("Не нашли курс по id " + id));
         Course courseUpd = courseMapper.updateCourse(course, courseDTO);
         CourseDTO courseDTOResult = courseMapper.fromCourse(courseDAO.update(courseUpd));
-        log.info("Курс с id {} обновлен. Было: {}. Стало: {}", id, courseMapper.fromCourse(course).toString(), courseDTOResult.toString());
+        log.info("Курс с id {} обновлен.Стало: {}", id, courseDTOResult.toString());
         return courseDTOResult;
     }
 

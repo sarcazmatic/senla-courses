@@ -37,7 +37,7 @@ public class LiteratureServiceImpl implements LiteratureService {
         Literature literature = literatureDAO.find(id).orElseThrow(()
                 -> new NotFoundException("Не удалось найти литературу"));
         Literature literatureResult = literatureDAO.update(literatureMapper.updateLiterature(literature, literatureDTO));
-        log.info("Отредактирована литература с id {}. Было: {}. Стало {}.", id, literature, literatureResult);
+        log.info("Отредактирована литература с id {}. Стало {}.", id, literatureResult);
         return literatureMapper.fromLiterature(literatureResult);
     }
 

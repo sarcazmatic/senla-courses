@@ -103,7 +103,7 @@ public class MessageServiceImpl implements MessageService {
         }
         List<Message> messagesList = messageDAO.findMessagesBetween(betweenIds.get(0), betweenIds.get(1), from, size);
         if (messagesList.isEmpty()) {
-            throw new EmptyListException("Список сообщений между указанными id пусть");
+            throw new EmptyListException("Список сообщений между указанными id пуст");
         }
         List<MessageFullDTO> messageFullDTOList = messagesList.stream().map(messageMapper::fromMessage).toList();
         log.info("Список сообщений между {} собран. Найдено {} элементов", betweenIds, messageFullDTOList.size());
