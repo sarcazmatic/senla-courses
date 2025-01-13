@@ -29,7 +29,7 @@ public class File {
     private Long id;
     private String name;
     @Lob
-    @Column(name = "content", columnDefinition = "BLOB")
+    @Column(name = "content")
     private byte[] content;
     @Column(name = "content_type")
     private String contentType;

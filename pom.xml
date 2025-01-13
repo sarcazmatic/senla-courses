@@ -30,13 +30,14 @@
 		<java.version>17</java.version>
 		<lombok.version>1.18.36</lombok.version>
 		<spring.deps.version>2.7.9</spring.deps.version>
-		<hibernate.core.version>6.2.0.Final</hibernate.core.version>
+		<hibernate.core.version>6.5.3.Final</hibernate.core.version>
 		<postgresql.version>[42.6.0,)</postgresql.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>3.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
