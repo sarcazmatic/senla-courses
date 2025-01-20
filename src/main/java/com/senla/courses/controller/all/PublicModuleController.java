@@ -32,7 +32,7 @@ public class PublicModuleController {
 
     @GetMapping("/find")
     @ResponseStatus(HttpStatus.OK)
-    public List<ModuleDTO> findByText(@RequestParam(required = false, name = "text") String text,
+    public List<ModuleDTO> findByText(@RequestParam(required = false, name = "text", defaultValue = "") String text,
                                       @RequestParam(required = false, defaultValue = "1") int from,
                                       @RequestParam(required = false, defaultValue = "10") int size,
                                       HttpServletRequest request) {

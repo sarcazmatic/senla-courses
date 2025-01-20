@@ -61,9 +61,7 @@ public class TeacherDAO implements GenericDAO<Teacher, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             Query<Teacher> query = session.createQuery("SELECT t from Teacher t JOIN FETCH t.user " +
-                    "WHERE (:name IS NULL) " +
-                    "OR (:name IS NOT NULL " +
-                    "AND UPPER(t.user.name) LIKE CONCAT ('%', UPPER(:name), '%'))", Teacher.class);
+                        "WHERE (UPPER(t.user.name)) LIKE CONCAT ('%', UPPER(:name), '%')", Teacher.class);
             query.setParameter("name", name);
             query.setFirstResult(from - 1);
             query.setMaxResults(size);
