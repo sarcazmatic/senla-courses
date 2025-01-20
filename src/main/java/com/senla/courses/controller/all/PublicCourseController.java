@@ -43,7 +43,7 @@ public class PublicCourseController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CourseDTO> findCoursesByText(@RequestParam(required = false, name = "text") String text,
+    public List<CourseDTO> findCoursesByText(@RequestParam(required = false, name = "text", defaultValue = "") String text,
                                              @RequestParam(required = false, defaultValue = "1") int from,
                                              @RequestParam(required = false, defaultValue = "10") int size,
                                              HttpServletRequest request) {

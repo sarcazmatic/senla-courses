@@ -25,7 +25,7 @@ public class PublicTeacherController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> findTeachersByName(@RequestParam(required = false, name = "name") String name,
+    public List<UserDTO> findTeachersByName(@RequestParam(required = false, name = "name", defaultValue = "") String name,
                                             @RequestParam(required = false, defaultValue = "1") int from,
                                             @RequestParam(required = false, defaultValue = "10") int size,
                                             HttpServletRequest request) {

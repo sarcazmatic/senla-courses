@@ -62,7 +62,7 @@ public class StudentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> findStudents(@RequestParam(required = false, name = "text") String name,
+    public List<UserDTO> findStudents(@RequestParam(required = false, name = "text", defaultValue = "") String name,
                                       @RequestParam(required = false, defaultValue = "1") int from,
                                       @RequestParam(required = false, defaultValue = "10") int size,
                                       HttpServletRequest request) {

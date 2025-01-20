@@ -43,8 +43,9 @@ public class StudentsCoursesDAO implements GenericDAO<StudentsCourses, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             Query<StudentsCourses> query = session.createQuery("SELECT sc from StudentsCourses sc " +
-                    "JOIN FETCH Student AS s JOIN FETCH Course AS c " +
-                    "WHERE (s.id = :studentId AND c.id = :courseId)", StudentsCourses.class);
+                    "JOIN FETCH sc.student " +
+                    "JOIN FETCH sc.course " +
+                    "WHERE (sc.student.id = :studentId AND sc.course.id = :courseId)", StudentsCourses.class);
             query.setParameter("studentId", studentId);
             query.setParameter("courseId", courseId);
             StudentsCourses studentsCourses = query.getSingleResult();
@@ -66,8 +67,8 @@ public class StudentsCoursesDAO implements GenericDAO<StudentsCourses, Long> {
         Transaction transaction = session.beginTransaction();
         try {
             Query<StudentsCourses> query = session.createQuery("SELECT sc from StudentsCourses sc " +
-                    "JOIN FETCH Student AS s JOIN FETCH Course AS c " +
-                    "WHERE c.id = :courseId", StudentsCourses.class);
+                    "JOIN FETCH sc.course " +
+                    "WHERE sc.course.id = :courseId", StudentsCourses.class);
             query.setParameter("courseId", courseId);
             List<StudentsCourses> studentsCourses = query.getResultList();
             transaction.commit();

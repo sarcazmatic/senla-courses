@@ -62,7 +62,7 @@ public class ModuleTaskController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public List<TaskDTO> findTaskByText(@RequestParam(required = false, name = "text") String text,
+    public List<TaskDTO> findTaskByText(@RequestParam(required = false, name = "text", defaultValue = "") String text,
                                         @RequestParam(required = false, defaultValue = "1") int from,
                                         @RequestParam(required = false, defaultValue = "10") int size,
                                         HttpServletRequest request) {
